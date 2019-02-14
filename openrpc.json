@@ -9,7 +9,7 @@
     },
     "servers": [
       {
-        "url": "http://localhost:8080"
+        "url": "http://localhost:1920"
       }
     ],
     "methods": [
@@ -34,18 +34,43 @@
         ],
         "params": [],
         "result": {
-          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
-          "type": "integer",
-          "format": "int64"
+          "description": "Current version according semantic versioning",
+          "type": "string"
         }
       },
       {
         "name": "emerald_listAccounts",
-        "summary": "Check service health",
+        "summary": "Return the list of all not hidden (by default) accounts from the keystore",
         "tags": [
           "jade"
         ],
-        "params": [],
+        "params": [
+          {
+            "name": "chain",
+            "required": false,
+            "description": "Chain name, by default `mainnet`, other possible variant `morden`",
+            "schema": {
+              "type": "string"
+            }
+          }, 
+          {
+            "name": "chain_id",
+            "required": false,
+            "description": "chain id number, by default for `mainnet` it equals `61`",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "show_hidden",
+            "required": false,
+            "description": "Show hidden accounts",
+            "schema": {
+              "type": "Boolean"
+            }
+          }
+        ],
         "result": {
           "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
           "type": "integer",
@@ -298,44 +323,32 @@
           "type": "integer",
           "format": "int64"
         }
-      },
-    //   {
-    //     "name": "get_pet",
-    //     "summary": "Info for a specific pet",
-    //     "tags": [
-    //       "jade"
-    //     ],
-    //     "params": [
-    //       {
-    //         "name": "petId",
-    //         "required": true,
-    //         "description": "The id of the pet to retrieve",
-    //         "schema": {
-    //           "type": "string"
-    //         }
-    //       }
-    //     ],
-    //     "result": {
-    //       "description": "Expected response to a valid request",
-    //       "schema": {
-    //         "$ref": "#/components/schemas/Pets"
-    //       }
-    //     }
-    //   }
+      }
     ],
     "components": {
       "schemas": {
-        "Pet": {
+        "Account": {
           "required": [
-            "id",
-            "name"
+            "address",
+            "hardware",
+            "name",
+            "description",
+            "is_hidden"
           ],
           "properties": {
-            "id": {
-              "type": "integer",
-              "format": "int64"
+            "address": {
+              "type": "string"
+            },
+            "hardware": {
+              "type": "bool"
             },
             "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "is_hidden": {
               "type": "string"
             },
             "tag": {
@@ -343,10 +356,10 @@
             }
           }
         },
-        "Pets": {
+        "Accounts": {
           "type": "array",
           "items": {
-            "$ref": "#/components/schemas/Pet"
+            "$ref": "#/components/schemas/Account"
           }
         }
       }
