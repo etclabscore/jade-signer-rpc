@@ -1,0 +1,354 @@
+{
+    "openrpc": "1.0.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "OpenRPC Petstore",
+      "license": {
+        "name": "Apache-2"
+      }
+    },
+    "servers": [
+      {
+        "url": "http://localhost:8080"
+      }
+    ],
+    "methods": [
+      {
+        "name": "emerald_heartbeat",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_currentVersion",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_listAccounts",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_hideAccount",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_unhideAccount",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_newAccount",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_shakeAccount",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_updateAccount",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_importAccount",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_exportAccount",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_generateMnemonic",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_importMnemonic",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_signTransaction",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_listContracts",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_hideContract",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_unhideContract",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_updateContract",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_importContract",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_exportContract",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_importAddress",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_listAddresses",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      {
+        "name": "emerald_deleteAddress",
+        "summary": "Check service health",
+        "tags": [
+          "jade"
+        ],
+        "params": [],
+        "result": {
+          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+    //   {
+    //     "name": "get_pet",
+    //     "summary": "Info for a specific pet",
+    //     "tags": [
+    //       "jade"
+    //     ],
+    //     "params": [
+    //       {
+    //         "name": "petId",
+    //         "required": true,
+    //         "description": "The id of the pet to retrieve",
+    //         "schema": {
+    //           "type": "string"
+    //         }
+    //       }
+    //     ],
+    //     "result": {
+    //       "description": "Expected response to a valid request",
+    //       "schema": {
+    //         "$ref": "#/components/schemas/Pets"
+    //       }
+    //     }
+    //   }
+    ],
+    "components": {
+      "schemas": {
+        "Pet": {
+          "required": [
+            "id",
+            "name"
+          ],
+          "properties": {
+            "id": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "name": {
+              "type": "string"
+            },
+            "tag": {
+              "type": "string"
+            }
+          }
+        },
+        "Pets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Pet"
+          }
+        }
+      }
+    }
+}
