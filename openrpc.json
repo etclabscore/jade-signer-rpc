@@ -80,93 +80,136 @@
       },
       {
         "name": "emerald_hideAccount",
-        "summary": "Check service health",
+        "summary": "Hide an account from the list returned by default by `emerald_listAccounts`",
         "tags": [
           "jade"
         ],
-        "params": [],
+        "params": [
+          {
+            "name": "address",
+            "required": true,
+            "description": "hex-encoded 20 bytes public address",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chain",
+            "required": false,
+            "description": "chain name, by default `mainnet`, other possible variant `morden`",
+            "schema": {
+              "type": "string"
+            }
+          }, 
+          {
+            "name": "chain_id",
+            "required": false,
+            "description": "chain id number, by default for `mainnet` it equals `61`",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
         "result": {
-          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
-          "type": "integer",
-          "format": "int64"
+          "description": "`accept` (Boolean) - `true` if required account exists",
+          "type": "boolean"
         }
       },
       {
         "name": "emerald_unhideAccount",
-        "summary": "Check service health",
+        "summary": "Show an account that was hidden before by the command `emerald_hideAccount`",
         "tags": [
           "jade"
         ],
-        "params": [],
+        "params": [{
+          "name": "address",
+          "required": true,
+          "description": "hex-encoded 20 bytes public address",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "chain",
+          "required": false,
+          "description": "chain name, by default `mainnet`, other possible variant `morden`",
+          "schema": {
+            "type": "string"
+          }
+        }, 
+        {
+          "name": "chain_id",
+          "required": false,
+          "description": "chain id number, by default for `mainnet` it equals `61`",
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }],
         "result": {
-          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
-          "type": "integer",
-          "format": "int64"
+          "description": "`accept` (Boolean) - `true` if required account exists",
+          "type": "boolean"
         }
       },
       {
         "name": "emerald_newAccount",
-        "summary": "Check service health",
+        "summary": "Creates a new account and stores it locally as a passphrase-encoded keystore file.",
         "tags": [
           "jade"
         ],
         "params": [],
         "result": {
-          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
-          "type": "integer",
-          "format": "int64"
+          "description": "",
+          "type": "boolean"
         }
       },
       {
         "name": "emerald_shakeAccount",
-        "summary": "Check service health",
+        "summary": "Recreate account with the same public address, but with a different passphrase",
         "tags": [
           "jade"
         ],
         "params": [],
         "result": {
-          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
-          "type": "integer",
-          "format": "int64"
+          "description": "",
+          "type": "boolean"
         }
       },
       {
         "name": "emerald_updateAccount",
-        "summary": "Check service health",
+        "summary": "Update not secured by passphrase account metadata, like `name` and `description`",
         "tags": [
           "jade"
         ],
         "params": [],
         "result": {
-          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
-          "type": "integer",
-          "format": "int64"
+          "description": "",
+          "type": "boolean"
         }
       },
       {
         "name": "emerald_importAccount",
-        "summary": "Check service health",
+        "summary": "Import a new account from an external keyfile. Handle both cases: normal account & HD wallet account",
         "tags": [
           "jade"
         ],
         "params": [],
         "result": {
-          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
-          "type": "integer",
-          "format": "int64"
+          "description": "",
+          "type": "boolean"
         }
       },
       {
         "name": "emerald_exportAccount",
-        "summary": "Check service health",
+        "summary": "Returns an account keyfile associated with the account.",
         "tags": [
           "jade"
         ],
         "params": [],
         "result": {
-          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
-          "type": "integer",
-          "format": "int64"
+          "description": "",
+          "type": "boolean"
         }
       },
       {
@@ -177,9 +220,8 @@
         ],
         "params": [],
         "result": {
-          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
-          "type": "integer",
-          "format": "int64"
+          "description": "",
+          "type": "boolean"
         }
       },
       {
@@ -190,9 +232,8 @@
         ],
         "params": [],
         "result": {
-          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
-          "type": "integer",
-          "format": "int64"
+          "description": "",
+          "type": "boolean"
         }
       },
       {
@@ -203,9 +244,8 @@
         ],
         "params": [],
         "result": {
-          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
-          "type": "integer",
-          "format": "int64"
+          "description": "",
+          "type": "boolean"
         }
       },
       {
@@ -216,9 +256,8 @@
         ],
         "params": [],
         "result": {
-          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
-          "type": "integer",
-          "format": "int64"
+          "description": "",
+          "type": "boolean"
         }
       },
       {
@@ -229,9 +268,8 @@
         ],
         "params": [],
         "result": {
-          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
-          "type": "integer",
-          "format": "int64"
+          "description": "",
+          "type": "boolean"
         }
       },
       {
@@ -242,9 +280,8 @@
         ],
         "params": [],
         "result": {
-          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
-          "type": "integer",
-          "format": "int64"
+          "description": "",
+          "type": "boolean"
         }
       },
       {
@@ -255,9 +292,8 @@
         ],
         "params": [],
         "result": {
-          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
-          "type": "integer",
-          "format": "int64"
+          "description": "",
+          "type": "boolean"
         }
       },
       {
@@ -268,9 +304,8 @@
         ],
         "params": [],
         "result": {
-          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
-          "type": "integer",
-          "format": "int64"
+          "description": "",
+          "type": "boolean"
         }
       },
       {
@@ -281,9 +316,8 @@
         ],
         "params": [],
         "result": {
-          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
-          "type": "integer",
-          "format": "int64"
+          "description": "",
+          "type": "boolean"
         }
       },
       {
@@ -294,9 +328,8 @@
         ],
         "params": [],
         "result": {
-          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
-          "type": "integer",
-          "format": "int64"
+          "description": "",
+          "type": "boolean"
         }
       },
       {
@@ -307,9 +340,8 @@
         ],
         "params": [],
         "result": {
-          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
-          "type": "integer",
-          "format": "int64"
+          "description": "",
+          "type": "boolean"
         }
       },
       {
@@ -320,9 +352,8 @@
         ],
         "params": [],
         "result": {
-          "description": "`timestamp` (Number) - Seconds since Jan 01 1970 (UTC)",
-          "type": "integer",
-          "format": "int64"
+          "description": "",
+          "type": "boolean"
         }
       }
     ],
@@ -332,8 +363,6 @@
           "required": [
             "address",
             "hardware",
-            "name",
-            "description",
             "is_hidden"
           ],
           "properties": {
@@ -344,9 +373,11 @@
               "type": "boolean"
             },
             "name": {
+              "required": false,
               "type": "string"
             },
             "description": {
+              "required": false,
               "type": "string"
             },
             "is_hidden": {
