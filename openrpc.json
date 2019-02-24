@@ -214,19 +214,19 @@
       },
       {
         "name": "emerald_generateMnemonic",
-        "summary": "Check service health",
+        "summary": "Generates a new 24 words long mnemonic phrase",
         "tags": [
           "jade"
         ],
         "params": [],
         "result": {
-          "description": "",
-          "type": "boolean"
+          "description": "hex-encoded 20 bytes public address",
+          "type": "string"
         }
       },
       {
         "name": "emerald_importMnemonic",
-        "summary": "Check service health",
+        "summary": "Creates a new account from a mnemonic and stores it locally as a passphrase-encoded keystore file",
         "tags": [
           "jade"
         ],
@@ -238,7 +238,9 @@
       },
       {
         "name": "emerald_signTransaction",
-        "summary": "Check service health",
+        "summary": "Signs transaction offline with private key from keystore file with given passphrase.
+        If `function` and `arguments` are provided, they will be encoded according smart contract ABI 
+        and used in the `data` field of the transaction",
         "tags": [
           "jade"
         ],
@@ -250,7 +252,7 @@
       },
       {
         "name": "emerald_listContracts",
-        "summary": "Check service health",
+        "summary": "Return the list of all not hidden (by default) smart contracts from the local storage",
         "tags": [
           "jade"
         ],
@@ -262,7 +264,7 @@
       },
       {
         "name": "emerald_hideContract",
-        "summary": "Check service health",
+        "summary": "Hide a smart contract from the list returned by default by `emerald_listContracts`",
         "tags": [
           "jade"
         ],
@@ -274,7 +276,7 @@
       },
       {
         "name": "emerald_unhideContract",
-        "summary": "Check service health",
+        "summary": "Show a smart contract that was hidden before by the command `emerald_hideContract`",
         "tags": [
           "jade"
         ],
@@ -286,7 +288,8 @@
       },
       {
         "name": "emerald_updateContract",
-        "summary": "Check service health",
+        "summary": "Update contract metadata. Contract address and chain information 
+        are used to identify the contract, and may not be updated.",
         "tags": [
           "jade"
         ],
@@ -298,7 +301,7 @@
       },
       {
         "name": "emerald_importContract",
-        "summary": "Check service health",
+        "summary": "Import a new smart contract Application Binary Interface (ABI) locally",
         "tags": [
           "jade"
         ],
@@ -310,7 +313,7 @@
       },
       {
         "name": "emerald_exportContract",
-        "summary": "Check service health",
+        "summary": "Returns contract object associated with the contract",
         "tags": [
           "jade"
         ],
@@ -322,7 +325,7 @@
       },
       {
         "name": "emerald_importAddress",
-        "summary": "Check service health",
+        "summary": "Add new contact into address book",
         "tags": [
           "jade"
         ],
@@ -334,7 +337,7 @@
       },
       {
         "name": "emerald_listAddresses",
-        "summary": "Check service health",
+        "summary": "Return all addresses for particular chain",
         "tags": [
           "jade"
         ],
@@ -346,7 +349,7 @@
       },
       {
         "name": "emerald_deleteAddress",
-        "summary": "Check service health",
+        "summary": "Delete contact from address book",
         "tags": [
           "jade"
         ],
