@@ -46,28 +46,12 @@
         ],
         "params": [
           {
-            "name": "chain",
-            "required": false,
-            "description": "Chain name, by default `mainnet`, other possible variant `morden`",
             "schema": {
-              "type": "string"
-            }
-          }, 
-          {
-            "name": "chain_id",
-            "required": false,
-            "description": "chain id number, by default for `mainnet` it equals `61`",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "show_hidden",
-            "required": false,
-            "description": "Show hidden accounts",
-            "schema": {
-              "type": "Boolean"
+              "anyOf": [
+                {"$ref": "#/components/schemas/Chain"},
+                {"$ref": "#/components/schemas/Chain_ID"},
+                {"$ref": "#/components/schemas/Show_hidden"} 
+              ]
             }
           }
         ],
@@ -238,9 +222,7 @@
       },
       {
         "name": "emerald_signTransaction",
-        "summary": "Signs transaction offline with private key from keystore file with given passphrase.
-        If `function` and `arguments` are provided, they will be encoded according smart contract ABI 
-        and used in the `data` field of the transaction",
+        "summary": "Signs transaction offline with private key from keystore file with given passphrase.\nIf `function` and `arguments` are provided, they will be encoded according smart contract ABI \nand used in the `data` field of the transaction",
         "tags": [
           "jade"
         ],
@@ -288,8 +270,7 @@
       },
       {
         "name": "emerald_updateContract",
-        "summary": "Update contract metadata. Contract address and chain information 
-        are used to identify the contract, and may not be updated.",
+        "summary": "Update contract metadata. Contract address and chain information \nare used to identify the contract, and may not be updated.",
         "tags": [
           "jade"
         ],
@@ -395,6 +376,37 @@
           "type": "array",
           "items": {
             "$ref": "#/components/schemas/Account"
+          }
+        },
+        "Chain": {
+          "required": [
+            "name"
+          ],
+          "properties": {
+            "name": {
+              "type": "string"
+            }
+          }
+        }, 
+        "Chain_ID": {
+          "required": [
+            "id"
+          ],
+          "properties": {
+            "id": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        },
+        "Show_hidden": {
+          "required": [
+            "show_hidden" 
+          ],
+          "properties": {
+            "id": {
+              "type": "boolean"
+            }
           }
         }
       }
