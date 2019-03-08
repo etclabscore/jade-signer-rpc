@@ -14,7 +14,7 @@
     ],
     "methods": [
       {
-        "name": "emerald_heartbeat",
+        "name": "jade_heartbeat",
         "summary": "Check service health",
         "tags": [
           "jade"
@@ -30,7 +30,7 @@
         }
       },
       {
-        "name": "emerald_currentVersion",
+        "name": "jade_currentVersion",
         "summary": "Check service health",
         "tags": [
           "jade"
@@ -43,7 +43,7 @@
         }
       },
       {
-        "name": "emerald_listAccounts",
+        "name": "jade_listAccounts",
         "summary": "Return the list of all not hidden (by default) accounts from the keystore",
         "tags": [
           "jade"
@@ -68,8 +68,8 @@
         }
       },
       {
-        "name": "emerald_hideAccount",
-        "summary": "Hide an account from the list returned by default by `emerald_listAccounts`",
+        "name": "jade_hideAccount",
+        "summary": "Hide an account from the list returned by default by `jade_listAccounts`",
         "tags": [
           "jade"
         ],
@@ -109,8 +109,8 @@
         }
       },
       {
-        "name": "emerald_unhideAccount",
-        "summary": "Show an account that was hidden before by the command `emerald_hideAccount`",
+        "name": "jade_unhideAccount",
+        "summary": "Show an account that was hidden before by the command `jade_hideAccount`",
         "tags": [
           "jade"
         ],
@@ -145,7 +145,7 @@
         }
       },
       {
-        "name": "emerald_newAccount",
+        "name": "jade_newAccount",
         "summary": "Creates a new account and stores it locally as a passphrase-encoded keystore file.",
         "tags": [
           "jade"
@@ -157,7 +157,7 @@
         }
       },
       {
-        "name": "emerald_shakeAccount",
+        "name": "jade_shakeAccount",
         "summary": "Recreate account with the same public address, but with a different passphrase",
         "tags": [
           "jade"
@@ -169,7 +169,7 @@
         }
       },
       {
-        "name": "emerald_updateAccount",
+        "name": "jade_updateAccount",
         "summary": "Update not secured by passphrase account metadata, like `name` and `description`",
         "tags": [
           "jade"
@@ -181,7 +181,7 @@
         }
       },
       {
-        "name": "emerald_importAccount",
+        "name": "jade_importAccount",
         "summary": "Import a new account from an external keyfile. Handle both cases: normal account & HD wallet account",
         "tags": [
           "jade"
@@ -193,7 +193,7 @@
         }
       },
       {
-        "name": "emerald_exportAccount",
+        "name": "jade_exportAccount",
         "summary": "Returns an account keyfile associated with the account.",
         "tags": [
           "jade"
@@ -205,7 +205,7 @@
         }
       },
       {
-        "name": "emerald_generateMnemonic",
+        "name": "jade_generateMnemonic",
         "summary": "Generates a new 24 words long mnemonic phrase",
         "tags": [
           "jade"
@@ -217,7 +217,7 @@
         }
       },
       {
-        "name": "emerald_importMnemonic",
+        "name": "jade_importMnemonic",
         "summary": "Creates a new account from a mnemonic and stores it locally as a passphrase-encoded keystore file",
         "tags": [
           "jade"
@@ -229,7 +229,7 @@
         }
       },
       {
-        "name": "emerald_signTransaction",
+        "name": "jade_signTransaction",
         "summary": "Signs transaction offline with private key from keystore file with given passphrase.\nIf `function` and `arguments` are provided, they will be encoded according smart contract ABI \nand used in the `data` field of the transaction",
         "tags": [
           "jade"
@@ -241,7 +241,7 @@
         }
       },
       {
-        "name": "emerald_listContracts",
+        "name": "jade_listContracts",
         "summary": "Return the list of all not hidden (by default) smart contracts from the local storage",
         "tags": [
           "jade"
@@ -253,8 +253,8 @@
         }
       },
       {
-        "name": "emerald_hideContract",
-        "summary": "Hide a smart contract from the list returned by default by `emerald_listContracts`",
+        "name": "jade_hideContract",
+        "summary": "Hide a smart contract from the list returned by default by `jade_listContracts`",
         "tags": [
           "jade"
         ],
@@ -265,8 +265,8 @@
         }
       },
       {
-        "name": "emerald_unhideContract",
-        "summary": "Show a smart contract that was hidden before by the command `emerald_hideContract`",
+        "name": "jade_unhideContract",
+        "summary": "Show a smart contract that was hidden before by the command `jade_hideContract`",
         "tags": [
           "jade"
         ],
@@ -277,7 +277,7 @@
         }
       },
       {
-        "name": "emerald_updateContract",
+        "name": "jade_updateContract",
         "summary": "Update contract metadata. Contract address and chain information \nare used to identify the contract, and may not be updated.",
         "tags": [
           "jade"
@@ -289,7 +289,7 @@
         }
       },
       {
-        "name": "emerald_importContract",
+        "name": "jade_importContract",
         "summary": "Import a new smart contract Application Binary Interface (ABI) locally",
         "tags": [
           "jade"
@@ -301,7 +301,7 @@
         }
       },
       {
-        "name": "emerald_exportContract",
+        "name": "jade_exportContract",
         "summary": "Returns contract object associated with the contract",
         "tags": [
           "jade"
@@ -313,7 +313,7 @@
         }
       },
       {
-        "name": "emerald_importAddress",
+        "name": "jade_importAddress",
         "summary": "Add new contact into address book",
         "tags": [
           "jade"
@@ -325,7 +325,7 @@
         }
       },
       {
-        "name": "emerald_listAddresses",
+        "name": "jade_listAddresses",
         "summary": "Return all addresses for particular chain",
         "tags": [
           "jade"
@@ -337,7 +337,7 @@
         }
       },
       {
-        "name": "emerald_deleteAddress",
+        "name": "jade_deleteAddress",
         "summary": "Delete contact from address book",
         "tags": [
           "jade"
