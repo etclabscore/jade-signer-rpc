@@ -1,0 +1,41 @@
+cargo:rustc-link-search=native=/usr/lib/x86_64-linux-gnu
+cargo:rustc-link-lib=usb-1.0
+TARGET = Some("x86_64-unknown-linux-gnu")
+OPT_LEVEL = Some("0")
+TARGET = Some("x86_64-unknown-linux-gnu")
+HOST = Some("x86_64-unknown-linux-gnu")
+TARGET = Some("x86_64-unknown-linux-gnu")
+TARGET = Some("x86_64-unknown-linux-gnu")
+HOST = Some("x86_64-unknown-linux-gnu")
+CC_x86_64-unknown-linux-gnu = None
+CC_x86_64_unknown_linux_gnu = None
+HOST_CC = None
+CC = None
+HOST = Some("x86_64-unknown-linux-gnu")
+TARGET = Some("x86_64-unknown-linux-gnu")
+HOST = Some("x86_64-unknown-linux-gnu")
+CFLAGS_x86_64-unknown-linux-gnu = None
+CFLAGS_x86_64_unknown_linux_gnu = None
+HOST_CFLAGS = None
+CFLAGS = None
+DEBUG = Some("true")
+running: "cc" "-O0" "-ffunction-sections" "-fdata-sections" "-fPIC" "-g" "-m64" "-I" "etc/hidapi/hidapi" "-I" "/usr/include/libusb-1.0" "-Wall" "-Wextra" "-o" "/home/k2/Workbench/emerald-vault/target/rls/debug/build/hidapi-9ebab5a4369b7e03/out/etc/hidapi/libusb/hid.o" "-c" "etc/hidapi/libusb/hid.c"
+cargo:warning=etc/hidapi/libusb/hid.c: In function ‘hid_error’:
+cargo:warning=etc/hidapi/libusb/hid.c:1299:68: warning: unused parameter ‘dev’ [-Wunused-parameter]
+cargo:warning= HID_API_EXPORT const wchar_t * HID_API_CALL  hid_error(hid_device *dev)
+cargo:warning=                                                                    ^~~
+exit code: 0
+TARGET = Some("x86_64-unknown-linux-gnu")
+TARGET = Some("x86_64-unknown-linux-gnu")
+HOST = Some("x86_64-unknown-linux-gnu")
+AR_x86_64-unknown-linux-gnu = None
+AR_x86_64_unknown_linux_gnu = None
+HOST_AR = None
+AR = None
+TARGET = Some("x86_64-unknown-linux-gnu")
+TARGET = Some("x86_64-unknown-linux-gnu")
+running: "ar" "crs" "/home/k2/Workbench/emerald-vault/target/rls/debug/build/hidapi-9ebab5a4369b7e03/out/libhidapi.a" "/home/k2/Workbench/emerald-vault/target/rls/debug/build/hidapi-9ebab5a4369b7e03/out/etc/hidapi/libusb/hid.o"
+exit code: 0
+TARGET = Some("x86_64-unknown-linux-gnu")
+cargo:rustc-link-lib=static=hidapi
+cargo:rustc-link-search=native=/home/k2/Workbench/emerald-vault/target/rls/debug/build/hidapi-9ebab5a4369b7e03/out

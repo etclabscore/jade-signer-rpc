@@ -1,0 +1,1 @@
+{"rustc":15410290127708036957,"features":"[]","target":3071240621937039158,"profile":13846881912122723292,"path":8961435032139657917,"deps":[["aes-soft v0.2.0","aes_soft",4546575540473245685],["ctr v0.1.1","ctr",11312895136345721711],["stream-cipher v0.1.1","stream_cipher",7424010861251795569]],"local":[{"Precalculated":"0.1.0"}],"rustflags":[],"edition":"Edition2015"}

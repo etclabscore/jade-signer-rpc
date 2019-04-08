@@ -1,0 +1,1 @@
+{"rustc":15410290127708036957,"features":"[]","target":15756740785589767289,"profile":13846881912122723292,"path":16313943283065929767,"deps":[["block-cipher-trait v0.5.3","block_cipher_trait",14456088780355540148],["stream-cipher v0.1.1","stream_cipher",7424010861251795569]],"local":[{"Precalculated":"0.1.1"}],"rustflags":[],"edition":"Edition2015"}

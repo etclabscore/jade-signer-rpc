@@ -1,0 +1,15 @@
+/home/k2/Workbench/emerald-vault/target/rls/debug/deps/uuid-34fbaf5f5a8ea817.rmeta: /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/lib.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/adapter/mod.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/adapter/core_support/mod.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/builder.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/parser/mod.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/parser/core_support.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/parser/std_support.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/prelude.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/core_support.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/std_support.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/v4.rs
+
+/home/k2/Workbench/emerald-vault/target/rls/debug/deps/uuid-34fbaf5f5a8ea817.d: /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/lib.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/adapter/mod.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/adapter/core_support/mod.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/builder.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/parser/mod.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/parser/core_support.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/parser/std_support.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/prelude.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/core_support.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/std_support.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/v4.rs
+
+/home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/lib.rs:
+/home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/adapter/mod.rs:
+/home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/adapter/core_support/mod.rs:
+/home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/builder.rs:
+/home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/parser/mod.rs:
+/home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/parser/core_support.rs:
+/home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/parser/std_support.rs:
+/home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/prelude.rs:
+/home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/core_support.rs:
+/home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/std_support.rs:
+/home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/uuid-0.7.2/src/v4.rs:

@@ -1,0 +1,12 @@
+/home/k2/Workbench/emerald-vault/target/rls/debug/deps/libsyntex_errors-7e7c77dd173981de.rlib: /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/lib.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/diagnostic.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/diagnostic_builder.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/emitter.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/snippet.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/registry.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/styled_buffer.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/lock.rs
+
+/home/k2/Workbench/emerald-vault/target/rls/debug/deps/syntex_errors-7e7c77dd173981de.d: /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/lib.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/diagnostic.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/diagnostic_builder.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/emitter.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/snippet.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/registry.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/styled_buffer.rs /home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/lock.rs
+
+/home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/lib.rs:
+/home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/diagnostic.rs:
+/home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/diagnostic_builder.rs:
+/home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/emitter.rs:
+/home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/snippet.rs:
+/home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/registry.rs:
+/home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/styled_buffer.rs:
+/home/k2/.cargo/registry/src/github.com-1ecc6299db9ec823/syntex_errors-0.58.1/src/lock.rs:

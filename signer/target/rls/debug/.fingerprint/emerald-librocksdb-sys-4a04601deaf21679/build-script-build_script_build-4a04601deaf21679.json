@@ -1,0 +1,1 @@
+{"rustc":8268226384949541169,"features":"[\"default\", \"static\"]","target":4944179213620976468,"profile":11870183705523825133,"path":482405083323924167,"deps":[["bindgen v0.29.1","bindgen",14566723343715078966],["cc v1.0.29","cc",14116137601374629952],["make-cmd v0.1.0","make_cmd",4302630437570914275]],"local":[{"Precalculated":"5.11.3"}],"rustflags":[],"edition":"Edition2015"}

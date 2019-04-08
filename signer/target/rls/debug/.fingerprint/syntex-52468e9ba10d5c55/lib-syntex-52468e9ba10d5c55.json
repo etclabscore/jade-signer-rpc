@@ -1,0 +1,1 @@
+{"rustc":15410290127708036957,"features":"[]","target":4408734149683116799,"profile":11870183705523825133,"path":5856029859452775725,"deps":[["syntex_errors v0.58.1","syntex_errors",17993167763190383223],["syntex_syntax v0.58.1","syntex_syntax",2896466715459781692]],"local":[{"Precalculated":"0.58.1"}],"rustflags":[],"edition":"Edition2015"}
