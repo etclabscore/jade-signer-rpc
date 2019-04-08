@@ -10,40 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="adc09312-14b4-4ad0-80a3-ef918c15ee3c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/jade-signer.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/book.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli.bats" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli.yml.old" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/deploy.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/README.adoc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/SUMMARY.adoc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/install.adoc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/usage-accounts.adoc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/usage-read.adoc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/usage-server.adoc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/usage-sign.adoc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/usage.adoc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gcloud-appveyor.json.enc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gcloud-travis.json.enc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/openrpc.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cmd/account.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cmd/arg_handlers.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cmd/error.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cmd/mod.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cmd/transaction.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/indicator.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rpc/comm.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rpc/mod.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rpc/serialize.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/usage.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/usage.txt.old" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -57,10 +24,10 @@
   <component name="FileEditorManager">
     <leaf>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Cargo.toml">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="3" column="5" selection-start-line="3" selection-start-column="5" selection-end-line="3" selection-end-column="5" />
+            <state relative-caret-position="170">
+              <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
             </state>
           </provider>
         </entry>
@@ -77,7 +44,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
+  <component name="ProjectFrameBounds" extendedState="7" fullScreen="true">
     <option name="y" value="27" />
     <option name="width" value="790" />
     <option name="height" value="873" />
@@ -94,6 +61,11 @@
             <path>
               <item name="jade-signer" type="b2602c69:ProjectViewProjectNode" />
               <item name="jade-signer" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jade-signer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jade-signer" type="462c0819:PsiDirectoryNode" />
+              <item name="signer" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -132,7 +104,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="-37" width="1600" height="937" extended-state="6" />
+    <frame x="0" y="-37" width="1600" height="937" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
@@ -161,6 +133,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
           <caret line="3" column="5" selection-start-line="3" selection-start-column="5" selection-end-line="3" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
         </state>
       </provider>
     </entry>

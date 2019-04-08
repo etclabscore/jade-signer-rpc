@@ -1,1 +1,0 @@
-{"rustc":15410290127708036957,"features":"[\"owning_ref\"]","target":4669023483832150989,"profile":13846881912122723292,"path":14821941817008115724,"deps":[["owning_ref v0.4.0","owning_ref",7832797700900405486],["scopeguard v0.3.3","scopeguard",4622647268081075564]],"local":[{"Precalculated":"0.1.5"}],"rustflags":[],"edition":"Edition2015"}
