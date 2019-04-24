@@ -1,120 +1,76 @@
 {
-    "openrpc": "1.0.0",
-    "info": {
-      "version": "1.0.0",
-      "title": "jade-signer OpenRPC",
-      "license": {
-        "name": "Apache-2"
+  "openrpc": "1.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "jade-signer OpenRPC",
+    "license": {
+      "name": "Apache-2"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:1920"
+    }
+  ],
+  "methods": [
+    {
+      "name": "jade_heartbeat",
+      "summary": "Check service health",
+      "params": [],
+      "result": {
+        "name": "timestamp",
+        "description": "Seconds since Jan 01 1970 (UTC)",
+        "schema": {
+          "type": "integer",
+          "format": "int64"
+        }
       }
     },
-    "servers": [
-      {
-        "url": "http://localhost:1920"
-      }
-    ],
-    "methods": [
-      {
-        "name": "jade_heartbeat",
-        "summary": "Check service health",
-        "tags": [
-          "jade"
-        ],
-        "params": [],
-        "result": {
-          "name": "timestamp",
-          "description": "Seconds since Jan 01 1970 (UTC)",
-          "schema": {
-            "type": "integer",
-            "format": "int64"
-          }
-        }
-      },
-      {
-        "name": "jade_currentVersion",
-        "summary": "Check service health",
-        "tags": [
-          "jade"
-        ],
-        "params": [],
-        "result": {
-          "name": "version",
-          "description": "Current version according semantic versioning",
+    {
+      "name": "jade_currentVersion",
+      "summary": "Check service health",
+      "params": [],
+      "result": {
+        "name": "version",
+        "description": "Current version according semantic versioning",
+        "schema": {
           "type": "string"
         }
-      },
-      {
-        "name": "jade_listAccounts",
-        "summary": "Return the list of all not hidden (by default) accounts from the keystore",
-        "tags": [
-          "jade"
-        ],
-        "params": [
-          {
-            "schema": {
-              "anyOf": [
-                {"$ref": "#/components/schemas/Chain"},
-                {"$ref": "#/components/schemas/Chain_ID"},
-                {"$ref": "#/components/schemas/Show_hidden"} 
-              ]
-            }
-          }
-        ],
-        "result": {
-          "name": "accounts",
-          "description": "List of all not hidden accounts",
+      }
+    },
+    {
+      "name": "jade_listAccounts",
+      "summary": "Return the list of all not hidden (by default) accounts from the keystore",
+      "params": [
+        {
           "schema": {
-            "$ref": "#/components/schemas/Accounts"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Chain"
+              },
+              {
+                "$ref": "#/components/schemas/Chain_ID"
+              },
+              {
+                "$ref": "#/components/schemas/Show_hidden"
+              }
+            ]
           }
         }
-      },
-      {
-        "name": "jade_hideAccount",
-        "summary": "Hide an account from the list returned by default by `jade_listAccounts`",
-        "tags": [
-          "jade"
-        ],
-        "params": [
-          {
-            "name": "address",
-            "required": true,
-            "description": "hex-encoded 20 bytes public address",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "chain",
-            "required": false,
-            "description": "chain name, by default `mainnet`, other possible variant `morden`",
-            "schema": {
-              "type": "string"
-            }
-          }, 
-          {
-            "name": "chain_id",
-            "required": false,
-            "description": "chain id number, by default for `mainnet` it equals `61`",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "result": {
-          "name": "accept",
-          "description": "`true` if required account exists",
-          "schema": {
-            "type": "boolean"
-          }
+      ],
+      "result": {
+        "name": "accounts",
+        "description": "List of all not hidden accounts",
+        "schema": {
+          "$ref": "#/components/schemas/Accounts"
         }
-      },
-      {
-        "name": "jade_unhideAccount",
-        "summary": "Show an account that was hidden before by the command `jade_hideAccount`",
-        "tags": [
-          "jade"
-        ],
-        "params": [{
+      }
+    },
+    {
+      "name": "jade_hideAccount",
+      "summary": "Hide an account from the list returned by default by `jade_listAccounts`",
+      "params": [
+        {
           "name": "address",
           "required": true,
           "description": "hex-encoded 20 bytes public address",
@@ -129,7 +85,7 @@
           "schema": {
             "type": "string"
           }
-        }, 
+        },
         {
           "name": "chain_id",
           "required": false,
@@ -138,105 +94,146 @@
             "type": "integer",
             "format": "int64"
           }
-        }],
-        "result": {
-          "description": "`accept` (Boolean) - `true` if required account exists",
-          "type": "boolean"
         }
-      },
-      {
-        "name": "jade_newAccount",
-        "summary": "Creates a new account and stores it locally as a passphrase-encoded keystore file.",
-        "tags": [
-          "jade"
-        ],
-        "params": [],
-        "result": {
-          "description": "",
-          "type": "boolean"
-        }
-      },
-      {
-        "name": "jade_signTransaction",
-        "summary": "Signs transaction offline with private key from keystore file with given passphrase.\nIf `function` and `arguments` are provided, they will be encoded according smart contract ABI \nand used in the `data` field of the transaction",
-        "tags": [
-          "jade"
-        ],
-        "params": [],
-        "result": {
-          "description": "",
+      ],
+      "result": {
+        "name": "accept",
+        "description": "`true` if required account exists",
+        "schema": {
           "type": "boolean"
         }
       }
-    ],
-    "components": {
-      "schemas": {
-        "Account": {
-          "required": [
-            "address",
-            "hardware",
-            "is_hidden"
-          ],
-          "properties": {
-            "address": {
-              "type": "string"
-            },
-            "hardware": {
-              "type": "boolean"
-            },
-            "name": {
-              "required": false,
-              "type": "string"
-            },
-            "description": {
-              "required": false,
-              "type": "string"
-            },
-            "is_hidden": {
-              "type": "boolean"
-            },
-            "tag": {
-              "type": "string"
-            }
+    },
+    {
+      "name": "jade_unhideAccount",
+      "summary": "Show an account that was hidden before by the command `jade_hideAccount`",
+      "params": [
+        {
+          "name": "address",
+          "required": true,
+          "description": "hex-encoded 20 bytes public address",
+          "schema": {
+            "type": "string"
           }
         },
-        "Accounts": {
-          "type": "array",
-          "items": {
-            "$ref": "#/components/schemas/Account"
+        {
+          "name": "chain",
+          "required": false,
+          "description": "chain name, by default `mainnet`, other possible variant `morden`",
+          "schema": {
+            "type": "string"
           }
         },
-        "Chain": {
-          "required": [
-            "name"
-          ],
-          "properties": {
-            "name": {
-              "type": "string"
-            }
+        {
+          "name": "chain_id",
+          "required": false,
+          "description": "chain id number, by default for `mainnet` it equals `61`",
+          "schema": {
+            "type": "integer",
+            "format": "int64"
           }
-        }, 
-        "Chain_ID": {
-          "required": [
-            "id"
-          ],
-          "properties": {
-            "id": {
-              "type": "integer",
-              "format": "int64"
-            }
+        }
+      ],
+      "result": {
+        "name": "unhideAccountResult",
+        "description": "`accept` (Boolean) - `true` if required account exists",
+        "schema": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "name": "jade_newAccount",
+      "summary": "Creates a new account and stores it locally as a passphrase-encoded keystore file.",
+      "params": [],
+      "result": {
+        "name": "newAccountResult",
+        "schema": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "name": "jade_signTransaction",
+      "summary": "Signs transaction offline with private key from keystore file with given passphrase.\nIf `function` and `arguments` are provided, they will be encoded according smart contract ABI \nand used in the `data` field of the transaction",
+      "params": [],
+      "result": {
+        "name": "signTransactionResult",
+        "description": "",
+        "schema": {
+          "type": "boolean"
+        }
+      }
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Account": {
+        "required": [
+          "name",
+          "description",
+          "address",
+          "hardware",
+          "is_hidden"
+        ],
+        "properties": {
+          "address": {
+            "type": "string"
+          },
+          "hardware": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "is_hidden": {
+            "type": "boolean"
+          },
+          "tag": {
+            "type": "string"
           }
-        },
-        "Show_hidden": {
-          "required": [
-            "show_hidden" 
-          ],
-          "properties": {
-            "id": {
-              "type": "boolean"
-            }
+        }
+      },
+      "Accounts": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Account"
+        }
+      },
+      "Chain": {
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Chain_ID": {
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "Show_hidden": {
+        "required": [
+          "show_hidden"
+        ],
+        "properties": {
+          "id": {
+            "type": "boolean"
           }
         }
       }
     }
+  }
 }
