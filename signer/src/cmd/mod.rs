@@ -52,8 +52,8 @@ pub fn execute(matches: &ArgMatches) -> ExecResult {
         // ("balance", Some(sub_m)) => balance_cmd(sub_m),
         // ("mnemonic", Some(_)) => mnemonic_cmd(),
         // ("nonce", Some(sub_m)) => nonce_cmd(sub_m),
-        // _ => Err(Error::ExecError(
-        //     "No command selected. Use `-h` for help".to_string(),
+         _ => Err(Error::ExecError(
+             "No command selected. Use `-h` for help".to_string(),
         // )),
     }
 }
@@ -80,7 +80,7 @@ fn server_cmd(
     info!("Chain set to '{}'", chain);
     info!("Security level set to '{}'", sec_lvl);
 
-    emerald::rpc::start(&addr, chain, storage_ctrl, Some(sec_lvl));
+    emerald::rpc::start(&addr, storage_ctrl, Some(sec_lvl));
 
     Ok(())
 }
