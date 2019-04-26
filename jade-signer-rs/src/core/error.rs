@@ -30,12 +30,6 @@ impl From<ethabi::Error> for Error {
     }
 }
 
-impl From<ethabi::ErrorKind> for Error {
-    fn from(err: ethabi::ErrorKind) -> Self {
-        Error::InvalidABI(format!("Invalid ABI Param {:?}", err))
-    }
-}
-
 impl From<hex::FromHexError> for Error {
     fn from(err: hex::FromHexError) -> Self {
         Error::UnexpectedHexEncoding(err)

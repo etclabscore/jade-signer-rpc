@@ -1,5 +1,6 @@
 //! # JSON RPC module
 
+mod common;
 mod error;
 mod serialize;
 mod serves;
@@ -42,19 +43,9 @@ where
         .map_err(|_| JsonRpcError::invalid_params("Corrupted input parameters".to_string()))
 }
 
-/// Start an HTTP RPC endpoint
-pub fn start(
-    addr: &SocketAddr,
-    chain_name: &str,
-    storage_ctrl: Arc<Box<StorageController>>,
-    sec_level: Option<KdfDepthLevel>,
-) {
+pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Option<KdfDepthLevel>) {
     let sec_level = sec_level.unwrap_or_default();
     let storage_ctrl = Arc::new(Mutex::new(storage_ctrl));
-    let chain_id = match to_chain_id(chain_name) {
-        Some(id) => id,
-        None => panic!(format!("Invalid chain name: {}", chain_name)),
-    };
 
     let wallet_manager = match WManager::new(None) {
         Ok(wm) => Arc::new(Mutex::new(RefCell::new(wm))),
@@ -163,7 +154,6 @@ pub fn start(
             wrapper(serves::sign_transaction(
                 parse(p)?,
                 &storage_ctrl,
-                chain_id,
                 &wm,
             ))
         });
