@@ -2,8 +2,8 @@
 
 use super::arg_handlers::*;
 use super::{rpc, ArgMatches, EnvVars, Error, ExecResult, KeyfileStorage, PrivateKey, Transaction};
-use emerald::{to_chain_id, Address};
-use hex::{FromHex, ToHex};
+use jade_signer_rs::{to_chain_id, Address};
+use hex::FromHex;
 use std::io;
 use std::io::Read;
 use std::str::FromStr;
@@ -52,7 +52,7 @@ fn new(
     let pk = request_passphrase().and_then(|pass| kf.decrypt_key(&pass).map_err(Error::from))?;
     let signed = build_tx(matches, env).and_then(|tr| sign_tx(&tr, pk, chain))?;
 
-    println!("{}", signed.to_hex());
+    println!("{}", hex::encode(signed));
 
     Ok(())
 }

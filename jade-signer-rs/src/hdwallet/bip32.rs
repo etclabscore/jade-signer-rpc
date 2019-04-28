@@ -49,9 +49,9 @@ impl HDPath {
             match s.parse::<u32>() {
                 Ok(v) => {
                     if is_hardened {
-                        res.push(Hardened { v })
+                        res.push(Hardened(v))
                     } else {
-                        res.push(Normal { v })
+                        res.push(Normal(v))
                     }
                 }
                 Err(e) => {
@@ -156,10 +156,10 @@ mod test {
     fn parse_hdpath() {
         let parsed = HDPath::try_from("m/44'/60'/160720'/0'").unwrap();
         let exp = HDPath(vec![
-            Hardened { index: 44 },
-            Hardened { index: 60 },
-            Hardened { index: 160720 },
-            Hardened { index: 0 },
+            Hardened(44),
+            Hardened(60),
+            Hardened(160720),
+            Hardened(0),
         ]);
 
         assert_eq!(parsed, exp)
@@ -173,11 +173,11 @@ mod test {
             4dc6ee1d3e82a42dfe1b40fef6bcc3fd").unwrap();
 
         let path = vec![
-            Hardened { index: 44 },
-            Hardened { index: 60 },
-            Hardened { index: 160720 },
-            Hardened { index: 0 },
-            Normal { index: 0 },
+            Hardened(44),
+            Hardened(60),
+            Hardened(160720),
+            Hardened(0),
+            Normal(0),
         ];
 
         let priv_key = generate_key(&HDPath(path), &seed).unwrap();

@@ -12,7 +12,7 @@ pub use hdwallet::bip32::{generate_key, HDPath};
 use keystore::{Kdf, Prf};
 use num::bigint::BigUint;
 use num::{FromPrimitive, ToPrimitive};
-use rand::OsRng;
+use rand::{OsRng, Rng};
 use sha2::{self, Digest};
 use std::ops::{BitAnd, Shr};
 

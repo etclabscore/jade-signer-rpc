@@ -1,7 +1,7 @@
 //! # Account related subcommands
 
 use super::arg_handlers::*;
-use super::emerald::storage::KeystoreError;
+use super::jade_signer_rs::storage::KeystoreError;
 use super::{EnvVars, Error, ExecResult, KeyfileStorage};
 use indicator::ProgressIndicator;
 use serde_json;

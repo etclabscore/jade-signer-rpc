@@ -6,20 +6,17 @@ mod transaction;
 #[macro_use]
 mod arg_handlers;
 
-use self::account::account_cmd;
 pub use self::arg_handlers::*;
 pub use self::error::Error;
-use self::transaction::transaction_cmd;
-use super::emerald::keystore::{KdfDepthLevel, KeyFile};
-use super::emerald::mnemonic::{gen_entropy, Language, Mnemonic, ENTROPY_BYTE_LENGTH};
-use super::emerald::storage::{default_path, KeyfileStorage, StorageController};
-use super::emerald::PrivateKey;
-use super::emerald::{self, align_bytes, to_arr, to_even_str, trim_hex, Address, Transaction};
+use super::jade_signer_rs::keystore::{KdfDepthLevel, KeyFile};
+use super::jade_signer_rs::mnemonic::{gen_entropy, Language, Mnemonic, ENTROPY_BYTE_LENGTH};
+use super::jade_signer_rs::storage::{default_path, KeyfileStorage, StorageController};
+use super::jade_signer_rs::PrivateKey;
+use super::jade_signer_rs::{self, align_bytes, to_arr, to_even_str, trim_hex, Address, Transaction};
 use clap::ArgMatches;
 use rpc;
 use std::net::SocketAddr;
 use std::path::PathBuf;
-use std::sync::Arc;
 
 type ExecResult = Result<(), Error>;
 
@@ -42,11 +39,10 @@ pub fn execute(matches: &ArgMatches) -> ExecResult {
     } else {
         base_path = default_path();
     }
-    let storage_ctrl = Arc::new(Box::new(StorageController::new(base_path)?));
-    let keystore = storage_ctrl.get_keystore(chain)?;
 
+    let storage_ctrl = StorageController::new(base_path)?;
     match matches.subcommand() {
-        ("server", Some(sub_m)) => server_cmd(sub_m, storage_ctrl.clone(), chain),
+        ("server", Some(sub_m)) => server_cmd(sub_m, storage_ctrl, chain),
         // ("account", Some(sub_m)) => account_cmd(sub_m, keystore, &env),
         // ("transaction", Some(sub_m)) => transaction_cmd(sub_m, keystore, &env, chain),
         // ("balance", Some(sub_m)) => balance_cmd(sub_m),
@@ -68,10 +64,10 @@ pub fn execute(matches: &ArgMatches) -> ExecResult {
 ///
 fn server_cmd(
     matches: &ArgMatches,
-    storage_ctrl: Arc<Box<StorageController>>,
+    storage_ctrl: StorageController,
     chain: &str,
 ) -> ExecResult {
-    info!("Starting Emerald Vault - v{}", emerald::version());
+    info!("Starting Emerald Vault - v{}", jade_signer_rs::version());
     let host = matches.value_of("host").unwrap_or_default();
     let port = matches.value_of("port").unwrap_or_default();
     let addr = format!("{}:{}", host, port).parse::<SocketAddr>()?;
@@ -80,7 +76,7 @@ fn server_cmd(
     info!("Chain set to '{}'", chain);
     info!("Security level set to '{}'", sec_lvl);
 
-    emerald::rpc::start(&addr, storage_ctrl, Some(sec_lvl));
+    jade_signer_rs::rpc::start(&addr, storage_ctrl, Some(sec_lvl));
 
     Ok(())
 }

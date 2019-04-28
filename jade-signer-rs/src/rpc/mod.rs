@@ -9,7 +9,7 @@ pub use self::error::Error;
 use super::core;
 use super::keystore::KdfDepthLevel;
 use super::storage::{self, StorageController};
-use super::util::{align_bytes, to_arr, to_chain_id, to_even_str, to_u64, trim_hex, ToHex};
+use super::util::{align_bytes, to_arr, to_even_str, to_u64, trim_hex, ToHex};
 use hdwallet::WManager;
 use jsonrpc_core::{Error as JsonRpcError, IoHandler, Params};
 use jsonrpc_http_server::{AccessControlAllowOrigin, DomainsValidation, ServerBuilder};
@@ -43,6 +43,14 @@ where
         .map_err(|_| JsonRpcError::invalid_params("Corrupted input parameters".to_string()))
 }
 
+/// Start JSON-RPC server
+///
+/// # Arguments
+///
+/// * addr - socket address
+/// * storage_ctrl - controller for `Keyfile` storage
+/// * sec_level - security level
+///
 pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Option<KdfDepthLevel>) {
     let sec_level = sec_level.unwrap_or_default();
     let storage_ctrl = Arc::new(Mutex::new(storage_ctrl));

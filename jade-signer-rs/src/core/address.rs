@@ -35,6 +35,12 @@ impl Address {
     }
 }
 
+impl std::convert::AsRef<[u8]> for Address {
+    fn as_ref(&self) -> &[u8] {
+        &self.0
+    }
+}
+
 impl ops::Deref for Address {
     type Target = [u8];
 
