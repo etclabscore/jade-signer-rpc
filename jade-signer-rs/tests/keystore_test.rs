@@ -1,16 +1,16 @@
-extern crate jade_signer_rs;
 extern crate hex;
+extern crate jade_signer_rs;
 extern crate serde_json;
 extern crate tempdir;
 extern crate uuid;
 
+use hex::FromHex;
 use jade_signer_rs::keystore::{
     Cipher, CoreCrypto, CryptoType, HdwalletCrypto, Iv, Kdf, KdfDepthLevel, KeyFile, Mac, Prf,
     Salt, CIPHER_IV_BYTES, KDF_SALT_BYTES,
 };
 use jade_signer_rs::storage::{DbStorage, FsStorage, KeyfileStorage};
 use jade_signer_rs::{Address, KECCAK256_BYTES};
-use hex::FromHex;
 
 use std::fs::File;
 use std::io::Read;

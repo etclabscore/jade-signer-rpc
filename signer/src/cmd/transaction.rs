@@ -2,8 +2,8 @@
 
 use super::arg_handlers::*;
 use super::{rpc, ArgMatches, EnvVars, Error, ExecResult, KeyfileStorage, PrivateKey, Transaction};
-use jade_signer_rs::{to_chain_id, Address};
 use hex::FromHex;
+use jade_signer_rs::{to_chain_id, Address};
 use std::io;
 use std::io::Read;
 use std::str::FromStr;

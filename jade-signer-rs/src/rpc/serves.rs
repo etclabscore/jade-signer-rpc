@@ -338,7 +338,7 @@ pub fn sign(
             input.data.len(),
             input.data
         )
-            .as_bytes(),
+        .as_bytes(),
     );
     match storage.search_by_address(&addr) {
         Ok((_, kf)) => {

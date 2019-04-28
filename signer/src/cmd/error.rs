@@ -1,10 +1,10 @@
 //! # Errors for command executor
 
-use jade_signer_rs::storage::KeystoreError;
-use jade_signer_rs::{self, keystore};
 use hex;
 use http;
 use hyper;
+use jade_signer_rs::storage::KeystoreError;
+use jade_signer_rs::{self, keystore};
 use reqwest;
 use serde_json;
 use std::net::AddrParseError;

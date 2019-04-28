@@ -159,11 +159,7 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
         let storage_ctrl = Arc::clone(&storage_ctrl);
         let wm = Arc::clone(&wallet_manager);
         io.add_method("jade_signTransaction", move |p: Params| {
-            wrapper(serves::sign_transaction(
-                parse(p)?,
-                &storage_ctrl,
-                &wm,
-            ))
+            wrapper(serves::sign_transaction(parse(p)?, &storage_ctrl, &wm))
         });
     }
 
