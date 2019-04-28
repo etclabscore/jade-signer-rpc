@@ -4,10 +4,9 @@ use super::util::{keccak256, to_arr, KECCAK256_BYTES};
 use super::Address;
 use super::Error;
 use hex;
-use rand::rngs::OsRng;
-use rand::Rng;
+use rand::{OsRng, Rng};
 use secp256k1::key::{PublicKey, SecretKey};
-use secp256k1::{Message, Secp256k1, SignOnly};
+use secp256k1::{ContextFlag, Message, Secp256k1};
 use std::{fmt, ops, str};
 
 /// Private key length in bytes
@@ -17,7 +16,7 @@ pub const PRIVATE_KEY_BYTES: usize = 32;
 pub const ECDSA_SIGNATURE_BYTES: usize = 65;
 
 lazy_static! {
-    static ref ECDSA: Secp256k1<SignOnly> = Secp256k1::signing_only();
+    static ref ECDSA: Secp256k1 = Secp256k1::with_caps(ContextFlag::SignOnly);
 }
 
 /// Transaction sign data (see Appendix F. "Signing Transactions" from Yellow Paper)

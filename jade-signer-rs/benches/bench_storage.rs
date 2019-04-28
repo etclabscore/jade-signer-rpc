@@ -1,19 +1,19 @@
 #![feature(test)]
-extern crate emerald_rs as emerald;
+extern crate jade_signer_rs;
 extern crate rand;
 extern crate tempdir;
 extern crate test;
 extern crate uuid;
 
-use emerald::keystore::{Kdf, KeyFile};
-use emerald::storage::{DbStorage, KeyfileStorage};
-use emerald::PrivateKey;
+use jade_signer_rs::keystore::{Kdf, KeyFile};
+use jade_signer_rs::storage::{DbStorage, KeyfileStorage};
+use jade_signer_rs::PrivateKey;
 use std::fs::File;
 use std::path::PathBuf;
 use tempdir::TempDir;
 
 pub fn temp_dir() -> PathBuf {
-    let dir = TempDir::new("emerald").unwrap();
+    let dir = TempDir::new("jade").unwrap();
     File::create(dir.path()).ok();
     dir.into_path()
 }

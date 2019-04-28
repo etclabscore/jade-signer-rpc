@@ -1,15 +1,15 @@
-extern crate emerald_rs as emerald;
+extern crate jade_signer_rs;
 extern crate hex;
 extern crate serde_json;
 extern crate tempdir;
 extern crate uuid;
 
-use emerald::keystore::{
+use jade_signer_rs::keystore::{
     Cipher, CoreCrypto, CryptoType, HdwalletCrypto, Iv, Kdf, KdfDepthLevel, KeyFile, Mac, Prf,
     Salt, CIPHER_IV_BYTES, KDF_SALT_BYTES,
 };
-use emerald::storage::{DbStorage, FsStorage, KeyfileStorage};
-use emerald::{Address, KECCAK256_BYTES};
+use jade_signer_rs::storage::{DbStorage, FsStorage, KeyfileStorage};
+use jade_signer_rs::{Address, KECCAK256_BYTES};
 use hex::FromHex;
 
 use std::fs::File;
@@ -30,7 +30,7 @@ macro_rules! arr {
 }
 
 pub fn temp_dir() -> PathBuf {
-    let dir = TempDir::new("emerald").unwrap();
+    let dir = TempDir::new("jade").unwrap();
     File::create(dir.path()).ok();
     dir.into_path()
 }

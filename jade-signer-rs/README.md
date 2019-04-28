@@ -70,7 +70,7 @@ fn main() {
         .parse::<SocketAddr>()
         .expect("Expect to parse address");
 
-    emerald::start(&addr, None, None);
+    jade_signer_rs::start(&addr, None, None);
 }
 ```
 

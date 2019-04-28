@@ -27,7 +27,7 @@ hex = "0.3.2"
 lazy_static = "1.2.0"
 serde_json = "1.0.38"
 serde_derive = "1.0.87"
-emerald-rs = "0.25.0"
+jade_signer_rs = {path = "../jade-signer-rs"}
 regex = "1.1.0"
 hyper = "0.12.23"
 reqwest = "0.9.9"

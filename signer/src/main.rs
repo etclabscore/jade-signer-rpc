@@ -1,10 +1,10 @@
-//! # CLI wrapper for `emerald-rs`
+//! # CLI wrapper for `jade-rs`
 
 #![cfg(feature = "cli")]
 #![cfg_attr(feature = "dev", feature(plugin))]
 #![cfg_attr(feature = "dev", plugin(clippy))]
 
-extern crate emerald_rs as emerald;
+extern crate jade_signer_rs;
 extern crate env_logger;
 extern crate hex;
 extern crate hyper;
@@ -29,14 +29,15 @@ mod indicator;
 mod rpc;
 
 use clap::App;
-use env_logger::LogBuilder;
-use log::LogRecord;
+use env_logger::Builder;
+use log::Record;
 use std::env;
 use std::process::*;
+use std::io::Write;
 
 const VERSION: Option<&'static str> = option_env!("CARGO_PKG_VERSION");
 
-/// Get the current Emerald version.
+/// Get the current version.
 pub fn version() -> &'static str {
     VERSION.unwrap_or("unknown")
 }
@@ -51,12 +52,12 @@ fn main() {
         2 | _ => env::set_var("RUST_LOG", "debug"),
     }
 
-    let mut log_builder = LogBuilder::new();
+    let mut log_builder = Builder::new();
     if env::var("RUST_LOG").is_ok() {
-        log_builder.parse(&env::var("RUST_LOG").unwrap());
+        log_builder.parse_filters(&env::var("RUST_LOG").unwrap());
     }
-    log_builder.format(|record: &LogRecord| format!("[{}]\t{}", record.level(), record.args()));
-    log_builder.init().expect("Expect to initialize logger");
+    log_builder.format(|buf, record: &Record| writeln!(buf, "{}", format!("[{}]\t{}", record.level(), record.args())));
+    log_builder.init();
 
     if matches.is_present("version") {
         println!("v{}", version());

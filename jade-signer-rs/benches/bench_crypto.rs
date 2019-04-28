@@ -1,13 +1,13 @@
 #![feature(test)]
-extern crate emerald_rs as emerald;
+extern crate jade_signer_rs;
 extern crate rand;
 extern crate tempdir;
 extern crate test;
 extern crate uuid;
 
-use emerald::keccak256;
-use emerald::keystore::{os_random, Kdf, KdfDepthLevel, KeyFile};
-use emerald::PrivateKey;
+use jade_signer_rs::keccak256;
+use jade_signer_rs::keystore::{os_random, Kdf, KdfDepthLevel, KeyFile};
+use jade_signer_rs::PrivateKey;
 
 use std::fs::File;
 use std::io::Read;
@@ -18,7 +18,7 @@ use test::Bencher;
 const PRJ_DIR: Option<&'static str> = option_env!("CARGO_MANIFEST_DIR");
 
 pub fn temp_dir() -> PathBuf {
-    let dir = TempDir::new("emerald").unwrap();
+    let dir = TempDir::new("jade").unwrap();
     File::create(dir.path()).ok();
     dir.into_path()
 }

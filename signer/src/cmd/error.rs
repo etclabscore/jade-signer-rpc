@@ -1,7 +1,7 @@
 //! # Errors for command executor
 
-use emerald::storage::KeystoreError;
-use emerald::{self, keystore};
+use jade_signer_rs::storage::KeystoreError;
+use jade_signer_rs::{self, keystore};
 use hex;
 use http;
 use hyper;
@@ -43,8 +43,8 @@ from_err!(keystore::SerializeError);
 from_err!(reqwest::Error);
 from_err!(num::ParseIntError);
 from_err!(hex::FromHexError);
-from_err!(emerald::Error);
-from_err!(emerald::mnemonic::Error);
+from_err!(jade_signer_rs::Error);
+from_err!(jade_signer_rs::mnemonic::Error);
 from_err!(url::ParseError);
 from_err!(serde_json::Error);
 from_err!(hyper::error::Error);
