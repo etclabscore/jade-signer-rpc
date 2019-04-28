@@ -12,7 +12,9 @@ use super::jade_signer_rs::keystore::{KdfDepthLevel, KeyFile};
 use super::jade_signer_rs::mnemonic::{gen_entropy, Language, Mnemonic, ENTROPY_BYTE_LENGTH};
 use super::jade_signer_rs::storage::{default_path, KeyfileStorage, StorageController};
 use super::jade_signer_rs::PrivateKey;
-use super::jade_signer_rs::{self, align_bytes, to_arr, to_even_str, trim_hex, Address, Transaction};
+use super::jade_signer_rs::{
+    self, align_bytes, to_arr, to_even_str, trim_hex, Address, Transaction,
+};
 use clap::ArgMatches;
 use rpc;
 use std::net::SocketAddr;
@@ -48,9 +50,11 @@ pub fn execute(matches: &ArgMatches) -> ExecResult {
         // ("balance", Some(sub_m)) => balance_cmd(sub_m),
         // ("mnemonic", Some(_)) => mnemonic_cmd(),
         // ("nonce", Some(sub_m)) => nonce_cmd(sub_m),
-         _ => Err(Error::ExecError(
-             "No command selected. Use `-h` for help".to_string(),
-        // )),
+        _ => Err(Error::ExecError(
+            "No command selected. Use `-h` for help".to_string(),
+            // )),
+            }
+        )),
     }
 }
 
@@ -62,11 +66,7 @@ pub fn execute(matches: &ArgMatches) -> ExecResult {
 /// * storage - `Keyfile` storage
 /// * chain - chain name
 ///
-fn server_cmd(
-    matches: &ArgMatches,
-    storage_ctrl: StorageController,
-    chain: &str,
-) -> ExecResult {
+fn server_cmd(matches: &ArgMatches, storage_ctrl: StorageController, chain: &str) -> ExecResult {
     info!("Starting Emerald Vault - v{}", jade_signer_rs::version());
     let host = matches.value_of("host").unwrap_or_default();
     let port = matches.value_of("port").unwrap_or_default();

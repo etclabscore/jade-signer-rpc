@@ -4,10 +4,10 @@
 #![cfg_attr(feature = "dev", feature(plugin))]
 #![cfg_attr(feature = "dev", plugin(clippy))]
 
-extern crate jade_signer_rs;
 extern crate env_logger;
 extern crate hex;
 extern crate hyper;
+extern crate jade_signer_rs;
 extern crate jsonrpc_core;
 #[macro_use]
 extern crate lazy_static;
@@ -32,8 +32,8 @@ use clap::App;
 use env_logger::Builder;
 use log::Record;
 use std::env;
-use std::process::*;
 use std::io::Write;
+use std::process::*;
 
 const VERSION: Option<&'static str> = option_env!("CARGO_PKG_VERSION");
 
@@ -56,7 +56,13 @@ fn main() {
     if env::var("RUST_LOG").is_ok() {
         log_builder.parse_filters(&env::var("RUST_LOG").unwrap());
     }
-    log_builder.format(|buf, record: &Record| writeln!(buf, "{}", format!("[{}]\t{}", record.level(), record.args())));
+    log_builder.format(|buf, record: &Record| {
+        writeln!(
+            buf,
+            "{}",
+            format!("[{}]\t{}", record.level(), record.args())
+        )
+    });
     log_builder.init();
 
     if matches.is_present("version") {

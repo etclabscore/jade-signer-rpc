@@ -6,8 +6,8 @@ mod serialize;
 
 pub use self::comm::{ClientMethod, MethodParams, RpcConnector};
 use cmd::Error;
-use jade_signer_rs::Address;
 use hex::ToHex;
+use jade_signer_rs::Address;
 use jsonrpc_core::{Params, Value};
 
 /// Get nonce for address from remote node
@@ -99,7 +99,7 @@ pub fn request_gas_price(rpc: &RpcConnector) -> Result<String, Error> {
 /// * String - transaction hash
 ///
 pub fn send_transaction(rpc: &RpcConnector, raw: &[u8]) -> Result<String, Error> {
-    let data = vec![Value::String(format!("0x{}", hex::encode(&raw))];
+    let data = vec![Value::String(format!("0x{}", hex::encode(&raw)) ])];
     let params = Params::Array(data);
     rpc.send_post(&MethodParams(ClientMethod::EthSendRawTransaction, &params))
         .and_then(|v| match v.as_str() {
