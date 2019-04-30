@@ -52,9 +52,7 @@ pub fn execute(matches: &ArgMatches) -> ExecResult {
         // ("nonce", Some(sub_m)) => nonce_cmd(sub_m),
         _ => Err(Error::ExecError(
             "No command selected. Use `-h` for help".to_string(),
-            // )),
-            }
-        )),
+            )),
     }
 }
 

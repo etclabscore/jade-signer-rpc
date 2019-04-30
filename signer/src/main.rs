@@ -26,7 +26,6 @@ extern crate clap;
 
 mod cmd;
 mod indicator;
-mod rpc;
 
 use clap::App;
 use env_logger::Builder;
