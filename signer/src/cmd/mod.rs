@@ -11,9 +11,7 @@ use super::jade_signer_rs::keystore::{KdfDepthLevel, KeyFile};
 use super::jade_signer_rs::mnemonic::{gen_entropy, Language, Mnemonic, ENTROPY_BYTE_LENGTH};
 use super::jade_signer_rs::storage::{default_path, KeyfileStorage, StorageController};
 use super::jade_signer_rs::PrivateKey;
-use super::jade_signer_rs::{
-    self, align_bytes, to_arr, to_even_str, trim_hex, Address,
-};
+use super::jade_signer_rs::{self, align_bytes, to_arr, to_even_str, trim_hex, Address};
 use clap::ArgMatches;
 use std::net::SocketAddr;
 use std::path::PathBuf;
@@ -49,7 +47,7 @@ pub fn execute(matches: &ArgMatches) -> ExecResult {
         // ("nonce", Some(sub_m)) => nonce_cmd(sub_m),
         _ => Err(Error::ExecError(
             "No command selected. Use `-h` for help".to_string(),
-            )),
+        )),
     }
 }
 

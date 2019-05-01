@@ -2,7 +2,7 @@
 
 use super::Error;
 use super::{
-    align_bytes, to_arr, to_even_str, trim_hex, Address, ArgMatches, KdfDepthLevel, PrivateKey
+    align_bytes, to_arr, to_even_str, trim_hex, Address, ArgMatches, KdfDepthLevel, PrivateKey,
 };
 use hex::FromHex;
 use reqwest::Url;
