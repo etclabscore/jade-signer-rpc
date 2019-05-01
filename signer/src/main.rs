@@ -9,7 +9,6 @@ extern crate hex;
 extern crate hyper;
 extern crate jade_signer_rs;
 extern crate jsonrpc_core;
-#[macro_use]
 extern crate lazy_static;
 #[macro_use]
 extern crate log;
@@ -17,7 +16,6 @@ extern crate http;
 extern crate reqwest;
 extern crate rpassword;
 extern crate serde;
-#[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
 extern crate url;
@@ -26,7 +24,6 @@ extern crate clap;
 
 mod cmd;
 mod indicator;
-mod rpc;
 
 use clap::App;
 use env_logger::Builder;
