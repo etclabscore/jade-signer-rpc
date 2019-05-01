@@ -1,9 +1,9 @@
 {
   "openrpc": "1.0.0",
   "info": {
-    "version": "1.0.0",
-    "title": "jade-signer-rpc JSON-RPC API",
-    "description": "Jade Signer RPC is an offline signer that lets you manage keys for any EVM-based blockchain.",
+    "version": "0.1.0",
+    "title": "Jade Signer JSON-RPC API",
+    "description": "Jade Signer JSON-RPC lets you manage keys and sign transactions and messages offline for any EVM-based blockchain.",
     "license": {
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
@@ -16,32 +16,7 @@
   ],
   "methods": [
     {
-      "name": "jade_heartbeat",
-      "summary": "Check service health",
-      "params": [],
-      "result": {
-        "name": "timestamp",
-        "description": "Seconds since Jan 01 1970 (UTC)",
-        "schema": {
-          "type": "integer"
-        }
-      }
-    },
-    {
-      "name": "jade_currentVersion",
-      "summary": "Current version",
-      "description": "Current version of the service.",
-      "params": [],
-      "result": {
-        "name": "version",
-        "description": "Current version according to semantic versioning",
-        "schema": {
-          "type": "string"
-        }
-      }
-    },
-    {
-      "name": "jade_listAccounts",
+      "name": "signer_listAccounts",
       "summary": "Return the list of all not hidden (by default) accounts from the keystore",
       "params": [
         {
@@ -57,8 +32,8 @@
       }
     },
     {
-      "name": "jade_hideAccount",
-      "summary": "Hide an account from the list returned by default by `jade_listAccounts`",
+      "name": "signer_hideAccount",
+      "summary": "Hide an account from the list returned by default by `signer_listAccounts`",
       "params": [
         {
           "$ref": "#/components/contentDescriptors/Address"
@@ -68,7 +43,7 @@
         }
       ],
       "result": {
-        "name": "accept",
+        "name": "hideAccountResult",
         "description": "`true` if required account exists",
         "schema": {
           "type": "boolean"
@@ -76,8 +51,8 @@
       }
     },
     {
-      "name": "jade_unhideAccount",
-      "summary": "Show an account that was hidden before by the command `jade_hideAccount`",
+      "name": "signer_unhideAccount",
+      "summary": "Show an account that was hidden before by the command `signer_hideAccount`",
       "params": [
         {
           "$ref": "#/components/contentDescriptors/Address"
@@ -95,7 +70,7 @@
       }
     },
     {
-      "name": "jade_newAccount",
+      "name": "signer_newAccount",
       "summary": "Creates a new account and stores it locally as a passphrase-encoded keystore file.",
       "params": [
         {
@@ -119,14 +94,11 @@
           }
         },
         {
-          "$ref": "#/components/schemas/Additional"
+          "$ref": "#/components/contentDescriptors/Additional"
         }
       ],
       "result": {
-        "name": "newAccountResult",
-        "schema": {
-          "$ref": "#/components/contentDescriptors/Address"
-        }
+        "$ref": "#/components/contentDescriptors/Address"
       },
       "examples": [
         {
@@ -156,14 +128,25 @@
       ]
     },
     {
-      "name": "jade_signTransaction",
-      "summary": "Signs transaction offline with private key from keystore file with given passphrase.\nIf `function` and `arguments` are provided, they will be encoded according smart contract ABI \nand used in the `data` field of the transaction",
+      "name": "signer_signTransaction",
+      "summary": "Signs transaction offline with private key from keystore file with given from address and passphrase.",
       "params": [
         {
           "name": "transaction",
           "description": "transaction to sign",
+          "summary": "transaction",
+          "required": true,
           "schema": {
             "$ref": "#/components/schemas/Transaction"
+          }
+        },
+        {
+          "name": "passphrase",
+          "required": true,
+          "description": "passphrase to keyfile",
+          "summary": "keyfile passphrase",
+          "schema": {
+            "$ref": "#/components/schemas/Passphrase"
           }
         },
         {
@@ -180,7 +163,7 @@
       }
     },
     {
-      "name": "jade_importAccount",
+      "name": "signer_importAccount",
       "summary": "Import an account",
       "description": "Import a new account from an external keyfile. should comply with the [Web3 Secret Storage Definition](https://github.com/ethereumproject/wiki/wiki/Web3-Secret-Storage-Definition)",
       "params": [
@@ -196,7 +179,7 @@
       }
     },
     {
-      "name": "jade_exportAccount",
+      "name": "signer_exportAccount",
       "summary": "Export an account",
       "description": "Export a keyfile associated with account. Keyfile uses the [Web3 Secret Storage Definition](https://github.com/ethereumproject/wiki/wiki/Web3-Secret-Storage-Definition)",
       "params": [
@@ -209,6 +192,43 @@
       ],
       "result": {
         "$ref": "#/components/contentDescriptors/Keyfile"
+      }
+    },
+    {
+      "name": "signer_sign",
+      "summary": "Sign a message",
+      "description": "Calculates an Ethereum-specific signature in the form of keccak256(\"\\x19Ethereum Signed Message:\n\" + len(message) + message))",
+      "params": [
+        {
+          "$ref": "#/components/contentDescriptors/Address"
+        },
+        {
+          "name": "dataToSign",
+          "description": "data to sign",
+          "summary": "sign data",
+          "schema": {
+            "type": "string",
+            "pattern": "^0x[a-fA-F0-9]+$"
+          }
+        },
+        {
+          "name": "passphrase",
+          "description": "passphrase to keyfile",
+          "schema": {
+            "$ref": "#/components/schemas/Passphrase"
+          }
+        },
+        {
+          "$ref": "#/components/contentDescriptors/Additional"
+        }
+      ],
+      "result": {
+        "name": "signedMessageData",
+        "description": "signature hash of the provided data",
+        "schema": {
+          "type": "string",
+          "pattern": "^0x[a-fA-F0-9]+$"
+        }
       }
     }
   ],
@@ -338,6 +358,8 @@
       "Transaction": {
         "type": "object",
         "required": [
+          "from",
+          "to",
           "gas",
           "gasPrice",
           "nonce"
@@ -373,9 +395,6 @@
           "value": {
             "description": "Value of Ether being transferred in Wei",
             "$ref": "#/components/schemas/Wei"
-          },
-          "passphrase": {
-            "$ref": "#/components/schemas/Passphrase"
           }
         }
       },
