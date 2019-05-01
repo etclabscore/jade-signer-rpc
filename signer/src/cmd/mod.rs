@@ -2,7 +2,6 @@
 
 mod account;
 mod error;
-mod transaction;
 #[macro_use]
 mod arg_handlers;
 
@@ -13,7 +12,7 @@ use super::jade_signer_rs::mnemonic::{gen_entropy, Language, Mnemonic, ENTROPY_B
 use super::jade_signer_rs::storage::{default_path, KeyfileStorage, StorageController};
 use super::jade_signer_rs::PrivateKey;
 use super::jade_signer_rs::{
-    self, align_bytes, to_arr, to_even_str, trim_hex, Address, Transaction,
+    self, align_bytes, to_arr, to_even_str, trim_hex, Address,
 };
 use clap::ArgMatches;
 use std::net::SocketAddr;
@@ -22,7 +21,6 @@ use std::path::PathBuf;
 type ExecResult = Result<(), Error>;
 
 const DEFAULT_CHAIN_NAME: &str = "mainnet";
-const DEFAULT_UPSTREAM: &str = "127.0.0.1:8545";
 
 /// Create new command executor
 pub fn execute(matches: &ArgMatches) -> ExecResult {
