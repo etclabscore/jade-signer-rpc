@@ -16,7 +16,6 @@ use super::jade_signer_rs::{
     self, align_bytes, to_arr, to_even_str, trim_hex, Address, Transaction,
 };
 use clap::ArgMatches;
-use rpc;
 use std::net::SocketAddr;
 use std::path::PathBuf;
 
@@ -79,28 +78,28 @@ fn server_cmd(matches: &ArgMatches, storage_ctrl: StorageController, chain: &str
     Ok(())
 }
 
-/// Show user balance
-///
-/// # Arguments:
-///
-/// * matches - arguments supplied from command-line
-///
-fn balance_cmd(matches: &ArgMatches) -> ExecResult {
-    match get_upstream(matches) {
-        Ok(ref rpc) => {
-            let addr = get_address(matches, "address").expect("Required account address");
-            let balance = rpc::request_balance(rpc, &addr)?;
-            info!("Balance for {} account", &addr);
-            println!("{}", balance);
+// /// Show user balance
+// ///
+// /// # Arguments:
+// ///
+// /// * matches - arguments supplied from command-line
+// ///
+// fn balance_cmd(matches: &ArgMatches) -> ExecResult {
+//     match get_upstream(matches) {
+//         Ok(ref rpc) => {
+//             let addr = get_address(matches, "address").expect("Required account address");
+//             let balance = rpc::request_balance(rpc, &addr)?;
+//             info!("Balance for {} account", &addr);
+//             println!("{}", balance);
 
-            Ok(())
-        }
-        Err(e) => Err(Error::ExecError(format!(
-            "Can't get balance: {}",
-            e.to_string()
-        ))),
-    }
-}
+//             Ok(())
+//         }
+//         Err(e) => Err(Error::ExecError(format!(
+//             "Can't get balance: {}",
+//             e.to_string()
+//         ))),
+//     }
+// }
 
 /// Creates new BIP39 mnemonic phrase
 /// Refer [BIP39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki)
@@ -113,22 +112,22 @@ fn mnemonic_cmd() -> ExecResult {
     Ok(())
 }
 
-/// Request `nonce` for specified account from a remote node
-///
-/// # Arguments:
-///
-/// * matches - arguments supplied from command-line
-///
-fn nonce_cmd(matches: &ArgMatches) -> ExecResult {
-    let addr = get_address(matches, "address").expect("Required account address");
-    let nonce = get_nonce(&matches, &addr)?;
+// /// Request `nonce` for specified account from a remote node
+// ///
+// /// # Arguments:
+// ///
+// /// * matches - arguments supplied from command-line
+// ///
+// fn nonce_cmd(matches: &ArgMatches) -> ExecResult {
+//     let addr = get_address(matches, "address").expect("Required account address");
+//     let nonce = get_nonce(&matches, &addr)?;
 
-    info!("Nonce for {} account", &addr);
-    if matches.is_present("hex") {
-        println!("{:x}", nonce);
-    } else {
-        println!("{}", nonce);
-    }
+//     info!("Nonce for {} account", &addr);
+//     if matches.is_present("hex") {
+//         println!("{:x}", nonce);
+//     } else {
+//         println!("{}", nonce);
+//     }
 
-    Ok(())
-}
+//     Ok(())
+// }
