@@ -75,57 +75,6 @@ pub fn hex_to_32bytes(hex: &str) -> Result<[u8; 32], Error> {
     Ok(to_arr(&align_bytes(&bytes, 32)))
 }
 
-// /// Parse address from command-line argument
-// ///
-// /// # Arguments:
-// ///
-// /// * matches - arguments supplied from command-line
-// /// * env - environment variables
-// ///
-// pub fn get_gas_price(matches: &ArgMatches, env: &EnvVars) -> Result<[u8; 32], Error> {
-//     let gas_pr = match matches
-//         .value_of("gas-price")
-//         .or_else(|| env.emerald_gas_price.as_ref().map(String::as_str))
-//     {
-//         Some(g) => g.to_string(),
-//         None => get_upstream(matches).and_then(|rpc| rpc::request_gas_price(&rpc))?,
-//     };
-//     hex_to_32bytes(trim_hex(&gas_pr))
-// }
-
-// /// Parse address from command-line argument
-// ///
-// /// # Arguments:
-// ///
-// /// * matches - arguments supplied from command-line
-// /// * env - environment variables
-// ///
-// pub fn get_gas_limit(matches: &ArgMatches, env: &EnvVars) -> Result<u64, Error> {
-//     let gas = match matches
-//         .value_of("gas")
-//         .or_else(|| env.emerald_gas.as_ref().map(String::as_str))
-//     {
-//         Some(g) => g.to_string(),
-//         None => get_upstream(matches).and_then(|rpc| rpc::request_gas(&rpc))?,
-//     };
-//     u64::from_str_radix(trim_hex(&gas), 16).map_err(Error::from)
-// }
-
-// /// Get nonce value for provided address
-// ///
-// /// # Arguments:
-// ///
-// /// * matches - arguments supplied from command-line
-// /// * addr - account address
-// ///
-// pub fn get_nonce(matches: &ArgMatches, addr: &Address) -> Result<u64, Error> {
-//     let nonce = match matches.value_of("nonce") {
-//         Some(n) => n.to_string(),
-//         None => get_upstream(matches).and_then(|rpc| rpc::request_nonce(&rpc, addr))?,
-//     };
-//     u64::from_str_radix(trim_hex(&nonce), 16).map_err(Error::from)
-// }
-
 /// Parse address from command-line argument
 ///
 /// # Arguments:
