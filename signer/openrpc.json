@@ -179,6 +179,92 @@
       }
     },
     {
+      "name": "signer_generateMnemonic",
+      "summary": "Generate a mnemonic phrase",
+      "description": "Generates a new 24 words long mnemonic phrase",
+      "params": [],
+      "result": {
+        "name": "mnemonicPhrase",
+        "description": "Mnemonic phrase is a list of 24 words",
+        "schema": {
+          "type": "string",
+          "description": "a list of 24 words"
+        }
+      }
+    },
+    {
+      "name": "signer_importMnemonic",
+      "summary": "Import a mnemonic phrase",
+      "description": "Creates a new account from a mnemonic and stores it locally as a passphrase-encoded keystore file.",
+      "params": [
+        {
+          "name": "importMnemonicOptions",
+          "schema": {
+            "type": "object",
+            "required": [
+              "mnemonic",
+              "passphrase",
+              "hdpath"
+            ],
+            "properties": {
+              "mnemonic": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "passphrase": {
+                "$ref": "#/components/schemas/Passphrase"
+              },
+              "hdpath": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        {
+          "$ref": "#/components/contentDescriptors/Additional"
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/Address"
+      },
+      "examples": [
+        {
+          "name": "importMnemonicExample",
+          "description": "example of importing a mnemonic phrase",
+          "params": [
+            {
+              "name": "importMnemonicOptionsExample",
+              "description": "example of import mnemonic options",
+              "value": {
+                "name": "my imported wallet",
+                "description": "my imported wallet description",
+                "passphrase": "baz",
+                "hdpath": "m/44'/60'/160720'/0'",
+                "mnemonic": "icon suggest road current ripple engage spell clay route large arena climb oxygen electric cupboard dream title immune fit beyond mouse slab bronze salad"
+              }
+            },
+            {
+              "name": "additionalParamsExample",
+              "description": "example of additional params for mnemonic import",
+              "value": {
+                "chain": "etc"
+              }
+            }
+          ],
+          "result": {
+            "name": "importMnemonicResultExample",
+            "description": "example of import mnemonic result",
+            "value": "0xa0dfb14b391590faff0d6b37bf2916f27cd15a28"
+          }
+        }
+      ]
+    },
+    {
       "name": "signer_exportAccount",
       "summary": "Export an account",
       "description": "Export a keyfile associated with account. Keyfile uses the [Web3 Secret Storage Definition](https://github.com/ethereumproject/wiki/wiki/Web3-Secret-Storage-Definition)",
