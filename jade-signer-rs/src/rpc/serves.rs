@@ -515,8 +515,8 @@ pub fn import_mnemonic(
     let storage_ctrl = storage.lock().unwrap();
     let (account, additional) = params.into_full();
     let storage = storage_ctrl.get_keystore(&additional.chain)?;
-    if account.password.is_empty() {
-        return Err(Error::InvalidDataFormat("Empty password".to_string()));
+    if account.passphase.is_empty() {
+        return Err(Error::InvalidDataFormat("Empty passphase".to_string()));
     }
 
     let mnemonic = Mnemonic::try_from(Language::English, &account.mnemonic)?;
@@ -532,7 +532,7 @@ pub fn import_mnemonic(
     let mut rng = os_random();
     let kf = KeyFile::new_custom(
         pk,
-        &account.password,
+        &account.passphase,
         kdf,
         &mut rng,
         Some(account.name),
