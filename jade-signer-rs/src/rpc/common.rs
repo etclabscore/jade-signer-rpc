@@ -237,7 +237,7 @@ pub struct NewMnemonicAccount {
     pub name: String,
     #[serde(default)]
     pub description: String,
-    pub password: String,
+    pub passphrase: String,
     pub mnemonic: String,
     pub hd_path: String,
 }
