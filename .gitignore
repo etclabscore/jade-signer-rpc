@@ -10,3 +10,6 @@ Cargo.lock
 **/*.rs.bk
 
 .idea/
+build
+/**/build
+.DS_Store

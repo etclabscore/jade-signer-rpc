@@ -4,15 +4,15 @@ Jade Signer JSON-RPC API lets you manage keys and sign transactions and messages
 
 [View The Documentation](https://playground.open-rpc.org/?uiSchema[appBar][ui:splitView]=false&schemaUrl=https://raw.githubusercontent.com/etclabscore/jade-signer-rpc/master/signer/openrpc.json&uiSchema[appBar][ui:logoUrl]=https://avatars1.githubusercontent.com/u/45863699?s=200&v=4).
 
-# The Problem
+## The Problem
 
 Most Existing Ethereum Clients include wallets or signers within the full node. This bloats client software and introduces more surface area for security issues to arise. The signing software should be offline and separate from a full node client to ensure proper separation of concerns.
 
-# The Solution
+## The Solution
 
 Jade Signer RPC is a an API to support the generation, import, and/or storing of Ethereum Private Keys. It uses the [Web3 Secret Storage Defition](https://github.com/ethereumproject/wiki/wiki/Web3-Secret-Storage-Definition) to store keys offline and optionally use [BIP39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki) to generate mnemonic phrases. This software has no access to outside nodes or APIs.
 
-# Usage
+## Usage
 
 ```shell	
 $ jade-signer-rpc --help	
@@ -30,3 +30,7 @@ Command-line interface for Jade Signer RPC
  SUBCOMMANDS:	
     server         Start local RPC server	
 ```
+
+## Contributing
+
+How to contribute, build and release are outlined in [CONTRIBUTING.md](CONTRIBUTING.md), [BUILDING.md](BUILDING.md) and [RELEASING.md](RELEASING.md) respectively. Commits in this repository follow the [CONVENTIONAL_COMMITS.md](CONVENTIONAL_COMMITS.md) specification.
