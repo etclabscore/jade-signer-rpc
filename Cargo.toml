@@ -1,5 +1,12 @@
-[workspace]
+[package]
+name = "jade-signer-rpc"
+version = "0.1.0"
+license = "Apache-2.0"
+description = "Signer - "
+repository = "https://github.com/ETCDEVTeam/jade-signer-rpc"
+keywords = ["openrpc", "ethereum"]
 
+[workspace]
 members = [
     "signer",
     "jade-signer-rs",
