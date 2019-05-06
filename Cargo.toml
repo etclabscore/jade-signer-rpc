@@ -6,6 +6,10 @@ description = "Jade Signer JSON-RPC lets you manage keys and sign transactions a
 repository = "https://github.com/ETCDEVTeam/jade-signer-rpc"
 keywords = ["openrpc", "ethereum"]
 
+[[bin]]
+name = "signer"
+path = "signer/src/main.rs"
+
 [workspace]
 members = [
     "signer",
