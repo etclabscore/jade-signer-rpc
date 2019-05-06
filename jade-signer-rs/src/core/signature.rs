@@ -85,8 +85,8 @@ impl PrivateKey {
     /// # Example
     ///
     /// ```
-    /// const PKB: usize = emerald_rs::PRIVATE_KEY_BYTES;
-    /// let pk = emerald_rs::PrivateKey::try_from(&[0u8; PKB]).unwrap();
+    /// const PKB: usize = jade_signer_rs::PRIVATE_KEY_BYTES;
+    /// let pk = jade_signer_rs::PrivateKey::try_from(&[0u8; PKB]).unwrap();
     /// assert_eq!(pk.to_string(),
     ///            "0x0000000000000000000000000000000000000000000000000000000000000000");
     /// ```
