@@ -1,23 +1,17 @@
 [package]
-name = "jade-signer"
+name = "signer"
 version = "0.1.0"
 authors = ["Constantine Kryvomaz <kostiyantynk@gmail.com>"]
-description = "Console utility for secure account management"
 homepage = "http://etclabscore.com"
-repository = "https://github.com/etclabscore/jade-signer"
-documentation = "https://docs.rs/emerald-vault"
+repository = "https://github.com/etclabscore/jade-signer-rpc/signer"
 keywords = ["ethereum-classic", "blockchain", "cold-storage", "openrpc"]
 categories = ["console", "bash"]
 readme = "README.md"
 license = "Apache-2.0"
 
 [badges]
-travis-ci = { repository = "etclabscore/jade-signer" }
-appveyor = { repository = "etclabscore/jade-signer" }
-
-[[bin]]
-name = "jade-signer"
-path = "src/main.rs"
+travis-ci = { repository = "etclabscore/jade-signer-rpc" }
+appveyor = { repository = "etclabscore/jade-signer-rpc" }
 
 [dependencies]
 log = "0.4.6"

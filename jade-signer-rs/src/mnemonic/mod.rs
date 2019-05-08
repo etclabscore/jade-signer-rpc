@@ -262,10 +262,16 @@ mod tests {
         );
 
         let seed = mnemonic.seed("TREZOR");
-        assert_eq!(seed, Vec::from_hex("bda85446c68413707090a52022edd26a\
-            1c9462295029f2e60cd7c4f2bbd309717\
-            0af7a4d73245cafa9c3cca8d561a7c3de6\
-            f5d4a10be8ed2a5e608d68f92fcc8").unwrap());
+        assert_eq!(
+            seed,
+            Vec::from_hex(
+                "bda85446c68413707090a52022edd26a\
+                 1c9462295029f2e60cd7c4f2bbd309717\
+                 0af7a4d73245cafa9c3cca8d561a7c3de6\
+                 f5d4a10be8ed2a5e608d68f92fcc8"
+            )
+            .unwrap()
+        );
     }
 
     #[test]
@@ -279,10 +285,16 @@ mod tests {
             .collect();
 
         assert_eq!(w, mnemonic.words);
-        assert_eq!(mnemonic.seed("TREZOR"), Vec::from_hex("274ddc525802f7c828d8ef7ddbcdc530\
-            4e87ac3535913611fbbfa986d0c9e547\
-            6c91689f9c8a54fd55bd38606aa6a859\
-            5ad213d4c9c9f9aca3fb217069a41028").unwrap());
+        assert_eq!(
+            mnemonic.seed("TREZOR"),
+            Vec::from_hex(
+                "274ddc525802f7c828d8ef7ddbcdc530\
+                 4e87ac3535913611fbbfa986d0c9e547\
+                 6c91689f9c8a54fd55bd38606aa6a859\
+                 5ad213d4c9c9f9aca3fb217069a41028"
+            )
+            .unwrap()
+        );
     }
 
     #[test]
@@ -297,10 +309,16 @@ mod tests {
             .collect();
 
         assert_eq!(w, mnemonic.words);
-        assert_eq!(mnemonic.seed("TREZOR"), Vec::from_hex("b15509eaa2d09d3efd3e006ef42151b3\
-            0367dc6e3aa5e44caba3fe4d3e352e65\
-            101fbdb86a96776b91946ff06f8eac59\
-            4dc6ee1d3e82a42dfe1b40fef6bcc3fd").unwrap());
+        assert_eq!(
+            mnemonic.seed("TREZOR"),
+            Vec::from_hex(
+                "b15509eaa2d09d3efd3e006ef42151b3\
+                 0367dc6e3aa5e44caba3fe4d3e352e65\
+                 101fbdb86a96776b91946ff06f8eac59\
+                 4dc6ee1d3e82a42dfe1b40fef6bcc3fd"
+            )
+            .unwrap()
+        );
     }
 
     #[test]

@@ -12,6 +12,6 @@ path = "signer/src/main.rs"
 
 [workspace]
 members = [
-    "signer",
     "jade-signer-rs",
+    "signer"
 ]

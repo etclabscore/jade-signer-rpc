@@ -280,23 +280,25 @@ mod tests {
         let fd = &manager.devices()[0].1;
         let sign = manager.sign_transaction(&fd, &rlp, None).unwrap();
 
-        assert_eq!(hex::encode(tx.raw_from_sig(chain, &sign)),
-                   "f86d80\
-                   85\
-                   04e3b29200\
-                   82\
-                   5208\
-                   94\
-                   78296f1058dd49c5d6500855f59094f0a2876397\
-                   88\
-                   0de0b6b3a7640000\
-                   80\
-                   81\
-                   9d\
-                   a0\
-                   5cba84eb9aac6854c8ff6aa21b3e0c6c2036e07ebdee44bcf7ace95bab569d8f\
-                   a0\
-                   6eab3be528ef7565c887e147a2d53340c6c9fab5d6f56694681c90b518b64183");
+        assert_eq!(
+            hex::encode(tx.raw_from_sig(chain, &sign)),
+            "f86d80\
+             85\
+             04e3b29200\
+             82\
+             5208\
+             94\
+             78296f1058dd49c5d6500855f59094f0a2876397\
+             88\
+             0de0b6b3a7640000\
+             80\
+             81\
+             9d\
+             a0\
+             5cba84eb9aac6854c8ff6aa21b3e0c6c2036e07ebdee44bcf7ace95bab569d8f\
+             a0\
+             6eab3be528ef7565c887e147a2d53340c6c9fab5d6f56694681c90b518b64183"
+        );
     }
 
     #[test]

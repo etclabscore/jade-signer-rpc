@@ -135,20 +135,22 @@ mod tests {
         ));
 
         let hex = hex::encode(tx.to_signed_raw(pk, 61 /*MAINNET_ID*/).unwrap());
-        assert_eq!(hex,
-                    "f86d\
-                    808504e3b29200825208\
-                    94\
-                    3f4e0668c20e100d7c2a27d4b177ac65b2875d26\
-                    88\
-                    0de0b6b3a7640000\
-                    80\
-                    81\
-                    9e\
-                    a0\
-                    4ca75f697cf61daf1980dcd4f4460450e9e07b3c1b16ad1224b1a46e7e5c53b2\
-                    a0\
-                    59648e92e975d9cdf5d12698d7267595c087e83e9598639e13525f6fe7c047f1");
+        assert_eq!(
+            hex,
+            "f86d\
+             808504e3b29200825208\
+             94\
+             3f4e0668c20e100d7c2a27d4b177ac65b2875d26\
+             88\
+             0de0b6b3a7640000\
+             80\
+             81\
+             9e\
+             a0\
+             4ca75f697cf61daf1980dcd4f4460450e9e07b3c1b16ad1224b1a46e7e5c53b2\
+             a0\
+             59648e92e975d9cdf5d12698d7267595c087e83e9598639e13525f6fe7c047f1"
+        );
     }
 
     #[test]
@@ -187,20 +189,22 @@ mod tests {
             "28b469dc4b039ff63fcd4cb708c668545e644cb25f21df6920aac20e4bc743f7",
         ));
 
-        assert_eq!(hex::encode(tx.to_signed_raw(pk, 62 /*TESTNET_ID*/).unwrap()),
-                    "f871\
-                    83\
-                    100009\
-                    85\
-                    04a817c800\
-                    82\
-                    5208\
-                    94\
-                    163b454d1ccdd0a12e88341b12afb2c98044c599\
-                    89\
-                    1e7751166579880000\
-                    80819fa0cc6cd05d41bbbeb71913bf403a09db118f22e4ed7ebf707fcfb483dd1cded\
-                    890a03c0a3985771bc0f10cf9fe85e3ea3c17132e3f09551eaedb8d2ae97cec3ad9f7");
+        assert_eq!(
+            hex::encode(tx.to_signed_raw(pk, 62 /*TESTNET_ID*/).unwrap()),
+            "f871\
+             83\
+             100009\
+             85\
+             04a817c800\
+             82\
+             5208\
+             94\
+             163b454d1ccdd0a12e88341b12afb2c98044c599\
+             89\
+             1e7751166579880000\
+             80819fa0cc6cd05d41bbbeb71913bf403a09db118f22e4ed7ebf707fcfb483dd1cded\
+             890a03c0a3985771bc0f10cf9fe85e3ea3c17132e3f09551eaedb8d2ae97cec3ad9f7"
+        );
     }
 
     #[test]
@@ -223,18 +227,20 @@ mod tests {
             "4646464646464646464646464646464646464646464646464646464646464646",
         ));
 
-        assert_eq!(hex::encode(tx.to_signed_raw(pk, 1 /*ETH mainnet*/).unwrap()),
-                    "f86c\
-                    09\
-                    85\
-                    04a817c800\
-                    82\
-                    5208\
-                    94\
-                    3535353535353535353535353535353535353535\
-                    88\
-                    0de0b6b3a7640000\
-                    8025a028ef61340bd939bc2195fe537567866003e1a15d3c71ff63e1590620aa\
-                    636276a067cbe9d8997f761aecb703304b3800ccf555c9f3dc64214b297fb1966a3b6d83");
+        assert_eq!(
+            hex::encode(tx.to_signed_raw(pk, 1 /*ETH mainnet*/).unwrap()),
+            "f86c\
+             09\
+             85\
+             04a817c800\
+             82\
+             5208\
+             94\
+             3535353535353535353535353535353535353535\
+             88\
+             0de0b6b3a7640000\
+             8025a028ef61340bd939bc2195fe537567866003e1a15d3c71ff63e1590620aa\
+             636276a067cbe9d8997f761aecb703304b3800ccf555c9f3dc64214b297fb1966a3b6d83"
+        );
     }
 }

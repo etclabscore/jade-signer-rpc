@@ -167,10 +167,13 @@ mod test {
 
     #[test]
     fn test_key_generation() {
-        let seed = Vec::from_hex("b15509eaa2d09d3efd3e006ef42151b3\
-            0367dc6e3aa5e44caba3fe4d3e352e65\
-            101fbdb86a96776b91946ff06f8eac59\
-            4dc6ee1d3e82a42dfe1b40fef6bcc3fd").unwrap();
+        let seed = Vec::from_hex(
+            "b15509eaa2d09d3efd3e006ef42151b3\
+             0367dc6e3aa5e44caba3fe4d3e352e65\
+             101fbdb86a96776b91946ff06f8eac59\
+             4dc6ee1d3e82a42dfe1b40fef6bcc3fd",
+        )
+        .unwrap();
 
         let path = vec![
             Hardened(44),
