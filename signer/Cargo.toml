@@ -17,7 +17,7 @@ appveyor = { repository = "etclabscore/jade-signer-rpc" }
 
 [[bin]]
 name = "signer"
-path = "signer/src/main.rs"
+path = "src/main.rs"
 
 [dependencies]
 log = "0.4.6"
