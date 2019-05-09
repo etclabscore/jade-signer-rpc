@@ -1,6 +1,7 @@
 [package]
 name = "jade-signer-rpc"
 version = "0.1.0"
+autobins = false
 license = "Apache-2.0"
 description = "Jade Signer JSON-RPC lets you manage keys and sign transactions and messages offline for any EVM-based blockchain."
 repository = "https://github.com/ETCDEVTeam/jade-signer-rpc"
