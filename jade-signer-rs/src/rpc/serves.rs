@@ -18,18 +18,6 @@ use std::str::FromStr;
 use std::sync::{Arc, Mutex};
 use util;
 
-pub fn current_version() -> Result<&'static str, Error> {
-    Ok(::version())
-}
-
-pub fn heartbeat() -> Result<i64, Error> {
-    use time::get_time;
-    let res = get_time().sec;
-    debug!("Emerald heartbeat: {}", res);
-
-    Ok(res)
-}
-
 pub fn list_accounts(
     params: Either<(), (ListAccountsAdditional,)>,
     storage: &Arc<Mutex<StorageController>>,

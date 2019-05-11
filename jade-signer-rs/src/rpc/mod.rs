@@ -63,20 +63,6 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
     let mut io = IoHandler::default();
 
     {
-        io.add_method("signer_currentVersion", move |p: Params| {
-            parse(p)?;
-            wrapper(serves::current_version())
-        });
-    }
-
-    {
-        io.add_method("signer_heartbeat", move |p: Params| {
-            parse(p)?;
-            wrapper(serves::heartbeat())
-        });
-    }
-
-    {
         let storage_ctrl = Arc::clone(&storage_ctrl);
         io.add_method("signer_listAddresses", move |p: Params| {
             wrapper(serves::list_addresses(parse(p)?, &storage_ctrl))
