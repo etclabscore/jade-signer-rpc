@@ -16,7 +16,15 @@ use serde_json;
 use std::cell::RefCell;
 use std::str::FromStr;
 use std::sync::{Arc, Mutex};
+use std::fs;
 use util;
+use std::path::Path;
+
+pub fn openrpc_discover(p: &Path) -> Result<String, Error> {
+    let contents = fs::read_to_string(p)?;
+
+    Ok(contents)
+}
 
 pub fn list_accounts(
     params: Either<(), (ListAccountsAdditional,)>,
