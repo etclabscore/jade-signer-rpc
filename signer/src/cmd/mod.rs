@@ -14,11 +14,12 @@ use super::jade_signer_rs::PrivateKey;
 use super::jade_signer_rs::{self, align_bytes, to_arr, to_even_str, trim_hex, Address};
 use clap::ArgMatches;
 use std::net::SocketAddr;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 type ExecResult = Result<(), Error>;
 
 const DEFAULT_CHAIN_NAME: &str = "mainnet";
+const OPENRPC_SPEC_PATH: &str = "../../openrpc.json";
 
 /// Create new command executor
 pub fn execute(matches: &ArgMatches) -> ExecResult {
@@ -38,8 +39,9 @@ pub fn execute(matches: &ArgMatches) -> ExecResult {
     }
 
     let storage_ctrl = StorageController::new(base_path)?;
+    let spec_path = Path::new(OPENRPC_SPEC_PATH);
     match matches.subcommand() {
-        ("server", Some(sub_m)) => server_cmd(sub_m, storage_ctrl, chain),
+        ("server", Some(sub_m)) => server_cmd(sub_m, storage_ctrl, chain, &spec_path),
         // ("account", Some(sub_m)) => account_cmd(sub_m, keystore, &env),
         // ("transaction", Some(sub_m)) => transaction_cmd(sub_m, keystore, &env, chain),
         // ("balance", Some(sub_m)) => balance_cmd(sub_m),
@@ -58,8 +60,14 @@ pub fn execute(matches: &ArgMatches) -> ExecResult {
 /// * matches - arguments supplied from command-line
 /// * storage - `Keyfile` storage
 /// * chain - chain name
+/// * p - path to OpenRPC spec
 ///
-fn server_cmd(matches: &ArgMatches, storage_ctrl: StorageController, chain: &str) -> ExecResult {
+fn server_cmd(
+    matches: &ArgMatches,
+    storage_ctrl: StorageController,
+    chain: &str,
+    p: &'static Path,
+) -> ExecResult {
     info!("Starting Emerald Vault - v{}", jade_signer_rs::version());
     let host = matches.value_of("host").unwrap_or_default();
     let port = matches.value_of("port").unwrap_or_default();
@@ -69,7 +77,7 @@ fn server_cmd(matches: &ArgMatches, storage_ctrl: StorageController, chain: &str
     info!("Chain set to '{}'", chain);
     info!("Security level set to '{}'", sec_lvl);
 
-    jade_signer_rs::rpc::start(&addr, storage_ctrl, Some(sec_lvl));
+    jade_signer_rs::rpc::start(&addr, storage_ctrl, Some(sec_lvl), p);
 
     Ok(())
 }
