@@ -3,8 +3,8 @@
 #![cfg_attr(feature = "dev", feature(plugin))]
 #![cfg_attr(feature = "dev", plugin(clippy))]
 
-extern crate hex;
 extern crate env_logger;
+extern crate hex;
 extern crate hyper;
 extern crate jade_signer_rs;
 extern crate jsonrpc_core;

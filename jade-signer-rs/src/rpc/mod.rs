@@ -19,8 +19,8 @@ use serde::Serialize;
 use serde_json::{self, Value};
 use std::cell::RefCell;
 use std::net::SocketAddr;
-use std::sync::{Arc, Mutex};
 use std::path::Path;
+use std::sync::{Arc, Mutex};
 
 fn wrapper<T: Serialize>(value: Result<T, Error>) -> Result<Value, JsonRpcError> {
     if value.is_err() {
@@ -53,7 +53,12 @@ where
 /// * sec_level - security level
 /// * openrpc_path - path to OpenRPC specification
 ///
-pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Option<KdfDepthLevel>, openrpc_path: &'static Path) {
+pub fn start(
+    addr: &SocketAddr,
+    storage_ctrl: StorageController,
+    sec_level: Option<KdfDepthLevel>,
+    openrpc_path: &'static Path,
+) {
     let sec_level = sec_level.unwrap_or_default();
     let storage_ctrl = Arc::new(Mutex::new(storage_ctrl));
 
@@ -69,7 +74,7 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
             wrapper(serves::openrpc_discover(openrpc_path))
         });
     }
-    
+
     {
         let storage_ctrl = Arc::clone(&storage_ctrl);
         io.add_method("signer_listAddresses", move |p: Params| {

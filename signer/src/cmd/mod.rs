@@ -14,7 +14,7 @@ use super::jade_signer_rs::PrivateKey;
 use super::jade_signer_rs::{self, align_bytes, to_arr, to_even_str, trim_hex, Address};
 use clap::ArgMatches;
 use std::net::SocketAddr;
-use std::path::{PathBuf, Path};
+use std::path::{Path, PathBuf};
 
 type ExecResult = Result<(), Error>;
 
@@ -62,7 +62,12 @@ pub fn execute(matches: &ArgMatches) -> ExecResult {
 /// * chain - chain name
 /// * p - path to OpenRPC spec
 ///
-fn server_cmd(matches: &ArgMatches, storage_ctrl: StorageController, chain: &str, p: &'static Path) -> ExecResult {
+fn server_cmd(
+    matches: &ArgMatches,
+    storage_ctrl: StorageController,
+    chain: &str,
+    p: &'static Path,
+) -> ExecResult {
     info!("Starting Emerald Vault - v{}", jade_signer_rs::version());
     let host = matches.value_of("host").unwrap_or_default();
     let port = matches.value_of("port").unwrap_or_default();

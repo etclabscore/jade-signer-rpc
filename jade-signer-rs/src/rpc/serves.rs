@@ -14,11 +14,11 @@ use keystore::{os_random, CryptoType, Kdf, KdfDepthLevel, KeyFile, PBKDF2_KDF_NA
 use mnemonic::{self, gen_entropy, HDPath, Language, Mnemonic, ENTROPY_BYTE_LENGTH};
 use serde_json;
 use std::cell::RefCell;
+use std::fs;
+use std::path::Path;
 use std::str::FromStr;
 use std::sync::{Arc, Mutex};
-use std::fs;
 use util;
-use std::path::Path;
 
 pub fn openrpc_discover(p: &Path) -> Result<String, Error> {
     let contents = fs::read_to_string(p)?;
