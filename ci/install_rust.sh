@@ -6,7 +6,7 @@ set -e
 # Print all executed commands
 set -x
 
-sudo apt-get install -y libusb-1.0-0-dev
+apt-get install -y libusb-1.0-0-dev
 
 # Download rustup script and execute it
 curl https://sh.rustup.rs -sSf > ./rustup.sh
