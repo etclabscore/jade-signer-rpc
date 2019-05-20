@@ -79,6 +79,31 @@ fn check_chain_id(id: u8) -> Result<String, Error> {
 
 #[derive(Deserialize, Debug)]
 #[serde(untagged)]
+pub enum SignParams<T, U> {
+    Left(T, String),
+    Right(U),
+}
+
+impl<T, U: Default> SignParams<T, U> {
+    pub fn into_right(self) -> U {
+        match self {
+            SignParams::Left(_, _) => U::default(),
+            SignParams::Right(u) => u,
+        }
+    }
+}
+
+impl<T, U: Default> SignParams<(T, String), (T, String, U)> {
+    pub fn into_full(self) -> (T, String, U) {
+        match self {
+            SignParams::Left((t, s), _) => (t, s, U::default()),
+            SignParams::Right((t, s, u)) => (t, s, u),
+        }
+    }
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(untagged)]
 pub enum Either<T, U> {
     Left(T),
     Right(U),

@@ -59,11 +59,7 @@ pub fn execute(matches: &ArgMatches) -> ExecResult {
 /// * storage - `Keyfile` storage
 /// * chain - chain name
 ///
-fn server_cmd(
-    matches: &ArgMatches,
-    storage_ctrl: StorageController,
-    chain: &str,
-) -> ExecResult {
+fn server_cmd(matches: &ArgMatches, storage_ctrl: StorageController, chain: &str) -> ExecResult {
     info!("Starting Emerald Vault - v{}", jade_signer_rs::version());
     let host = matches.value_of("host").unwrap_or_default();
     let port = matches.value_of("port").unwrap_or_default();

@@ -1,7 +1,8 @@
 use super::common::{
     extract_chain_params, CommonAdditional, Either, FunctionParams, ListAccountAccount,
     ListAccountsAdditional, NewAccountAccount, NewMnemonicAccount, SelectedAccount,
-    ShakeAccountAccount, SignData, SignTxAdditional, SignTxTransaction, UpdateAccountAccount,
+    ShakeAccountAccount, SignData, SignParams, SignTxAdditional, SignTxTransaction,
+    UpdateAccountAccount,
 };
 use super::Error;
 use super::StorageController;
@@ -14,10 +15,10 @@ use keystore::{os_random, CryptoType, Kdf, KdfDepthLevel, KeyFile, PBKDF2_KDF_NA
 use mnemonic::{self, gen_entropy, HDPath, Language, Mnemonic, ENTROPY_BYTE_LENGTH};
 use serde_json;
 use std::cell::RefCell;
+use std::ops::Deref;
 use std::str::FromStr;
 use std::sync::{Arc, Mutex};
 use util;
-use std::ops::Deref;
 
 static OPENRPC_SCHEMA: &'static [u8] = include_bytes!("../../openrpc.json");
 
@@ -321,12 +322,12 @@ pub fn sign_transaction(
 }
 
 pub fn sign(
-    params: Either<(SignData,), (SignData, CommonAdditional)>,
+    params: SignParams<(SignData, String), (SignData, String, CommonAdditional)>,
     storage: &Arc<Mutex<StorageController>>,
     wallet_manager: &Arc<Mutex<RefCell<WManager>>>,
 ) -> Result<Params, Error> {
     let storage_ctrl = storage.lock().unwrap();
-    let (input, additional) = params.into_full();
+    let (input, passphrase, additional) = params.into_full();
     let storage = storage_ctrl.get_keystore(&additional.chain)?;
     let addr = Address::from_str(&input.address)?;
     let hash = util::keccak256(
@@ -341,11 +342,10 @@ pub fn sign(
         Ok((_, kf)) => {
             match kf.crypto {
                 CryptoType::Core(_) => {
-                    if input.passphrase.is_none() {
+                    if passphrase.is_empty() {
                         return Err(Error::InvalidDataFormat("Missing passphrase".to_string()));
                     }
-                    let pass = input.passphrase.unwrap();
-                    if let Ok(pk) = kf.decrypt_key(&pass) {
+                    if let Ok(pk) = kf.decrypt_key(&passphrase) {
                         let signed = pk.sign_hash(hash)?;
                         Ok(Params::Array(vec![Value::String(signed.into())]))
                     } else {

@@ -52,11 +52,7 @@ where
 /// * storage_ctrl - controller for `Keyfile` storage
 /// * sec_level - security level
 ///
-pub fn start(
-    addr: &SocketAddr,
-    storage_ctrl: StorageController,
-    sec_level: Option<KdfDepthLevel>,
-) {
+pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Option<KdfDepthLevel>) {
     let sec_level = sec_level.unwrap_or_default();
     let storage_ctrl = Arc::new(Mutex::new(storage_ctrl));
 
