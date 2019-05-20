@@ -286,9 +286,6 @@
       "description": "Calculates an Ethereum-specific signature in the form of keccak256(\"\\x19Ethereum Signed Message:\n\" + len(message) + message))",
       "params": [
         {
-          "$ref": "#/components/contentDescriptors/Address"
-        },
-        {
           "name": "dataToSign",
           "description": "data to sign",
           "summary": "sign data",
@@ -296,6 +293,9 @@
             "type": "string",
             "pattern": "^0x[a-fA-F0-9]+$"
           }
+        },
+        {
+          "$ref": "#/components/contentDescriptors/Address"
         },
         {
           "name": "passphrase",
