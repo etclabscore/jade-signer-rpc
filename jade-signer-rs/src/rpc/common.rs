@@ -218,8 +218,6 @@ pub struct SignTxTransaction {
     #[serde(default)]
     pub data: String,
     pub nonce: String,
-    #[serde(default)]
-    pub passphrase: Option<String>,
 }
 
 #[derive(Deserialize, Default, Debug)]
@@ -246,8 +244,6 @@ impl CommonChainParams for SignTxAdditional {
 pub struct SignData {
     pub address: String,
     pub data: String,
-    #[serde(default)]
-    pub passphrase: Option<String>,
 }
 
 #[derive(Deserialize, Default, Debug)]

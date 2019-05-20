@@ -206,16 +206,15 @@ pub fn new_account(
 }
 
 pub fn sign_transaction(
-    params: Either<(SignTxTransaction,), (SignTxTransaction, SignTxAdditional)>,
+    params: SignParams<(SignTxTransaction, String, ), (SignTxTransaction, String, SignTxAdditional)>,
     storage: &Arc<Mutex<StorageController>>,
     wallet_manager: &Arc<Mutex<RefCell<WManager>>>,
 ) -> Result<Params, Error> {
     let storage_ctrl = storage.lock().unwrap();
-    let (transaction, additional) = params.into_full();
+    let (transaction, passphrase, additional) = params.into_full();
     let storage = storage_ctrl.get_keystore(&additional.chain)?;
     let addr = Address::from_str(&transaction.from)?;
     let (_chain, chain_id) = extract_chain_params(&additional)?;
-    let passphrase = transaction.passphrase.clone();
 
     match storage.search_by_address(&addr) {
         Ok((_, kf)) => {
