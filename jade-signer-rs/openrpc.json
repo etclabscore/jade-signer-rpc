@@ -204,7 +204,7 @@
             "required": [
               "mnemonic",
               "passphrase",
-              "hdpath"
+              "hd_path"
             ],
             "properties": {
               "mnemonic": {
@@ -219,7 +219,7 @@
               "passphrase": {
                 "$ref": "#/components/schemas/Passphrase"
               },
-              "hdpath": {
+              "hd_path": {
                 "type": "string"
               }
             }
@@ -244,7 +244,7 @@
                 "name": "my imported wallet",
                 "description": "my imported wallet description",
                 "passphrase": "baz",
-                "hdpath": "m/44'/60'/160720'/0'",
+                "hd_path": "m/44'/60'/160720'/0'",
                 "mnemonic": "icon suggest road current ripple engage spell clay route large arena climb oxygen electric cupboard dream title immune fit beyond mouse slab bronze salad"
               }
             },
