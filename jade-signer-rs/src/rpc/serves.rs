@@ -206,7 +206,7 @@ pub fn new_account(
 }
 
 pub fn sign_transaction(
-    params: SignParams<(SignTxTransaction, String, ), (SignTxTransaction, String, SignTxAdditional)>,
+    params: SignParams<(SignTxTransaction, String), (SignTxTransaction, String, SignTxAdditional)>,
     storage: &Arc<Mutex<StorageController>>,
     wallet_manager: &Arc<Mutex<RefCell<WManager>>>,
 ) -> Result<Params, Error> {
