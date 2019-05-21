@@ -323,13 +323,12 @@ pub fn sign_transaction(
 }
 
 pub fn sign(
-    params: SignParams<CommonAdditional>,
+    params: SignParams<(String, String, String, CommonAdditional)>,
     storage: &Arc<Mutex<StorageController>>,
     wallet_manager: &Arc<Mutex<RefCell<WManager>>>,
 ) -> Result<Params, Error> {
     let storage_ctrl = storage.lock().unwrap();
-    let (input, address, passphrase, additional): (String, String, String, CommonAdditional) =
-        params.into_full();
+    let (input, address, passphrase, additional) = params.into_full();
     let storage = storage_ctrl.get_keystore(&additional.chain)?;
     let addr = Address::from_str(&address)?;
     let hash = util::keccak256(
