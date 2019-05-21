@@ -222,14 +222,13 @@ pub fn sign_transaction(
                 Ok(tr) => {
                     match kf.crypto {
                         CryptoType::Core(_) => {
-                            if passphrase.is_none() {
+                            if passphrase.is_empty() {
                                 return Err(Error::InvalidDataFormat(
                                     "Missing passphrase".to_string(),
                                 ));
                             }
-                            let pass = passphrase.unwrap();
 
-                            if let Ok(pk) = kf.decrypt_key(&pass) {
+                            if let Ok(pk) = kf.decrypt_key(&passphrase) {
                                 let raw = tr
                                     .to_signed_raw(pk, chain_id)
                                     .expect("Expect to sign a transaction");
