@@ -79,6 +79,56 @@ fn check_chain_id(id: u8) -> Result<String, Error> {
 
 #[derive(Deserialize, Debug)]
 #[serde(untagged)]
+pub enum SignTxParams<T, U> {
+    Left(T, String),
+    Right(U),
+}
+
+impl<T, U: Default> SignTxParams<T, U> {
+    pub fn into_right(self) -> U {
+        match self {
+            SignTxParams::Left(_, _) => U::default(),
+            SignTxParams::Right(u) => u,
+        }
+    }
+}
+
+impl<T, U: Default> SignTxParams<(T, String), (T, String, U)> {
+    pub fn into_full(self) -> (T, String, U) {
+        match self {
+            SignTxParams::Left((t, s), _) => (t, s, U::default()),
+            SignTxParams::Right((t, s, u)) => (t, s, u),
+        }
+    }
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(untagged)]
+pub enum SignParams<U> {
+    Left(String, String, String),
+    Right(U),
+}
+
+impl<U: Default> SignParams<U> {
+    pub fn into_right(self) -> U {
+        match self {
+            SignParams::Left(_, _, _) => U::default(),
+            SignParams::Right(u) => u,
+        }
+    }
+}
+
+impl<U: Default> SignParams<(String, String, String, U)> {
+    pub fn into_full(self) -> (String, String, String, U) {
+        match self {
+            SignParams::Left(t, p, s) => (t, p, s, U::default()),
+            SignParams::Right((t, p, s, u)) => (t, p, s, u),
+        }
+    }
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(untagged)]
 pub enum Either<T, U> {
     Left(T),
     Right(U),
@@ -193,8 +243,6 @@ pub struct SignTxTransaction {
     #[serde(default)]
     pub data: String,
     pub nonce: String,
-    #[serde(default)]
-    pub passphrase: Option<String>,
 }
 
 #[derive(Deserialize, Default, Debug)]
@@ -215,14 +263,6 @@ impl CommonChainParams for SignTxAdditional {
     fn get_chain_id(&self) -> Option<usize> {
         self.chain_id
     }
-}
-
-#[derive(Deserialize, Debug)]
-pub struct SignData {
-    pub address: String,
-    pub data: String,
-    #[serde(default)]
-    pub passphrase: Option<String>,
 }
 
 #[derive(Deserialize, Default, Debug)]

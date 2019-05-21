@@ -1,7 +1,8 @@
 use super::common::{
     extract_chain_params, CommonAdditional, Either, FunctionParams, ListAccountAccount,
     ListAccountsAdditional, NewAccountAccount, NewMnemonicAccount, SelectedAccount,
-    ShakeAccountAccount, SignData, SignTxAdditional, SignTxTransaction, UpdateAccountAccount,
+    ShakeAccountAccount, SignParams, SignTxAdditional, SignTxParams, SignTxTransaction,
+    UpdateAccountAccount,
 };
 use super::Error;
 use super::StorageController;
@@ -14,10 +15,10 @@ use keystore::{os_random, CryptoType, Kdf, KdfDepthLevel, KeyFile, PBKDF2_KDF_NA
 use mnemonic::{self, gen_entropy, HDPath, Language, Mnemonic, ENTROPY_BYTE_LENGTH};
 use serde_json;
 use std::cell::RefCell;
+use std::ops::Deref;
 use std::str::FromStr;
 use std::sync::{Arc, Mutex};
 use util;
-use std::ops::Deref;
 
 static OPENRPC_SCHEMA: &'static [u8] = include_bytes!("../../openrpc.json");
 
@@ -205,16 +206,18 @@ pub fn new_account(
 }
 
 pub fn sign_transaction(
-    params: Either<(SignTxTransaction,), (SignTxTransaction, SignTxAdditional)>,
+    params: SignTxParams<
+        (SignTxTransaction, String),
+        (SignTxTransaction, String, SignTxAdditional),
+    >,
     storage: &Arc<Mutex<StorageController>>,
     wallet_manager: &Arc<Mutex<RefCell<WManager>>>,
 ) -> Result<Params, Error> {
     let storage_ctrl = storage.lock().unwrap();
-    let (transaction, additional) = params.into_full();
+    let (transaction, passphrase, additional) = params.into_full();
     let storage = storage_ctrl.get_keystore(&additional.chain)?;
     let addr = Address::from_str(&transaction.from)?;
     let (_chain, chain_id) = extract_chain_params(&additional)?;
-    let passphrase = transaction.passphrase.clone();
 
     match storage.search_by_address(&addr) {
         Ok((_, kf)) => {
@@ -222,14 +225,13 @@ pub fn sign_transaction(
                 Ok(tr) => {
                     match kf.crypto {
                         CryptoType::Core(_) => {
-                            if passphrase.is_none() {
+                            if passphrase.is_empty() {
                                 return Err(Error::InvalidDataFormat(
                                     "Missing passphrase".to_string(),
                                 ));
                             }
-                            let pass = passphrase.unwrap();
 
-                            if let Ok(pk) = kf.decrypt_key(&pass) {
+                            if let Ok(pk) = kf.decrypt_key(&passphrase) {
                                 let raw = tr
                                     .to_signed_raw(pk, chain_id)
                                     .expect("Expect to sign a transaction");
@@ -321,31 +323,25 @@ pub fn sign_transaction(
 }
 
 pub fn sign(
-    params: Either<(SignData,), (SignData, CommonAdditional)>,
+    params: SignParams<(String, String, String, CommonAdditional)>,
     storage: &Arc<Mutex<StorageController>>,
     wallet_manager: &Arc<Mutex<RefCell<WManager>>>,
 ) -> Result<Params, Error> {
     let storage_ctrl = storage.lock().unwrap();
-    let (input, additional) = params.into_full();
+    let (input, address, passphrase, additional) = params.into_full();
     let storage = storage_ctrl.get_keystore(&additional.chain)?;
-    let addr = Address::from_str(&input.address)?;
+    let addr = Address::from_str(&address)?;
     let hash = util::keccak256(
-        format!(
-            "\x19Ethereum Signed Message:\n{}{}",
-            input.data.len(),
-            input.data
-        )
-        .as_bytes(),
+        format!("\x19Ethereum Signed Message:\n{}{}", input.len(), input).as_bytes(),
     );
     match storage.search_by_address(&addr) {
         Ok((_, kf)) => {
             match kf.crypto {
                 CryptoType::Core(_) => {
-                    if input.passphrase.is_none() {
+                    if passphrase.is_empty() {
                         return Err(Error::InvalidDataFormat("Missing passphrase".to_string()));
                     }
-                    let pass = input.passphrase.unwrap();
-                    if let Ok(pk) = kf.decrypt_key(&pass) {
+                    if let Ok(pk) = kf.decrypt_key(&passphrase) {
                         let signed = pk.sign_hash(hash)?;
                         Ok(Params::Array(vec![Value::String(signed.into())]))
                     } else {
@@ -397,7 +393,7 @@ pub fn sign(
                                 debug!(
                                     "HD wallet addr:{:?} path: {:?} signed data to: {:?}\n\t raw: \
                                      {:?}",
-                                    addr, fd, input.data, s
+                                    addr, fd, input, s
                                 );
                                 return Ok(Params::Array(vec![Value::String(s.into())]));
                             }
