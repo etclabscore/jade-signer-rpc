@@ -1,7 +1,7 @@
 use super::common::{
     extract_chain_params, CommonAdditional, Either, FunctionParams, ListAccountAccount,
     ListAccountsAdditional, NewAccountAccount, NewMnemonicAccount, SelectedAccount,
-    ShakeAccountAccount, SignData, SignParams, SignTxAdditional, SignTxTransaction,
+    ShakeAccountAccount, SignParams, SignTxAdditional, SignTxParams, SignTxTransaction,
     UpdateAccountAccount,
 };
 use super::Error;
@@ -206,7 +206,10 @@ pub fn new_account(
 }
 
 pub fn sign_transaction(
-    params: SignParams<(SignTxTransaction, String), (SignTxTransaction, String, SignTxAdditional)>,
+    params: SignTxParams<
+        (SignTxTransaction, String),
+        (SignTxTransaction, String, SignTxAdditional),
+    >,
     storage: &Arc<Mutex<StorageController>>,
     wallet_manager: &Arc<Mutex<RefCell<WManager>>>,
 ) -> Result<Params, Error> {
@@ -320,21 +323,17 @@ pub fn sign_transaction(
 }
 
 pub fn sign(
-    params: SignParams<(SignData, String), (SignData, String, CommonAdditional)>,
+    params: SignParams<CommonAdditional>,
     storage: &Arc<Mutex<StorageController>>,
     wallet_manager: &Arc<Mutex<RefCell<WManager>>>,
 ) -> Result<Params, Error> {
     let storage_ctrl = storage.lock().unwrap();
-    let (input, passphrase, additional) = params.into_full();
+    let (input, address, passphrase, additional): (String, String, String, CommonAdditional) =
+        params.into_full();
     let storage = storage_ctrl.get_keystore(&additional.chain)?;
-    let addr = Address::from_str(&input.address)?;
+    let addr = Address::from_str(&address)?;
     let hash = util::keccak256(
-        format!(
-            "\x19Ethereum Signed Message:\n{}{}",
-            input.data.len(),
-            input.data
-        )
-        .as_bytes(),
+        format!("\x19Ethereum Signed Message:\n{}{}", input.len(), input).as_bytes(),
     );
     match storage.search_by_address(&addr) {
         Ok((_, kf)) => {
@@ -395,7 +394,7 @@ pub fn sign(
                                 debug!(
                                     "HD wallet addr:{:?} path: {:?} signed data to: {:?}\n\t raw: \
                                      {:?}",
-                                    addr, fd, input.data, s
+                                    addr, fd, input, s
                                 );
                                 return Ok(Params::Array(vec![Value::String(s.into())]));
                             }
