@@ -507,7 +507,8 @@ pub fn import_mnemonic(
 ) -> Result<String, Error> {
     let storage_ctrl = storage.lock().unwrap();
     let (account, additional) = params.into_full();
-    let storage = storage_ctrl.get_keystore(&additional.chain)?;
+    let (chain, _) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_keystore(&chain)?;
     if account.passphrase.is_empty() {
         return Err(Error::InvalidDataFormat("Empty passphrase".to_string()));
     }
