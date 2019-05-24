@@ -34,7 +34,8 @@ pub fn list_accounts(
 ) -> Result<Vec<ListAccountAccount>, Error> {
     let storage_ctrl = storage.lock().unwrap();
     let (additional,) = params.into_right();
-    let storage = storage_ctrl.get_keystore(&additional.chain)?;
+    let (chain, chain_id) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_keystore(&chain)?;
     let res = storage
         .list_accounts(additional.show_hidden)?
         .iter()
@@ -60,7 +61,8 @@ pub fn hide_account(
 ) -> Result<bool, Error> {
     let storage_ctrl = storage.lock().unwrap();
     let (account, additional) = params.into_full();
-    let storage = storage_ctrl.get_keystore(&additional.chain)?;
+    let (chain, chain_id) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_keystore(&chain)?;
     let addr = Address::from_str(&account.address)?;
     let res = storage.hide(&addr)?;
     debug!("Account hided: {}", addr);
@@ -74,7 +76,8 @@ pub fn unhide_account(
 ) -> Result<bool, Error> {
     let storage_ctrl = storage.lock().unwrap();
     let (account, additional) = params.into_full();
-    let storage = storage_ctrl.get_keystore(&additional.chain)?;
+    let (chain, chain_id) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_keystore(&chain)?;
     let addr = Address::from_str(&account.address)?;
     let res = storage.unhide(&addr)?;
     debug!("Account unhided: {}", addr);
@@ -90,7 +93,8 @@ pub fn shake_account(
 
     let storage_ctrl = storage.lock().unwrap();
     let (account, additional) = params.into_full();
-    let storage = storage_ctrl.get_keystore(&additional.chain)?;
+    let (chain, chain_id) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_keystore(&chain)?;
     let addr = Address::from_str(&account.address)?;
 
     let (_, kf) = storage.search_by_address(&addr)?;
@@ -124,7 +128,8 @@ pub fn update_account(
 ) -> Result<bool, Error> {
     let storage_ctrl = storage.lock().unwrap();
     let (account, additional) = params.into_full();
-    let storage = storage_ctrl.get_keystore(&additional.chain)?;
+    let (chain, chain_id) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_keystore(&chain)?;
     let addr = Address::from_str(&account.address)?;
 
     let (_, mut kf) = storage.search_by_address(&addr)?;
@@ -152,7 +157,8 @@ pub fn import_account(
 ) -> Result<String, Error> {
     let storage_ctrl = storage.lock().unwrap();
     let (raw, additional) = params.into_full();
-    let storage = storage_ctrl.get_keystore(&additional.chain)?;
+    let (chain, chain_id) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_keystore(&chain)?;
     let raw = serde_json::to_string(&raw)?;
 
     let kf = KeyFile::decode(&raw)?;
@@ -169,7 +175,8 @@ pub fn export_account(
 ) -> Result<Value, Error> {
     let storage_ctrl = storage.lock().unwrap();
     let (account, additional) = params.into_full();
-    let storage = storage_ctrl.get_keystore(&additional.chain)?;
+    let (chain, chain_id) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_keystore(&chain)?;
     let addr = Address::from_str(&account.address)?;
 
     let (_, kf) = storage.search_by_address(&addr)?;
@@ -186,7 +193,8 @@ pub fn new_account(
 ) -> Result<String, Error> {
     let storage_ctrl = storage.lock().unwrap();
     let (account, additional) = params.into_full();
-    let storage = storage_ctrl.get_keystore(&additional.chain)?;
+    let (chain, chain_id) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_keystore(&chain)?;
     if account.passphrase.is_empty() {
         return Err(Error::InvalidDataFormat("Empty passphrase".to_string()));
     }
@@ -215,7 +223,8 @@ pub fn sign_transaction(
 ) -> Result<Params, Error> {
     let storage_ctrl = storage.lock().unwrap();
     let (transaction, passphrase, additional) = params.into_full();
-    let storage = storage_ctrl.get_keystore(&additional.chain)?;
+    let (chain, chain_id) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_keystore(&chain)?;
     let addr = Address::from_str(&transaction.from)?;
     let (_chain, chain_id) = extract_chain_params(&additional)?;
 
@@ -329,7 +338,8 @@ pub fn sign(
 ) -> Result<Params, Error> {
     let storage_ctrl = storage.lock().unwrap();
     let (input, address, passphrase, additional) = params.into_full();
-    let storage = storage_ctrl.get_keystore(&additional.chain)?;
+    let (chain, chain_id) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_keystore(&chain)?;
     let addr = Address::from_str(&address)?;
     let hash = util::keccak256(
         format!("\x19Ethereum Signed Message:\n{}{}", input.len(), input).as_bytes(),
@@ -432,7 +442,8 @@ pub fn list_contracts(
 ) -> Result<Vec<serde_json::Value>, Error> {
     let storage_ctrl = storage.lock().unwrap();
     let (additional,) = params.into_right();
-    let storage = storage_ctrl.get_contracts(&additional.chain)?;
+    let (chain, chain_id) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_contracts(&chain)?;
 
     Ok(storage.list())
 }
@@ -443,7 +454,8 @@ pub fn import_contract(
 ) -> Result<(), Error> {
     let storage_ctrl = storage.lock().unwrap();
     let (raw, additional) = params.into_full();
-    let storage = storage_ctrl.get_contracts(&additional.chain)?;
+    let (chain, chain_id) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_contracts(&chain)?;
 
     storage.add(&raw)?;
     Ok(())
@@ -455,7 +467,8 @@ pub fn list_addresses(
 ) -> Result<Vec<serde_json::Value>, Error> {
     let storage_ctrl = storage.lock().unwrap();
     let (additional,) = params.into_right();
-    let storage = storage_ctrl.get_addressbook(&additional.chain)?;
+    let (chain, chain_id) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_addressbook(&chain)?;
 
     Ok(storage.list())
 }
@@ -466,7 +479,8 @@ pub fn import_address(
 ) -> Result<String, Error> {
     let storage_ctrl = storage.lock().unwrap();
     let (raw, additional) = params.into_full();
-    let storage = storage_ctrl.get_addressbook(&additional.chain)?;
+    let (chain, chain_id) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_addressbook(&chain)?;
 
     storage.add(&raw)?;
     Ok(raw.get("address").unwrap().to_string())
@@ -478,7 +492,8 @@ pub fn delete_address(
 ) -> Result<(), Error> {
     let storage_ctrl = storage.lock().unwrap();
     let (addr, additional) = params.into_full();
-    let storage = storage_ctrl.get_addressbook(&additional.chain)?;
+    let (chain, chain_id) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_addressbook(&chain)?;
 
     storage.delete(&addr)?;
     Ok(())
@@ -507,7 +522,8 @@ pub fn import_mnemonic(
 ) -> Result<String, Error> {
     let storage_ctrl = storage.lock().unwrap();
     let (account, additional) = params.into_full();
-    let storage = storage_ctrl.get_keystore(&additional.chain)?;
+    let (chain, _) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_keystore(&chain)?;
     if account.passphrase.is_empty() {
         return Err(Error::InvalidDataFormat("Empty passphrase".to_string()));
     }
