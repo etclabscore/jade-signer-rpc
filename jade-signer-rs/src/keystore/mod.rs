@@ -15,11 +15,16 @@ pub use self::kdf::{Kdf, KdfDepthLevel, KdfParams, PBKDF2_KDF_NAME};
 pub use self::prf::Prf;
 pub use self::serialize::Error as SerializeError;
 pub use self::serialize::{
-    try_extract_address, CoreCrypto, Iv, Mac, SerializableKeyFileCore, SerializableKeyFileHD,
+    try_extract_address, CoreCrypto, Iv, Mac, SerializableKeyFileCore
 };
 use super::core::{self, Address, PrivateKey};
 use super::util::{self, keccak256, to_arr, KECCAK256_BYTES};
+#[cfg(feature = "hardware-wallet")]
 pub use hdwallet::HdwalletCrypto;
+
+#[cfg(feature = "hardware-wallet")]
+pub use self::serialize::SerializableKeyFileHD;
+
 use rand::{OsRng, Rng};
 use std::convert::From;
 use std::str::FromStr;
@@ -64,6 +69,7 @@ pub enum CryptoType {
     /// normal Web3 Secret Storage
     Core(CoreCrypto),
 
+    #[cfg(feature = "hardware-wallet")]
     /// backed with HD Wallet
     HdWallet(HdwalletCrypto),
 }

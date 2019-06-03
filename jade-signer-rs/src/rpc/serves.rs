@@ -252,7 +252,8 @@ pub fn sign_transaction(
                                 Err(Error::InvalidDataFormat("Invalid passphrase".to_string()))
                             }
                         }
-
+                        
+                        #[cfg(feature = "hardware-wallet")]
                         CryptoType::HdWallet(hw) => {
                             let guard = wallet_manager.lock().unwrap();
                             let mut wm = guard.borrow_mut();

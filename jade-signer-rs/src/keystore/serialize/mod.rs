@@ -11,6 +11,7 @@ pub use self::crypto::{CoreCrypto, Iv, Mac};
 pub use self::error::Error;
 use super::core::{self, Address};
 use super::util;
+#[cfg(feature = "hardware-wallet")]
 use super::HdwalletCrypto;
 use super::{Cipher, CryptoType, KdfParams, KeyFile, Salt, CIPHER_IV_BYTES};
 use serde::ser;
@@ -65,6 +66,7 @@ impl Into<KeyFile> for SerializableKeyFileCore {
     }
 }
 
+#[cfg(feature = "hardware-wallet")]
 /// A serializable keystore file (UTC / JSON format)
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct SerializableKeyFileHD {
@@ -77,6 +79,7 @@ pub struct SerializableKeyFileHD {
     crypto: HdwalletCrypto,
 }
 
+#[cfg(feature = "hardware-wallet")]
 impl SerializableKeyFileHD {
     fn try_from(kf: &KeyFile) -> Result<Self, Error> {
         let cr = HdwalletCrypto::try_from(kf)?;
@@ -93,6 +96,7 @@ impl SerializableKeyFileHD {
     }
 }
 
+#[cfg(feature = "hardware-wallet")]
 impl Into<KeyFile> for SerializableKeyFileHD {
     fn into(self) -> KeyFile {
         KeyFile {
