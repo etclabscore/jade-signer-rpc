@@ -2,7 +2,7 @@
 
 Jade Signer JSON-RPC API lets you manage keys and sign transactions and messages offline for any EVM-based blockchain.
 
-[View The Documentation](https://playground.open-rpc.org/?uiSchema[appBar][ui:input]=false&uiSchema[appBar][ui:splitView]=false&schemaUrl=https://raw.githubusercontent.com/etclabscore/jade-signer-rpc/master/jade-signer-rs/openrpc.json).
+[View The Documentation](https://playground.open-rpc.org/?uiSchema[appBar][ui:title]=Jade%20Signer&uiSchema[appBar][ui:logoUrl]=https://github.com/etclabscore/jade-media-assets/raw/master/jade-logo-light/jade-logo-light%20(PNG)/48x48.png&uiSchema[appBar][ui:input]=false&uiSchema[appBar][ui:splitView]=false&schemaUrl=https://raw.githubusercontent.com/etclabscore/jade-signer-rpc/master/jade-signer-rs/openrpc.json).
 
 ## The Problem
 
