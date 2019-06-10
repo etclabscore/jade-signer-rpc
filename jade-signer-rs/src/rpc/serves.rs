@@ -8,7 +8,11 @@ use super::Error;
 use super::StorageController;
 use contract::Contract;
 use core::{Address, Transaction};
+
+#[cfg(feature = "hardware-wallet")]
 use hdwallet::bip32::to_prefixed_path;
+
+#[cfg(feature = "hardware-wallet")]
 use hdwallet::WManager;
 use jsonrpc_core::{Params, Value};
 use keystore::{os_random, CryptoType, Kdf, KdfDepthLevel, KeyFile, PBKDF2_KDF_NAME};
@@ -252,7 +256,7 @@ pub fn sign_transaction(
                                 Err(Error::InvalidDataFormat("Invalid passphrase".to_string()))
                             }
                         }
-                        
+
                         #[cfg(feature = "hardware-wallet")]
                         CryptoType::HdWallet(hw) => {
                             let guard = wallet_manager.lock().unwrap();
@@ -359,7 +363,7 @@ pub fn sign(
                         Err(Error::InvalidDataFormat("Invalid passphrase".to_string()))
                     }
                 }
-
+                #[cfg(feature = "hardware-wallet")]
                 CryptoType::HdWallet(hw) => {
                     let guard = wallet_manager.lock().unwrap();
                     let mut wm = guard.borrow_mut();

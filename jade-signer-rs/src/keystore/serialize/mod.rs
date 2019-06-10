@@ -123,6 +123,7 @@ impl KeyFile {
                 ver = core.version;
                 Ok(core.into())
             })
+            #[cfg(feature = "hardware-wallet")]
             .or_else(|_| {
                 serde_json::from_str::<SerializableKeyFileHD>(&buf).and_then(|hd| {
                     ver = hd.version;
