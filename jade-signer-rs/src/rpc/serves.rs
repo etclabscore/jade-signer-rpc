@@ -217,6 +217,8 @@ pub fn new_account(
     Ok(addr)
 }
 
+
+#[cfg(feature = "hardware-wallet")]
 pub fn sign_transaction(
     params: SignTxParams<
         (SignTxTransaction, String),
@@ -336,6 +338,37 @@ pub fn sign_transaction(
     }
 }
 
+#[cfg(feature = "default")]
+pub fn sign(
+    params: SignParams<(String, String, String, CommonAdditional)>,
+    storage: &Arc<Mutex<StorageController>>,
+) -> Result<Params, Error> {
+    let storage_ctrl = storage.lock().unwrap();
+    let (input, address, passphrase, additional) = params.into_full();
+    let (chain, chain_id) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_keystore(&chain)?;
+    let addr = Address::from_str(&address)?;
+    let hash = util::keccak256(
+        format!("\x19Ethereum Signed Message:\n{}{}", input.len(), input).as_bytes(),
+    );
+    match storage.search_by_address(&addr) {
+        Ok((_, kf)) => {
+                if passphrase.is_empty() {
+                    return Err(Error::InvalidDataFormat("Missing passphrase".to_string()));
+                }
+                if let Ok(pk) = kf.decrypt_key(&passphrase) {
+                    let signed = pk.sign_hash(hash)?;
+                    Ok(Params::Array(vec![Value::String(signed.into())]))
+                } else {
+                    Err(Error::InvalidDataFormat("Invalid passphrase".to_string()))
+                }
+            }
+        }
+        Err(_) => Err(Error::InvalidDataFormat("Can't find account".to_string())),
+    }
+}
+
+#[cfg(feature = "hardware-wallet")]
 pub fn sign(
     params: SignParams<(String, String, String, CommonAdditional)>,
     storage: &Arc<Mutex<StorageController>>,
@@ -363,7 +396,7 @@ pub fn sign(
                         Err(Error::InvalidDataFormat("Invalid passphrase".to_string()))
                     }
                 }
-                #[cfg(feature = "hardware-wallet")]
+                
                 CryptoType::HdWallet(hw) => {
                     let guard = wallet_manager.lock().unwrap();
                     let mut wm = guard.borrow_mut();
@@ -432,6 +465,7 @@ pub fn sign(
         Err(_) => Err(Error::InvalidDataFormat("Can't find account".to_string())),
     }
 }
+
 
 pub fn encode_function_call(
     params: Either<(Value,), (Value, FunctionParams)>,
