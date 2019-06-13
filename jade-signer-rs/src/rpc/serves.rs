@@ -217,6 +217,46 @@ pub fn new_account(
     Ok(addr)
 }
 
+#[cfg(feature = "default")]
+pub fn sign_transaction(
+    params: SignTxParams<
+        (SignTxTransaction, String),
+        (SignTxTransaction, String, SignTxAdditional),
+    >,
+    storage: &Arc<Mutex<StorageController>>,
+) -> Result<Params, Error> {
+    let storage_ctrl = storage.lock().unwrap();
+    let (transaction, passphrase, additional) = params.into_full();
+    let (chain, chain_id) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_keystore(&chain)?;
+    let addr = Address::from_str(&transaction.from)?;
+    let (_chain, chain_id) = extract_chain_params(&additional)?;
+
+    match storage.search_by_address(&addr) {
+        Ok((_, kf)) => match transaction.try_into() {
+            Ok(tr) => {
+                if passphrase.is_empty() {
+                    return Err(Error::InvalidDataFormat("Missing passphrase".to_string()));
+                }
+
+                if let Ok(pk) = kf.decrypt_key(&passphrase) {
+                    let raw = tr
+                        .to_signed_raw(pk, chain_id)
+                        .expect("Expect to sign a transaction");
+                    let signed = Transaction::to_raw_params(&raw);
+                    debug!("Signed transaction to: {:?}\n\t raw: {:?}", &tr.to, signed);
+
+                    Ok(signed)
+                } else {
+                    Err(Error::InvalidDataFormat("Invalid passphrase".to_string()))
+                }
+            }
+            Err(err) => Err(Error::InvalidDataFormat(err.to_string())),
+        },
+
+        Err(_) => Err(Error::InvalidDataFormat("Can't find account".to_string())),
+    }
+}
 
 #[cfg(feature = "hardware-wallet")]
 pub fn sign_transaction(
@@ -353,15 +393,14 @@ pub fn sign(
     );
     match storage.search_by_address(&addr) {
         Ok((_, kf)) => {
-                if passphrase.is_empty() {
-                    return Err(Error::InvalidDataFormat("Missing passphrase".to_string()));
-                }
-                if let Ok(pk) = kf.decrypt_key(&passphrase) {
-                    let signed = pk.sign_hash(hash)?;
-                    Ok(Params::Array(vec![Value::String(signed.into())]))
-                } else {
-                    Err(Error::InvalidDataFormat("Invalid passphrase".to_string()))
-                }
+            if passphrase.is_empty() {
+                return Err(Error::InvalidDataFormat("Missing passphrase".to_string()));
+            }
+            if let Ok(pk) = kf.decrypt_key(&passphrase) {
+                let signed = pk.sign_hash(hash)?;
+                Ok(Params::Array(vec![Value::String(signed.into())]))
+            } else {
+                Err(Error::InvalidDataFormat("Invalid passphrase".to_string()))
             }
         }
         Err(_) => Err(Error::InvalidDataFormat("Can't find account".to_string())),
@@ -396,7 +435,7 @@ pub fn sign(
                         Err(Error::InvalidDataFormat("Invalid passphrase".to_string()))
                     }
                 }
-                
+
                 CryptoType::HdWallet(hw) => {
                     let guard = wallet_manager.lock().unwrap();
                     let mut wm = guard.borrow_mut();
@@ -465,7 +504,6 @@ pub fn sign(
         Err(_) => Err(Error::InvalidDataFormat("Can't find account".to_string())),
     }
 }
-
 
 pub fn encode_function_call(
     params: Either<(Value,), (Value, FunctionParams)>,

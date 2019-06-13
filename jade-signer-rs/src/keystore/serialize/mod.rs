@@ -111,6 +111,7 @@ impl Into<KeyFile> for SerializableKeyFileHD {
 }
 
 impl KeyFile {
+    #[cfg(feature = "default")]
     /// Decode `Keyfile` from JSON
     /// Handles different variants of `crypto` section
     ///
@@ -123,7 +124,28 @@ impl KeyFile {
                 ver = core.version;
                 Ok(core.into())
             })
-            #[cfg(feature = "hardware-wallet")]
+            .map_err(Error::from)?;
+
+        if !SUPPORTED_VERSIONS.contains(&ver) {
+            return Err(Error::UnsupportedVersion(ver));
+        }
+
+        Ok(kf)
+    }
+
+    #[cfg(feature = "hardware-wallet")]
+    /// Decode `Keyfile` from JSON
+    /// Handles different variants of `crypto` section
+    ///
+    pub fn decode(f: &str) -> Result<KeyFile, Error> {
+        let buf = f.to_string().to_lowercase();
+        let mut ver = 0;
+
+        let kf = serde_json::from_str::<SerializableKeyFileCore>(&buf)
+            .and_then(|core| {
+                ver = core.version;
+                Ok(core.into())
+            })
             .or_else(|_| {
                 serde_json::from_str::<SerializableKeyFileHD>(&buf).and_then(|hd| {
                     ver = hd.version;

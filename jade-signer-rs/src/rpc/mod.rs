@@ -149,13 +149,24 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
         });
     }
 
-    if cfg!(feature = "hardware-wallet") {
+    #[cfg(feature = "default")]
+    {
         let storage_ctrl = Arc::clone(&storage_ctrl);
-        let wm = Arc::clone(&wallet_manager);
         io.add_method("signer_signTransaction", move |p: Params| {
-            wrapper(serves::sign_transaction(parse(p)?, &storage_ctrl, &wm))
+            wrapper(serves::sign_transaction(parse(p)?, &storage_ctrl))
         });
-    } else {
+    }
+
+    #[cfg(feature = "default")]
+    {
+        let storage_ctrl = Arc::clone(&storage_ctrl);
+        io.add_method("signer_sign", move |p: Params| {
+            wrapper(serves::sign(parse(p)?, &storage_ctrl))
+        });
+    }
+
+    #[cfg(feature = "hardware-wallet")]
+    {
         let storage_ctrl = Arc::clone(&storage_ctrl);
         let wm = Arc::clone(&wallet_manager);
         io.add_method("signer_signTransaction", move |p: Params| {
@@ -163,6 +174,7 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
         });
     }
 
+    #[cfg(feature = "hardware-wallet")]
     {
         let storage_ctrl = Arc::clone(&storage_ctrl);
         let wm = Arc::clone(&wallet_manager);

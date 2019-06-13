@@ -14,9 +14,7 @@ pub use self::error::Error;
 pub use self::kdf::{Kdf, KdfDepthLevel, KdfParams, PBKDF2_KDF_NAME};
 pub use self::prf::Prf;
 pub use self::serialize::Error as SerializeError;
-pub use self::serialize::{
-    try_extract_address, CoreCrypto, Iv, Mac, SerializableKeyFileCore
-};
+pub use self::serialize::{try_extract_address, CoreCrypto, Iv, Mac, SerializableKeyFileCore};
 use super::core::{self, Address, PrivateKey};
 use super::util::{self, keccak256, to_arr, KECCAK256_BYTES};
 #[cfg(feature = "hardware-wallet")]
