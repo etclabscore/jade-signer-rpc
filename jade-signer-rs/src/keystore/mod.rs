@@ -67,8 +67,8 @@ pub enum CryptoType {
     /// normal Web3 Secret Storage
     Core(CoreCrypto),
 
-    #[cfg(feature = "hardware-wallet")]
     /// backed with HD Wallet
+    #[cfg(feature = "hardware-wallet")]
     HdWallet(HdwalletCrypto),
 }
 

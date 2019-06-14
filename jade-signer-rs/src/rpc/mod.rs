@@ -18,7 +18,6 @@ use log::Level;
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 use serde_json::{self, Value};
-use std::cell::RefCell;
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 
@@ -216,6 +215,7 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
         });
     }
 
+    #[cfg(feature = "hardware-wallet")]
     {
         let storage_ctrl = Arc::clone(&storage_ctrl);
         io.add_method("signer_importMnemonic", move |p: Params| {

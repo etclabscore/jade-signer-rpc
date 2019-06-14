@@ -15,10 +15,11 @@ use hdwallet::bip32::to_prefixed_path;
 #[cfg(feature = "hardware-wallet")]
 use hdwallet::WManager;
 use jsonrpc_core::{Params, Value};
-use keystore::{os_random, CryptoType, Kdf, KdfDepthLevel, KeyFile, PBKDF2_KDF_NAME};
-use mnemonic::{self, gen_entropy, HDPath, Language, Mnemonic, ENTROPY_BYTE_LENGTH};
+use keystore::{CryptoType, KdfDepthLevel, KeyFile};
+#[cfg(feature = "hardware-wallet")]
+use mnemonic::HDPath;
+use mnemonic::{gen_entropy, Language, Mnemonic, ENTROPY_BYTE_LENGTH};
 use serde_json;
-use std::cell::RefCell;
 use std::ops::Deref;
 use std::str::FromStr;
 use std::sync::{Arc, Mutex};
@@ -592,6 +593,7 @@ pub fn generate_mnemonic() -> Result<String, Error> {
     Ok(mnemonic.sentence())
 }
 
+#[cfg(feature = "hardware-wallet")]
 pub fn import_mnemonic(
     params: Either<(NewMnemonicAccount,), (NewMnemonicAccount, CommonAdditional)>,
     sec: &KdfDepthLevel,

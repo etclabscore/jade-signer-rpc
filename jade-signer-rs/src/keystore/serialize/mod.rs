@@ -66,9 +66,9 @@ impl Into<KeyFile> for SerializableKeyFileCore {
     }
 }
 
-#[cfg(feature = "hardware-wallet")]
 /// A serializable keystore file (UTC / JSON format)
 #[derive(Serialize, Deserialize, Clone, Debug)]
+#[cfg(feature = "hardware-wallet")]
 pub struct SerializableKeyFileHD {
     version: u8,
     id: Uuid,
@@ -163,6 +163,18 @@ impl KeyFile {
 }
 
 impl Serialize for KeyFile {
+    #[cfg(feature = "default")]
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        match SerializableKeyFileCore::try_from(self.clone()) {
+            Ok(sf) => sf.serialize(serializer),
+            Err(e) => Err(ser::Error::custom(e)),
+        }
+    }
+
+    #[cfg(feature = "hardware-wallet")]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
