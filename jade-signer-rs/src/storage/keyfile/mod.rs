@@ -40,6 +40,31 @@ pub struct AccountInfo {
     pub is_hidden: bool,
 }
 
+#[cfg(feature = "default")]
+impl From<KeyFile> for AccountInfo {
+    fn from(kf: KeyFile) -> Self {
+        let mut info = Self::default();
+        info.address = kf.address.to_string();
+
+        if let Some(name) = kf.name {
+            info.name = name;
+        };
+
+        if let Some(desc) = kf.description {
+            info.description = desc;
+        };
+
+        if let Some(visible) = kf.visible {
+            info.is_hidden = !visible;
+        };
+
+        info.is_hardware = false;
+
+        info
+    }
+}
+
+#[cfg(feature = "hardware-wallet")]
 impl From<KeyFile> for AccountInfo {
     fn from(kf: KeyFile) -> Self {
         let mut info = Self::default();

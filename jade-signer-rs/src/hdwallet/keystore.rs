@@ -1,3 +1,4 @@
+#[cfg(feature = "hardware-wallet")]
 use super::Error;
 use keystore::{CryptoType, KeyFile};
 

@@ -11,6 +11,7 @@ pub use self::crypto::{CoreCrypto, Iv, Mac};
 pub use self::error::Error;
 use super::core::{self, Address};
 use super::util;
+#[cfg(feature = "hardware-wallet")]
 use super::HdwalletCrypto;
 use super::{Cipher, CryptoType, KdfParams, KeyFile, Salt, CIPHER_IV_BYTES};
 use serde::ser;
@@ -67,6 +68,7 @@ impl Into<KeyFile> for SerializableKeyFileCore {
 
 /// A serializable keystore file (UTC / JSON format)
 #[derive(Serialize, Deserialize, Clone, Debug)]
+#[cfg(feature = "hardware-wallet")]
 pub struct SerializableKeyFileHD {
     version: u8,
     id: Uuid,
@@ -77,6 +79,7 @@ pub struct SerializableKeyFileHD {
     crypto: HdwalletCrypto,
 }
 
+#[cfg(feature = "hardware-wallet")]
 impl SerializableKeyFileHD {
     fn try_from(kf: &KeyFile) -> Result<Self, Error> {
         let cr = HdwalletCrypto::try_from(kf)?;
@@ -93,6 +96,7 @@ impl SerializableKeyFileHD {
     }
 }
 
+#[cfg(feature = "hardware-wallet")]
 impl Into<KeyFile> for SerializableKeyFileHD {
     fn into(self) -> KeyFile {
         KeyFile {
@@ -107,6 +111,29 @@ impl Into<KeyFile> for SerializableKeyFileHD {
 }
 
 impl KeyFile {
+    #[cfg(feature = "default")]
+    /// Decode `Keyfile` from JSON
+    /// Handles different variants of `crypto` section
+    ///
+    pub fn decode(f: &str) -> Result<KeyFile, Error> {
+        let buf = f.to_string().to_lowercase();
+        let mut ver = 0;
+
+        let kf = serde_json::from_str::<SerializableKeyFileCore>(&buf)
+            .and_then(|core| {
+                ver = core.version;
+                Ok(core.into())
+            })
+            .map_err(Error::from)?;
+
+        if !SUPPORTED_VERSIONS.contains(&ver) {
+            return Err(Error::UnsupportedVersion(ver));
+        }
+
+        Ok(kf)
+    }
+
+    #[cfg(feature = "hardware-wallet")]
     /// Decode `Keyfile` from JSON
     /// Handles different variants of `crypto` section
     ///
@@ -136,6 +163,18 @@ impl KeyFile {
 }
 
 impl Serialize for KeyFile {
+    #[cfg(feature = "default")]
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        match SerializableKeyFileCore::try_from(self.clone()) {
+            Ok(sf) => sf.serialize(serializer),
+            Err(e) => Err(ser::Error::custom(e)),
+        }
+    }
+
+    #[cfg(feature = "hardware-wallet")]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,

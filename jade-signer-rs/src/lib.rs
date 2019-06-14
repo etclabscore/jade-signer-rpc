@@ -39,6 +39,7 @@ extern crate time;
 extern crate uuid;
 mod contract;
 mod core;
+#[cfg(feature = "hardware-wallet")]
 mod hdwallet;
 pub mod keystore;
 pub mod mnemonic;

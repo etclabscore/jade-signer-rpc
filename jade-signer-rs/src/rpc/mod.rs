@@ -10,6 +10,7 @@ use super::core;
 use super::keystore::KdfDepthLevel;
 use super::storage::{self, StorageController};
 use super::util::{align_bytes, to_arr, to_even_str, to_u64, trim_hex, ToHex};
+#[cfg(feature = "hardware-wallet")]
 use hdwallet::WManager;
 use jsonrpc_core::{Error as JsonRpcError, IoHandler, Params};
 use jsonrpc_http_server::{AccessControlAllowOrigin, DomainsValidation, ServerBuilder};
@@ -17,9 +18,7 @@ use log::Level;
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 use serde_json::{self, Value};
-use std::cell::RefCell;
 use std::net::SocketAddr;
-use std::path::Path;
 use std::sync::{Arc, Mutex};
 
 fn wrapper<T: Serialize>(value: Result<T, Error>) -> Result<Value, JsonRpcError> {
@@ -56,6 +55,7 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
     let sec_level = sec_level.unwrap_or_default();
     let storage_ctrl = Arc::new(Mutex::new(storage_ctrl));
 
+    #[cfg(feature = "hardware-wallet")]
     let wallet_manager = match WManager::new(None) {
         Ok(wm) => Arc::new(Mutex::new(RefCell::new(wm))),
         Err(e) => panic!("Can't create HID endpoint: {}", e.to_string()),
@@ -148,6 +148,23 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
         });
     }
 
+    #[cfg(feature = "default")]
+    {
+        let storage_ctrl = Arc::clone(&storage_ctrl);
+        io.add_method("signer_signTransaction", move |p: Params| {
+            wrapper(serves::sign_transaction(parse(p)?, &storage_ctrl))
+        });
+    }
+
+    #[cfg(feature = "default")]
+    {
+        let storage_ctrl = Arc::clone(&storage_ctrl);
+        io.add_method("signer_sign", move |p: Params| {
+            wrapper(serves::sign(parse(p)?, &storage_ctrl))
+        });
+    }
+
+    #[cfg(feature = "hardware-wallet")]
     {
         let storage_ctrl = Arc::clone(&storage_ctrl);
         let wm = Arc::clone(&wallet_manager);
@@ -156,6 +173,7 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
         });
     }
 
+    #[cfg(feature = "hardware-wallet")]
     {
         let storage_ctrl = Arc::clone(&storage_ctrl);
         let wm = Arc::clone(&wallet_manager);
@@ -197,6 +215,7 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
         });
     }
 
+    #[cfg(feature = "hardware-wallet")]
     {
         let storage_ctrl = Arc::clone(&storage_ctrl);
         io.add_method("signer_importMnemonic", move |p: Params| {

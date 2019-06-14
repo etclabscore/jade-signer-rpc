@@ -8,13 +8,18 @@ use super::Error;
 use super::StorageController;
 use contract::Contract;
 use core::{Address, Transaction};
+
+#[cfg(feature = "hardware-wallet")]
 use hdwallet::bip32::to_prefixed_path;
+
+#[cfg(feature = "hardware-wallet")]
 use hdwallet::WManager;
 use jsonrpc_core::{Params, Value};
-use keystore::{os_random, CryptoType, Kdf, KdfDepthLevel, KeyFile, PBKDF2_KDF_NAME};
-use mnemonic::{self, gen_entropy, HDPath, Language, Mnemonic, ENTROPY_BYTE_LENGTH};
+use keystore::{CryptoType, KdfDepthLevel, KeyFile};
+#[cfg(feature = "hardware-wallet")]
+use mnemonic::HDPath;
+use mnemonic::{gen_entropy, Language, Mnemonic, ENTROPY_BYTE_LENGTH};
 use serde_json;
-use std::cell::RefCell;
 use std::ops::Deref;
 use std::str::FromStr;
 use std::sync::{Arc, Mutex};
@@ -213,6 +218,48 @@ pub fn new_account(
     Ok(addr)
 }
 
+#[cfg(feature = "default")]
+pub fn sign_transaction(
+    params: SignTxParams<
+        (SignTxTransaction, String),
+        (SignTxTransaction, String, SignTxAdditional),
+    >,
+    storage: &Arc<Mutex<StorageController>>,
+) -> Result<Params, Error> {
+    let storage_ctrl = storage.lock().unwrap();
+    let (transaction, passphrase, additional) = params.into_full();
+    let (chain, chain_id) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_keystore(&chain)?;
+    let addr = Address::from_str(&transaction.from)?;
+    let (_chain, chain_id) = extract_chain_params(&additional)?;
+
+    match storage.search_by_address(&addr) {
+        Ok((_, kf)) => match transaction.try_into() {
+            Ok(tr) => {
+                if passphrase.is_empty() {
+                    return Err(Error::InvalidDataFormat("Missing passphrase".to_string()));
+                }
+
+                if let Ok(pk) = kf.decrypt_key(&passphrase) {
+                    let raw = tr
+                        .to_signed_raw(pk, chain_id)
+                        .expect("Expect to sign a transaction");
+                    let signed = Transaction::to_raw_params(&raw);
+                    debug!("Signed transaction to: {:?}\n\t raw: {:?}", &tr.to, signed);
+
+                    Ok(signed)
+                } else {
+                    Err(Error::InvalidDataFormat("Invalid passphrase".to_string()))
+                }
+            }
+            Err(err) => Err(Error::InvalidDataFormat(err.to_string())),
+        },
+
+        Err(_) => Err(Error::InvalidDataFormat("Can't find account".to_string())),
+    }
+}
+
+#[cfg(feature = "hardware-wallet")]
 pub fn sign_transaction(
     params: SignTxParams<
         (SignTxTransaction, String),
@@ -253,6 +300,7 @@ pub fn sign_transaction(
                             }
                         }
 
+                        #[cfg(feature = "hardware-wallet")]
                         CryptoType::HdWallet(hw) => {
                             let guard = wallet_manager.lock().unwrap();
                             let mut wm = guard.borrow_mut();
@@ -331,6 +379,36 @@ pub fn sign_transaction(
     }
 }
 
+#[cfg(feature = "default")]
+pub fn sign(
+    params: SignParams<(String, String, String, CommonAdditional)>,
+    storage: &Arc<Mutex<StorageController>>,
+) -> Result<Params, Error> {
+    let storage_ctrl = storage.lock().unwrap();
+    let (input, address, passphrase, additional) = params.into_full();
+    let (chain, chain_id) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_keystore(&chain)?;
+    let addr = Address::from_str(&address)?;
+    let hash = util::keccak256(
+        format!("\x19Ethereum Signed Message:\n{}{}", input.len(), input).as_bytes(),
+    );
+    match storage.search_by_address(&addr) {
+        Ok((_, kf)) => {
+            if passphrase.is_empty() {
+                return Err(Error::InvalidDataFormat("Missing passphrase".to_string()));
+            }
+            if let Ok(pk) = kf.decrypt_key(&passphrase) {
+                let signed = pk.sign_hash(hash)?;
+                Ok(Params::Array(vec![Value::String(signed.into())]))
+            } else {
+                Err(Error::InvalidDataFormat("Invalid passphrase".to_string()))
+            }
+        }
+        Err(_) => Err(Error::InvalidDataFormat("Can't find account".to_string())),
+    }
+}
+
+#[cfg(feature = "hardware-wallet")]
 pub fn sign(
     params: SignParams<(String, String, String, CommonAdditional)>,
     storage: &Arc<Mutex<StorageController>>,
@@ -515,6 +593,7 @@ pub fn generate_mnemonic() -> Result<String, Error> {
     Ok(mnemonic.sentence())
 }
 
+#[cfg(feature = "hardware-wallet")]
 pub fn import_mnemonic(
     params: Either<(NewMnemonicAccount,), (NewMnemonicAccount, CommonAdditional)>,
     sec: &KdfDepthLevel,
