@@ -4,9 +4,11 @@ extern crate serde_json;
 extern crate tempdir;
 extern crate uuid;
 
+#[cfg(feature="hardware-wallet")]
+use jade_signer_rs::HdwalletCrypto;
 use hex::FromHex;
 use jade_signer_rs::keystore::{
-    Cipher, CoreCrypto, CryptoType, HdwalletCrypto, Iv, Kdf, KdfDepthLevel, KeyFile, Mac, Prf,
+    Cipher, CoreCrypto, CryptoType, Iv, Kdf, KdfDepthLevel, KeyFile, Mac, Prf,
     Salt, CIPHER_IV_BYTES, KDF_SALT_BYTES,
 };
 use jade_signer_rs::storage::{DbStorage, FsStorage, KeyfileStorage};
@@ -207,6 +209,7 @@ fn should_decode_keyfile_with_address() {
     }
 }
 
+#[cfg(feature="hardware-wallet")]
 #[test]
 fn should_decode_hd_wallet_keyfile() {
     let path = keyfile_path("UTC--2017-05-30T06-16-46Z--a928d7c2-b37b-464c-a70b-b9979d59fac5");
@@ -309,6 +312,7 @@ fn should_search_by_address_db() {
     );
 }
 
+#[cfg(feature="hardware-wallet")]
 #[test]
 fn should_update_existing_addresses() {
     let path = keyfile_path("UTC--2017-05-30T06-16-46Z--a928d7c2-b37b-464c-a70b-b9979d59fac4");
