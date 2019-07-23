@@ -28,7 +28,7 @@ impl Serialize for Address {
 
 /// Try to extract `Address` from JSON formatted text
 pub fn try_extract_address(text: &str) -> Option<Address> {
-    lazy_static! {
+    lazy_static::lazy_static! {
         static ref ADDR_RE: Regex = Regex::new(r#"address.+?([a-fA-F0-9]{40})"#).unwrap();
     }
 

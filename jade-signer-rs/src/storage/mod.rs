@@ -12,7 +12,6 @@ pub use self::keyfile::*;
 pub use self::storage_ctrl::StorageController;
 pub use self::KeystoreError;
 use std::boxed::Box;
-use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -39,7 +38,7 @@ pub fn default_path() -> PathBuf {
 /// Default path (Mac OS X)
 #[cfg(target_os = "macos")]
 pub fn default_path() -> PathBuf {
-    let mut config_dir = env::home_dir().expect("Expect path to home dir");
+    let mut config_dir = dirs::home_dir().expect("Expect path to home dir");
     config_dir.push("Library");
     config_dir.push("Emerald");
     config_dir
@@ -75,7 +74,7 @@ pub fn build_path(base_path: &Path, chain: &str, folder: &str) -> PathBuf {
 ///
 /// * `keystore_path` - path for `KeyFile` storage
 ///
-pub fn build_keyfile_storage<P>(path: P) -> Result<Box<KeyfileStorage>, KeystoreError>
+pub fn build_keyfile_storage<P>(path: P) -> Result<Box<dyn KeyfileStorage>, KeystoreError>
 where
     P: AsRef<Path>,
 {

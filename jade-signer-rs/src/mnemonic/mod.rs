@@ -8,7 +8,7 @@ mod language;
 
 pub use self::error::Error;
 pub use self::language::{Language, BIP39_ENGLISH_WORDLIST};
-use keystore::{Kdf, Prf};
+use crate::keystore::{Kdf, Prf};
 use num::bigint::BigUint;
 use num::{FromPrimitive, ToPrimitive};
 use rand::{OsRng, Rng};

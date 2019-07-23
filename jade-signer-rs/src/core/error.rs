@@ -61,7 +61,7 @@ impl error::Error for Error {
         "Core error"
     }
 
-    fn cause(&self) -> Option<&error::Error> {
+    fn cause(&self) -> Option<&dyn error::Error> {
         match *self {
             Error::UnexpectedHexEncoding(ref err) => Some(err),
             Error::EcdsaCrypto(ref err) => Some(err),

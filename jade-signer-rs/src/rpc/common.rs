@@ -1,8 +1,10 @@
 //! Common types for JSON RPC handlers
 //!
 
+use serde::{Deserialize, Serialize};
+
 use super::Error;
-use util;
+use crate::util;
 
 /// Trait to access a common chain name and id params
 ///
@@ -23,11 +25,11 @@ pub trait CommonChainParams {
 ///
 /// Return `Error` if parameters does not match
 ///
-pub fn extract_chain_params(p: &CommonChainParams) -> Result<(String, u8), Error> {
+pub fn extract_chain_params(p: &dyn CommonChainParams) -> Result<(String, u8), Error> {
     let name_param = p.get_chain();
     let id_param = p.get_chain_id();
-    let mut id: u8;
-    let mut name: String;
+    let id: u8;
+    let name: String;
 
     if !name_param.is_empty() && id_param.is_some() {
         id = check_chain_name(&name_param)?;

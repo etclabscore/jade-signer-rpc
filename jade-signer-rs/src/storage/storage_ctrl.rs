@@ -22,7 +22,7 @@ const CHAIN_NAMES: &'static [&'static str; 9] = &[
 
 /// Controller to switch storage according to specified chain
 pub struct StorageController {
-    keyfile_storages: HashMap<String, Box<KeyfileStorage>>,
+    keyfile_storages: HashMap<String, Box<dyn KeyfileStorage>>,
     contract_storages: HashMap<String, Box<ContractStorage>>,
     addressbook_storages: HashMap<String, Box<AddressbookStorage>>,
 }
@@ -52,7 +52,7 @@ impl StorageController {
     }
 
     /// Get `KeyFile` storage for specified chain
-    pub fn get_keystore(&self, chain: &str) -> Result<&Box<KeyfileStorage>, KeystoreError> {
+    pub fn get_keystore(&self, chain: &str) -> Result<&Box<dyn KeyfileStorage>, KeystoreError> {
         match self.keyfile_storages.get(chain) {
             Some(st) => Ok(st),
             None => Err(KeystoreError::StorageError(format!(

@@ -197,8 +197,8 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
         .start_http(addr)
         .expect("Expect to build HTTP RPC server");
 
-    if log_enabled!(Level::Info) {
-        info!("Connector started on http://{}", server.address());
+    if log::log_enabled!(Level::Info) {
+        log::info!("Connector started on http://{}", server.address());
     }
 
     server.wait();

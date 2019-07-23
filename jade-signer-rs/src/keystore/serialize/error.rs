@@ -1,8 +1,8 @@
 //! # Serialize keystore files (UTC / JSON) module errors
-use rpc;
 use serde_json;
-
 use std::{error, fmt, io};
+
+use crate::rpc;
 
 /// Keystore file serialize errors
 #[derive(Debug)]
@@ -64,7 +64,7 @@ impl error::Error for Error {
         "Keystore file serialize error"
     }
 
-    fn cause(&self) -> Option<&error::Error> {
+    fn cause(&self) -> Option<&dyn error::Error> {
         match *self {
             _ => None,
         }

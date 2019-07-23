@@ -2,9 +2,9 @@
 
 use super::error::KeystoreError;
 use super::{generate_filename, AccountInfo, KeyfileStorage};
-use core::Address;
-use keystore::try_extract_address;
-use keystore::KeyFile;
+use crate::core::Address;
+use crate::keystore::try_extract_address;
+use crate::keystore::KeyFile;
 
 use serde_json;
 use std::ffi::OsStr;
@@ -165,11 +165,15 @@ impl KeyfileStorage for FsStorage {
                                     info.filename = name.to_string();
                                     accounts.push(info);
                                 }
-                                None => info!("Corrupted filename for: {:?}", entry.file_name()),
+                                None => {
+                                    log::info!("Corrupted filename for: {:?}", entry.file_name())
+                                }
                             }
                         }
                     }
-                    Err(_) => info!("Invalid keystore file format for: {:?}", entry.file_name()),
+                    Err(_) => {
+                        log::info!("Invalid keystore file format for: {:?}", entry.file_name())
+                    }
                 }
             }
         }

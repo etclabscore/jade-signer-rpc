@@ -18,10 +18,12 @@ pub use self::serialize::{try_extract_address, CoreCrypto, Iv, Mac, Serializable
 use super::core::{self, Address, PrivateKey};
 use super::util::{self, keccak256, to_arr, KECCAK256_BYTES};
 
-use rand::{OsRng, Rng};
 use std::convert::From;
 use std::str::FromStr;
 use std::{cmp, fmt};
+
+use rand::{OsRng, Rng};
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 /// Key derivation function salt length in bytes
@@ -119,8 +121,8 @@ impl KeyFile {
             ..Default::default()
         };
 
-        if let CryptoType::Core(ref mut core) = kf.crypto {
-            core.kdf_params.kdf = kdf;
+        match &mut kf.crypto {
+            CryptoType::Core(core) => core.kdf_params.kdf = kdf,
         }
 
         kf.encrypt_key_custom(pk, passphrase, rng);
@@ -194,7 +196,6 @@ impl KeyFile {
                 v.extend_from_slice(&core.cipher_text);
                 core.mac = Mac::from(keccak256(&v));
             }
-            _ => debug!("HD Wallet crypto used instead of normal"),
         }
     }
 }

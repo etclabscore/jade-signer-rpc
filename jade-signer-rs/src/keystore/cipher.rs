@@ -4,6 +4,7 @@ use super::Error;
 use aes_ctr::stream_cipher::generic_array::GenericArray;
 use aes_ctr::stream_cipher::{NewFixStreamCipher, StreamCipherCore};
 use aes_ctr::Aes128Ctr;
+use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::str::FromStr;
 

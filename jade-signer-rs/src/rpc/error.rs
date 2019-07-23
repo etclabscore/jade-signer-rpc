@@ -2,11 +2,11 @@
 
 use super::core;
 use super::storage;
-use contract;
+use crate::contract;
+use crate::keystore;
+use crate::mnemonic;
 use hex;
 use jsonrpc_core;
-use keystore;
-use mnemonic;
 use reqwest;
 use serde_json;
 use std::{error, fmt, io};
@@ -121,7 +121,7 @@ impl error::Error for Error {
         "JSON RPC errors"
     }
 
-    fn cause(&self) -> Option<&error::Error> {
+    fn cause(&self) -> Option<&dyn error::Error> {
         match *self {
             Error::HttpClient(ref err) => Some(err),
             _ => None,

@@ -43,7 +43,7 @@ impl Into<Vec<u8>> for RLPList {
     fn into(self) -> Vec<u8> {
         let mut res: Vec<u8> = Vec::new();
         match self.tail.len() {
-            s @ 0...55 => {
+            s @ 0..=55 => {
                 res.push((s + 192) as u8);
                 res.extend(self.tail.as_slice());
             }

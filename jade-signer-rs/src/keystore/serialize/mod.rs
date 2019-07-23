@@ -13,7 +13,7 @@ use super::core::{self, Address};
 use super::util;
 use super::{Cipher, CryptoType, KdfParams, KeyFile, Salt, CIPHER_IV_BYTES};
 use serde::ser;
-use serde::{Serialize, Serializer};
+use serde::{Deserialize, Serialize, Serializer};
 use serde_json;
 use uuid::Uuid;
 

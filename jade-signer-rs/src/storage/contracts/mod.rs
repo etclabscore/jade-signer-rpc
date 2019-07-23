@@ -1,7 +1,7 @@
 //! # Contracts utils
 
-use contract::Error;
-use core::Address;
+use crate::contract::Error;
+use crate::core::Address;
 use glob::glob;
 use serde_json;
 use std::fs::File;

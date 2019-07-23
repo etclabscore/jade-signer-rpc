@@ -11,9 +11,9 @@ mod fs;
 pub use self::db::DbStorage;
 pub use self::error::KeystoreError;
 pub use self::fs::FsStorage;
-use core::Address;
-use keystore::{CryptoType, KeyFile};
-use util;
+use crate::core::Address;
+use crate::keystore::KeyFile;
+use crate::util;
 
 /// Short account info
 ///

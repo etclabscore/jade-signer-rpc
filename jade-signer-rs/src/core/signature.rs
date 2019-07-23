@@ -15,7 +15,7 @@ pub const PRIVATE_KEY_BYTES: usize = 32;
 /// ECDSA crypto signature length in bytes
 pub const ECDSA_SIGNATURE_BYTES: usize = 65;
 
-lazy_static! {
+lazy_static::lazy_static! {
     static ref ECDSA: Secp256k1 = Secp256k1::with_caps(ContextFlag::SignOnly);
 }
 
