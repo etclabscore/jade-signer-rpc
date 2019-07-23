@@ -41,7 +41,7 @@ pub fn try_extract_address(text: &str) -> Option<Address> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tests::*;
+    use crate::tests::*;
 
     #[test]
     fn should_encode_default_address() {

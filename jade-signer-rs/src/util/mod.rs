@@ -246,7 +246,7 @@ pub use self::tests::*;
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tests::*;
+    use crate::tests::*;
 
     #[test]
     fn should_convert_zero_string_into_16bytes() {

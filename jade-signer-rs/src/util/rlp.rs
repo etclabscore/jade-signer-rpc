@@ -195,7 +195,7 @@ impl WriteRLP for RLPList {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tests::*;
+    use crate::tests::*;
 
     #[test]
     fn encode_zero() {

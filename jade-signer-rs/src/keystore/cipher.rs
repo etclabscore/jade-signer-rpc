@@ -59,7 +59,7 @@ impl fmt::Display for Cipher {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tests::*;
+    use crate::tests::*;
 
     #[test]
     fn should_encrypt_with_aes_ctr() {

@@ -212,7 +212,7 @@ fn should_decode_keyfile_with_address() {
 #[cfg(not(target_os = "windows"))]
 fn should_use_security_level() {
     let sec = KdfDepthLevel::Normal;
-    let kf = KeyFile::new("1234567890", &sec, None, None).unwrap();
+    let kf = KeyFile::new("1234567890", sec, None, None).unwrap();
     if let CryptoType::Core(ref core) = kf.crypto {
         assert_eq!(core.kdf_params.kdf, Kdf::from(sec));
     } else {
@@ -220,7 +220,7 @@ fn should_use_security_level() {
     }
 
     let sec = KdfDepthLevel::High;
-    let kf = KeyFile::new("1234567890", &sec, Some("s".to_string()), None).unwrap();
+    let kf = KeyFile::new("1234567890", sec, Some("s".to_string()), None).unwrap();
     if let CryptoType::Core(ref core) = kf.crypto {
         assert_eq!(core.kdf_params.kdf, Kdf::from(sec));
     } else {
@@ -230,7 +230,7 @@ fn should_use_security_level() {
 
 #[test]
 fn should_flush_to_file() {
-    let kf = KeyFile::new("1234567890", &KdfDepthLevel::Normal, None, None).unwrap();
+    let kf = KeyFile::new("1234567890", KdfDepthLevel::Normal, None, None).unwrap();
 
     let storage = FsStorage::new(&temp_dir().as_path());
 

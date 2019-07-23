@@ -254,7 +254,7 @@ pub fn os_random() -> OsRng {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tests::*;
+    use crate::tests::*;
 
     #[test]
     fn should_create_keyfile() {
