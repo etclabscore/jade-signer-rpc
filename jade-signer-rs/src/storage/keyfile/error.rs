@@ -1,6 +1,6 @@
 //! # Errors for storage of `Keyfiles`
 
-use keystore::SerializeError;
+use crate::keystore::SerializeError;
 use rocksdb;
 use serde_json;
 
@@ -60,7 +60,7 @@ impl error::Error for KeystoreError {
         "KeyFile storage error"
     }
 
-    fn cause(&self) -> Option<&error::Error> {
+    fn cause(&self) -> Option<&dyn error::Error> {
         match *self {
             _ => None,
         }

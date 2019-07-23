@@ -2,7 +2,7 @@
 pub mod error;
 
 use self::error::AddressbookError;
-use core::Address;
+use crate::core::Address;
 use glob::glob;
 use serde_json;
 use std::fs::remove_file;

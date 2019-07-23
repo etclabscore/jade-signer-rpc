@@ -1,10 +1,8 @@
 //! # Serialize keystore files (UTC / JSON) module errors
-#[cfg(feature = "hardware-wallet")]
-use hdwallet;
-use rpc;
 use serde_json;
-
 use std::{error, fmt, io};
+
+use crate::rpc;
 
 /// Keystore file serialize errors
 #[derive(Debug)]
@@ -46,18 +44,6 @@ impl From<serde_json::Error> for Error {
     }
 }
 
-//impl From<serde_json::Error> for Error {
-//    fn from(err: serde_json::Error) -> Self {
-//        Error::InvalidDecoding(err)
-//    }
-//}
-#[cfg(feature = "hardware-wallet")]
-impl From<hdwallet::Error> for Error {
-    fn from(err: hdwallet::Error) -> Self {
-        Error::InvalidCrypto(err.to_string())
-    }
-}
-
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
@@ -78,7 +64,7 @@ impl error::Error for Error {
         "Keystore file serialize error"
     }
 
-    fn cause(&self) -> Option<&error::Error> {
+    fn cause(&self) -> Option<&dyn error::Error> {
         match *self {
             _ => None,
         }

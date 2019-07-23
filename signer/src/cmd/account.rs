@@ -1,19 +1,20 @@
 //! # Account related subcommands
 
-use super::arg_handlers::*;
-use super::jade_signer_rs::storage::KeystoreError;
-use super::{EnvVars, Error, ExecResult, KeyfileStorage};
-use indicator::ProgressIndicator;
-use serde_json;
+use std::fs;
 use std::fs::File;
 use std::io::Read;
 use std::io::Write;
 use std::path::{Path, PathBuf};
-
-use super::{Address, KeyFile};
-use clap::ArgMatches;
-use std::fs;
 use std::str::FromStr;
+
+use clap::ArgMatches;
+use serde_json;
+
+use super::arg_handlers::*;
+use super::{Address, KeyFile};
+use super::{EnvVars, Error, ExecResult, KeyfileStorage};
+use crate::indicator::ProgressIndicator;
+use jade_signer_rs::storage::KeystoreError;
 
 /// Hide account from being listed
 ///
@@ -25,7 +26,7 @@ use std::str::FromStr;
 ///
 pub fn account_cmd(
     matches: &ArgMatches,
-    storage: &Box<KeyfileStorage>,
+    storage: &dyn KeyfileStorage,
     env: &EnvVars,
 ) -> ExecResult {
     match matches.subcommand() {
@@ -50,7 +51,7 @@ pub fn account_cmd(
 /// * matches - arguments supplied from command-line
 /// * storage - `Keyfile` storage
 ///
-fn list(matches: &ArgMatches, storage: &Box<KeyfileStorage>) -> ExecResult {
+fn list(matches: &ArgMatches, storage: &dyn KeyfileStorage) -> ExecResult {
     let accounts_info = storage.list_accounts(matches.is_present("show-hidden"))?;
 
     println!("{0: <45} {1: <45} ", "ADDRESS", "NAME");
@@ -68,23 +69,23 @@ fn list(matches: &ArgMatches, storage: &Box<KeyfileStorage>) -> ExecResult {
 /// * matches - arguments supplied from command-line
 /// * storage - `Keyfile` storage
 ///
-fn new(matches: &ArgMatches, storage: &Box<KeyfileStorage>) -> ExecResult {
+fn new(matches: &ArgMatches, storage: &dyn KeyfileStorage) -> ExecResult {
     println!("! Warning: passphrase can't be restored. Don't forget it !");
     let passphrase = request_passphrase()?;
     let name = matches.value_of("name").map(String::from);
     let desc = matches.value_of("description").map(String::from);
     let sec_level = get_security_lvl(matches)?;
-    info!("Security level: {}", sec_level);
+    log::info!("Security level: {}", sec_level);
 
     let ind = ProgressIndicator::start(Some("Generating new account".to_string()));
     let kf = match matches.value_of("raw") {
         Some(raw) => {
             let pk = parse_pk(raw)?;
-            let mut k = KeyFile::new(&passphrase, &sec_level, name, desc)?;
+            let mut k = KeyFile::new(&passphrase, sec_level, name, desc)?;
             k.encrypt_key(pk, &passphrase);
             k
         }
-        None => KeyFile::new(&passphrase, &sec_level, name, desc)?,
+        None => KeyFile::new(&passphrase, sec_level, name, desc)?,
     };
     storage.put(&kf)?;
 
@@ -104,7 +105,7 @@ fn new(matches: &ArgMatches, storage: &Box<KeyfileStorage>) -> ExecResult {
 ///
 fn toggle_visibility<U, F: Fn(&Address) -> Result<U, KeystoreError>>(
     matches: &ArgMatches,
-    storage: &Box<KeyfileStorage>,
+    storage: &dyn KeyfileStorage,
     toggle_op: F,
 ) -> ExecResult {
     if matches.is_present("all") {
@@ -128,7 +129,7 @@ fn toggle_visibility<U, F: Fn(&Address) -> Result<U, KeystoreError>>(
 /// * matches - arguments supplied from command-line
 /// * storage - `Keyfile` storage
 ///
-fn strip(matches: &ArgMatches, storage: &Box<KeyfileStorage>) -> ExecResult {
+fn strip(matches: &ArgMatches, storage: &dyn KeyfileStorage) -> ExecResult {
     let address = get_address(matches, "address")?;
 
     let (_, kf) = storage.search_by_address(&address)?;
@@ -148,7 +149,7 @@ fn strip(matches: &ArgMatches, storage: &Box<KeyfileStorage>) -> ExecResult {
 /// * storage - `Keyfile` storage
 /// * env - environment variables
 ///
-fn export(matches: &ArgMatches, storage: &Box<KeyfileStorage>, env: &EnvVars) -> ExecResult {
+fn export(matches: &ArgMatches, storage: &dyn KeyfileStorage, env: &EnvVars) -> ExecResult {
     let path = get_path(matches, env)?;
 
     let ind = ProgressIndicator::start(Some("Exporting Keyfiles".to_string()));
@@ -180,7 +181,7 @@ fn export(matches: &ArgMatches, storage: &Box<KeyfileStorage>, env: &EnvVars) ->
 /// * storage - `Keyfile` storage
 /// * env - environment variables
 ///
-fn import(matches: &ArgMatches, storage: &Box<KeyfileStorage>, env: &EnvVars) -> ExecResult {
+fn import(matches: &ArgMatches, storage: &dyn KeyfileStorage, env: &EnvVars) -> ExecResult {
     let path = get_path(matches, env)?;
     let mut counter = 0;
 
@@ -213,7 +214,7 @@ fn import(matches: &ArgMatches, storage: &Box<KeyfileStorage>, env: &EnvVars) ->
 /// * matches - arguments supplied from command-line
 /// * storage - `Keyfile` storage
 ///
-fn update(matches: &ArgMatches, storage: &Box<KeyfileStorage>) -> ExecResult {
+fn update(matches: &ArgMatches, storage: &dyn KeyfileStorage) -> ExecResult {
     let address = get_address(matches, "address")?;
     let name = matches.value_of("name").map(String::from);
     let desc = matches.value_of("description").map(String::from);
@@ -247,7 +248,7 @@ fn get_path(matches: &ArgMatches, env: &EnvVars) -> Result<PathBuf, Error> {
 ///
 pub fn import_keyfile<P: AsRef<Path>>(
     path: P,
-    storage: &Box<KeyfileStorage>,
+    storage: &dyn KeyfileStorage,
     force_mode: bool,
 ) -> Result<(), Error> {
     let mut json = String::new();
@@ -277,7 +278,7 @@ pub fn import_keyfile<P: AsRef<Path>>(
 ///
 pub fn export_keyfile(
     path: &Path,
-    storage: &Box<KeyfileStorage>,
+    storage: &dyn KeyfileStorage,
     addr: &Address,
 ) -> Result<(), Error> {
     let (info, kf) = storage.search_by_address(addr)?;

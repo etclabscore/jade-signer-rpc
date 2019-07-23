@@ -1,25 +1,5 @@
 //! # CLI wrapper for `jade-rs`
 #![cfg(feature = "cli")]
-#![cfg_attr(feature = "dev", feature(plugin))]
-#![cfg_attr(feature = "dev", plugin(clippy))]
-
-extern crate env_logger;
-extern crate hex;
-extern crate hyper;
-extern crate jade_signer_rs;
-extern crate jsonrpc_core;
-extern crate lazy_static;
-#[macro_use]
-extern crate log;
-extern crate http;
-extern crate reqwest;
-extern crate rpassword;
-extern crate serde;
-extern crate serde_derive;
-extern crate serde_json;
-extern crate url;
-#[macro_use]
-extern crate clap;
 
 mod cmd;
 mod indicator;
@@ -39,7 +19,7 @@ pub fn version() -> &'static str {
 }
 
 fn main() {
-    let yaml = load_yaml!("../cli.yml");
+    let yaml = clap::load_yaml!("../cli.yml");
     let matches = App::from_yaml(yaml).get_matches();
 
     match matches.occurrences_of("verbose") {
@@ -69,7 +49,7 @@ fn main() {
     match cmd::execute(&matches) {
         Ok(_) => exit(0),
         Err(e) => {
-            error!("{}", e.to_string());
+            log::error!("{}", e.to_string());
             exit(1)
         }
     };

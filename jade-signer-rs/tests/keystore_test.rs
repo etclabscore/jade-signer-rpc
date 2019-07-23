@@ -10,8 +10,6 @@ use jade_signer_rs::keystore::{
     CIPHER_IV_BYTES, KDF_SALT_BYTES,
 };
 use jade_signer_rs::storage::{DbStorage, FsStorage, KeyfileStorage};
-#[cfg(feature = "hardware-wallet")]
-use jade_signer_rs::HdwalletCrypto;
 use jade_signer_rs::{Address, KECCAK256_BYTES};
 
 use std::fs::File;
@@ -209,50 +207,12 @@ fn should_decode_keyfile_with_address() {
     }
 }
 
-#[cfg(feature = "hardware-wallet")]
-#[test]
-fn should_decode_hd_wallet_keyfile() {
-    let path = keyfile_path("UTC--2017-05-30T06-16-46Z--a928d7c2-b37b-464c-a70b-b9979d59fac5");
-
-    let mut crypto = HdwalletCrypto::default();
-    crypto.cipher = "hardware".to_string();
-    crypto.hardware = "ledger-nano-s:v1".to_string();
-    crypto.hd_path = "44'/61'/0'/0/0".to_string();
-
-    let exp = KeyFile {
-        visible: None,
-        name: None,
-        description: None,
-        address: Address::from_str("01234567890abcdef1234567890abcdef1234567").unwrap(),
-        uuid: Uuid::from_str("a928d7c2-b37b-464c-a70b-b9979d59fac5").unwrap(),
-        crypto: CryptoType::HdWallet(crypto),
-    };
-
-    // just first encoding
-    let key = KeyFile::decode(&file_content(path)).unwrap();
-
-    // verify encoding & decoding full cycle logic
-    let key = KeyFile::decode(&serde_json::to_string(&key).unwrap()).unwrap();
-
-    if let CryptoType::HdWallet(ref exp_hd) = exp.crypto {
-        if let CryptoType::HdWallet(ref recv_hd) = key.crypto {
-            assert_eq!(key, exp);
-            assert_eq!(key.visible, exp.visible);
-            assert_eq!(recv_hd.cipher, exp_hd.cipher);
-            assert_eq!(recv_hd.hardware, exp_hd.hardware);
-            assert_eq!(recv_hd.hd_path, exp_hd.hd_path);
-        } else {
-            assert!(false, "Invalid Crypto type")
-        }
-    }
-}
-
 #[test]
 //TODO:1 remove condition after fix for `scrypt` on Windows
 #[cfg(not(target_os = "windows"))]
 fn should_use_security_level() {
     let sec = KdfDepthLevel::Normal;
-    let kf = KeyFile::new("1234567890", &sec, None, None).unwrap();
+    let kf = KeyFile::new("1234567890", sec, None, None).unwrap();
     if let CryptoType::Core(ref core) = kf.crypto {
         assert_eq!(core.kdf_params.kdf, Kdf::from(sec));
     } else {
@@ -260,7 +220,7 @@ fn should_use_security_level() {
     }
 
     let sec = KdfDepthLevel::High;
-    let kf = KeyFile::new("1234567890", &sec, Some("s".to_string()), None).unwrap();
+    let kf = KeyFile::new("1234567890", sec, Some("s".to_string()), None).unwrap();
     if let CryptoType::Core(ref core) = kf.crypto {
         assert_eq!(core.kdf_params.kdf, Kdf::from(sec));
     } else {
@@ -270,7 +230,7 @@ fn should_use_security_level() {
 
 #[test]
 fn should_flush_to_file() {
-    let kf = KeyFile::new("1234567890", &KdfDepthLevel::Normal, None, None).unwrap();
+    let kf = KeyFile::new("1234567890", KdfDepthLevel::Normal, None, None).unwrap();
 
     let storage = FsStorage::new(&temp_dir().as_path());
 
@@ -310,22 +270,4 @@ fn should_search_by_address_db() {
         kf.uuid,
         "a928d7c2-b37b-464c-a70b-b9979d59fac4".parse().unwrap()
     );
-}
-
-#[cfg(feature = "hardware-wallet")]
-#[test]
-fn should_update_existing_addresses() {
-    let path = keyfile_path("UTC--2017-05-30T06-16-46Z--a928d7c2-b37b-464c-a70b-b9979d59fac4");
-    let mut key = KeyFile::decode(&file_content(path)).unwrap();
-
-    let storage = DbStorage::new(temp_dir().as_path()).unwrap();
-    assert!(key.name.is_none());
-    storage.put(&key).unwrap();
-
-    let updated_name = Some("updated name".to_string());
-    key.name = updated_name.clone();
-    assert!(storage.put(&key).is_ok());
-
-    let (_, kf) = storage.search_by_address(&key.address).unwrap();
-    assert_eq!(kf.name, updated_name)
 }

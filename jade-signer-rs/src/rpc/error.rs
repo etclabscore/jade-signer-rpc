@@ -2,13 +2,11 @@
 
 use super::core;
 use super::storage;
-use contract;
-#[cfg(feature = "hardware-wallet")]
-use hdwallet;
+use crate::contract;
+use crate::keystore;
+use crate::mnemonic;
 use hex;
 use jsonrpc_core;
-use keystore;
-use mnemonic;
 use reqwest;
 use serde_json;
 use std::{error, fmt, io};
@@ -98,13 +96,6 @@ impl From<mnemonic::Error> for Error {
     }
 }
 
-#[cfg(feature = "hardware-wallet")]
-impl From<hdwallet::Error> for Error {
-    fn from(err: hdwallet::Error) -> Self {
-        Error::MnemonicError(err.to_string())
-    }
-}
-
 impl Into<jsonrpc_core::Error> for Error {
     fn into(self) -> jsonrpc_core::Error {
         jsonrpc_core::Error::internal_error()
@@ -130,7 +121,7 @@ impl error::Error for Error {
         "JSON RPC errors"
     }
 
-    fn cause(&self) -> Option<&error::Error> {
+    fn cause(&self) -> Option<&dyn error::Error> {
         match *self {
             Error::HttpClient(ref err) => Some(err),
             _ => None,

@@ -10,8 +10,6 @@ use super::core;
 use super::keystore::KdfDepthLevel;
 use super::storage::{self, StorageController};
 use super::util::{align_bytes, to_arr, to_even_str, to_u64, trim_hex, ToHex};
-#[cfg(feature = "hardware-wallet")]
-use hdwallet::WManager;
 use jsonrpc_core::{Error as JsonRpcError, IoHandler, Params};
 use jsonrpc_http_server::{AccessControlAllowOrigin, DomainsValidation, ServerBuilder};
 use log::Level;
@@ -54,12 +52,6 @@ where
 pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Option<KdfDepthLevel>) {
     let sec_level = sec_level.unwrap_or_default();
     let storage_ctrl = Arc::new(Mutex::new(storage_ctrl));
-
-    #[cfg(feature = "hardware-wallet")]
-    let wallet_manager = match WManager::new(None) {
-        Ok(wm) => Arc::new(Mutex::new(RefCell::new(wm))),
-        Err(e) => panic!("Can't create HID endpoint: {}", e.to_string()),
-    };
 
     let mut io = IoHandler::default();
 
@@ -144,7 +136,7 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
     {
         let storage_ctrl = Arc::clone(&storage_ctrl);
         io.add_method("signer_newAccount", move |p: Params| {
-            wrapper(serves::new_account(parse(p)?, &sec_level, &storage_ctrl))
+            wrapper(serves::new_account(parse(p)?, sec_level, &storage_ctrl))
         });
     }
 
@@ -161,24 +153,6 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
         let storage_ctrl = Arc::clone(&storage_ctrl);
         io.add_method("signer_sign", move |p: Params| {
             wrapper(serves::sign(parse(p)?, &storage_ctrl))
-        });
-    }
-
-    #[cfg(feature = "hardware-wallet")]
-    {
-        let storage_ctrl = Arc::clone(&storage_ctrl);
-        let wm = Arc::clone(&wallet_manager);
-        io.add_method("signer_signTransaction", move |p: Params| {
-            wrapper(serves::sign_transaction(parse(p)?, &storage_ctrl, &wm))
-        });
-    }
-
-    #[cfg(feature = "hardware-wallet")]
-    {
-        let storage_ctrl = Arc::clone(&storage_ctrl);
-        let wm = Arc::clone(&wallet_manager);
-        io.add_method("signer_sign", move |p: Params| {
-            wrapper(serves::sign(parse(p)?, &storage_ctrl, &wm))
         });
     }
 
@@ -215,18 +189,6 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
         });
     }
 
-    #[cfg(feature = "hardware-wallet")]
-    {
-        let storage_ctrl = Arc::clone(&storage_ctrl);
-        io.add_method("signer_importMnemonic", move |p: Params| {
-            wrapper(serves::import_mnemonic(
-                parse(p)?,
-                &sec_level,
-                &storage_ctrl,
-            ))
-        });
-    }
-
     let server = ServerBuilder::new(io)
         .cors(DomainsValidation::AllowOnly(vec![
             AccessControlAllowOrigin::Any,
@@ -235,8 +197,8 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
         .start_http(addr)
         .expect("Expect to build HTTP RPC server");
 
-    if log_enabled!(Level::Info) {
-        info!("Connector started on http://{}", server.address());
+    if log::log_enabled!(Level::Info) {
+        log::info!("Connector started on http://{}", server.address());
     }
 
     server.wait();

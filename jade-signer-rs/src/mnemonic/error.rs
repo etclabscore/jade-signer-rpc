@@ -1,6 +1,5 @@
 //! # Mnemonic sentence generation errors
 
-use core;
 use std::{error, fmt, io};
 
 /// `Mnemonic` generation errors
@@ -13,8 +12,8 @@ pub enum Error {
     KeyGenerationError(String),
 }
 
-impl From<core::Error> for Error {
-    fn from(err: core::Error) -> Self {
+impl From<crate::core::Error> for Error {
+    fn from(err: crate::core::Error) -> Self {
         Error::MnemonicError(err.to_string())
     }
 }
@@ -45,7 +44,7 @@ impl error::Error for Error {
         "Mnemonic generation error"
     }
 
-    fn cause(&self) -> Option<&error::Error> {
+    fn cause(&self) -> Option<&dyn error::Error> {
         match *self {
             _ => None,
         }

@@ -11,9 +11,9 @@ mod fs;
 pub use self::db::DbStorage;
 pub use self::error::KeystoreError;
 pub use self::fs::FsStorage;
-use core::Address;
-use keystore::{CryptoType, KeyFile};
-use util;
+use crate::core::Address;
+use crate::keystore::KeyFile;
+use crate::util;
 
 /// Short account info
 ///
@@ -59,33 +59,6 @@ impl From<KeyFile> for AccountInfo {
         };
 
         info.is_hardware = false;
-
-        info
-    }
-}
-
-#[cfg(feature = "hardware-wallet")]
-impl From<KeyFile> for AccountInfo {
-    fn from(kf: KeyFile) -> Self {
-        let mut info = Self::default();
-        info.address = kf.address.to_string();
-
-        if let Some(name) = kf.name {
-            info.name = name;
-        };
-
-        if let Some(desc) = kf.description {
-            info.description = desc;
-        };
-
-        if let Some(visible) = kf.visible {
-            info.is_hidden = !visible;
-        };
-
-        info.is_hardware = match kf.crypto {
-            CryptoType::Core(_) => false,
-            CryptoType::HdWallet(_) => true,
-        };
 
         info
     }

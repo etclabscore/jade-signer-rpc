@@ -8,7 +8,7 @@ use super::{
 use std::collections::HashMap;
 use std::path::Path;
 
-const CHAIN_NAMES: &'static [&'static str; 9] = &[
+const CHAIN_NAMES: &[&str; 9] = &[
     "eth",
     "morden",
     "ropsten",
@@ -22,7 +22,7 @@ const CHAIN_NAMES: &'static [&'static str; 9] = &[
 
 /// Controller to switch storage according to specified chain
 pub struct StorageController {
-    keyfile_storages: HashMap<String, Box<KeyfileStorage>>,
+    keyfile_storages: HashMap<String, Box<dyn KeyfileStorage>>,
     contract_storages: HashMap<String, Box<ContractStorage>>,
     addressbook_storages: HashMap<String, Box<AddressbookStorage>>,
 }
@@ -52,9 +52,9 @@ impl StorageController {
     }
 
     /// Get `KeyFile` storage for specified chain
-    pub fn get_keystore(&self, chain: &str) -> Result<&Box<KeyfileStorage>, KeystoreError> {
+    pub fn get_keystore(&self, chain: &str) -> Result<&dyn KeyfileStorage, KeystoreError> {
         match self.keyfile_storages.get(chain) {
-            Some(st) => Ok(st),
+            Some(st) => Ok(&**st),
             None => Err(KeystoreError::StorageError(format!(
                 "No storage for: {}",
                 chain
@@ -63,9 +63,9 @@ impl StorageController {
     }
 
     /// Get `Contract` storage for specified chain
-    pub fn get_contracts(&self, chain: &str) -> Result<&Box<ContractStorage>, KeystoreError> {
+    pub fn get_contracts(&self, chain: &str) -> Result<&ContractStorage, KeystoreError> {
         match self.contract_storages.get(chain) {
-            Some(st) => Ok(st),
+            Some(st) => Ok(&st),
             None => Err(KeystoreError::StorageError(format!(
                 "No storage for: {}",
                 chain
@@ -74,9 +74,9 @@ impl StorageController {
     }
 
     /// Get `Addressbook` storage for specified chain
-    pub fn get_addressbook(&self, chain: &str) -> Result<&Box<AddressbookStorage>, KeystoreError> {
+    pub fn get_addressbook(&self, chain: &str) -> Result<&AddressbookStorage, KeystoreError> {
         match self.addressbook_storages.get(chain) {
-            Some(st) => Ok(st),
+            Some(st) => Ok(&st),
             None => Err(KeystoreError::StorageError(format!(
                 "No storage for: {}",
                 chain

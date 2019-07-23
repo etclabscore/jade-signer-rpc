@@ -7,6 +7,7 @@ use ethabi::spec::param_type::{ParamType, Reader};
 use ethabi::token::{LenientTokenizer, Token, Tokenizer};
 use ethabi::{Encoder, Function, Interface};
 use hex;
+use serde::Deserialize;
 use std::fmt;
 
 /// Contract specification
@@ -47,9 +48,10 @@ impl Contract {
 
     /// Encode ABI input params to hex string
     pub fn serialize_params(types: &[String], values: Vec<String>) -> Result<String, Error> {
-        let types: Result<Vec<ParamType>, _> = types.iter().map(|s| Reader::read(s)).collect();
-
-        let types = try!(types);
+        let types = types
+            .iter()
+            .map(|s| Reader::read(s))
+            .collect::<Result<Vec<ParamType>, _>>()?;
 
         let params: Vec<_> = types.into_iter().zip(values.into_iter()).collect();
 

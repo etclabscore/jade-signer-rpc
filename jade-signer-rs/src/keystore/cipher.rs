@@ -4,6 +4,7 @@ use super::Error;
 use aes_ctr::stream_cipher::generic_array::GenericArray;
 use aes_ctr::stream_cipher::{NewFixStreamCipher, StreamCipherCore};
 use aes_ctr::Aes128Ctr;
+use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::str::FromStr;
 
@@ -20,7 +21,7 @@ pub enum Cipher {
 
 impl Cipher {
     /// Encrypt given text with provided key and initial vector
-    pub fn encrypt(&self, data: &[u8], key: &[u8], iv: &[u8]) -> Vec<u8> {
+    pub fn encrypt(self, data: &[u8], key: &[u8], iv: &[u8]) -> Vec<u8> {
         let key = GenericArray::from_slice(key);
         let iv = GenericArray::from_slice(iv);
         let mut buf = data.to_vec();
@@ -58,7 +59,7 @@ impl fmt::Display for Cipher {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tests::*;
+    use crate::tests::*;
 
     #[test]
     fn should_encrypt_with_aes_ctr() {

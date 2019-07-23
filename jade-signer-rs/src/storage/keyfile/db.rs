@@ -2,14 +2,13 @@
 
 use super::error::KeystoreError;
 use super::{generate_filename, AccountInfo, KeyfileStorage};
-use core::Address;
-use keystore::KeyFile;
+use crate::core::Address;
+use crate::keystore::KeyFile;
+use crate::util;
 use rocksdb::{IteratorMode, DB};
-
 use serde_json;
 use std::path::Path;
 use std::str;
-use util;
 
 /// Database backed storage for `KeyFile`
 ///
@@ -122,7 +121,7 @@ impl KeyfileStorage for DbStorage {
                 }
                 Err(_) => {
                     let data: [u8; 20] = util::to_arr(&*addr);
-                    info!(
+                    log::info!(
                         "Invalid keystore file format for address: {}",
                         Address::from(data)
                     )

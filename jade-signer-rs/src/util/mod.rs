@@ -12,16 +12,16 @@ use std::mem::transmute;
 
 static HEX_CHARS: &'static [u8] = b"0123456789abcdef";
 
-const ETH: &'static str = "eth";
-const MORDEN: &'static str = "morden";
-const ROPSTEN: &'static str = "ropsten";
-const RINKEBY: &'static str = "rinkeby";
-const ROOTSTOCK_MAINNET: &'static str = "rootstock-main";
-const ROOTSTOCK_TESTNET: &'static str = "rootstock-test";
-const KOVAN: &'static str = "kovan";
-const ETC: &'static str = "etc";
-const MAINNET: &'static str = "mainnet";
-const ETC_MORDEN: &'static str = "etc-morden";
+const ETH: &str = "eth";
+const MORDEN: &str = "morden";
+const ROPSTEN: &str = "ropsten";
+const RINKEBY: &str = "rinkeby";
+const ROOTSTOCK_MAINNET: &str = "rootstock-main";
+const ROOTSTOCK_TESTNET: &str = "rootstock-test";
+const KOVAN: &str = "kovan";
+const ETC: &str = "etc";
+const MAINNET: &str = "mainnet";
+const ETC_MORDEN: &str = "etc-morden";
 
 /// Convert `self` into hex string
 pub trait ToHex {
@@ -246,7 +246,7 @@ pub use self::tests::*;
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tests::*;
+    use crate::tests::*;
 
     #[test]
     fn should_convert_zero_string_into_16bytes() {

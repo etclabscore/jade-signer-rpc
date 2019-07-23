@@ -1,14 +1,17 @@
 //! # Keystore files key derivation function
 
-use super::prf::Prf;
-use super::Error;
-use super::Salt;
+use std::fmt;
+use std::str::FromStr;
+
 use hmac::Hmac;
 use pbkdf2::pbkdf2;
 use scrypt::{scrypt, ScryptParams};
+use serde::{Deserialize, Serialize};
 use sha2::{Sha256, Sha512};
-use std::fmt;
-use std::str::FromStr;
+
+use super::prf::Prf;
+use super::Error;
+use super::Salt;
 
 /// `PBKDF2` key derivation function name
 pub const PBKDF2_KDF_NAME: &str = "pbkdf2";
@@ -123,7 +126,6 @@ impl Kdf {
             Kdf::Pbkdf2 { prf, c } => {
                 match prf {
                     Prf::HmacSha256 => {
-                        let mut hmac = prf.hmac(passphrase);
                         pbkdf2::<Hmac<Sha256>>(
                             passphrase.as_bytes(),
                             kdf_salt,
@@ -142,7 +144,7 @@ impl Kdf {
                 };
             }
             Kdf::Scrypt { n, r, p } => {
-                let log_n = (n as f64).log2().round() as u8;
+                let log_n = f64::from(n).log2().round() as u8;
                 let params = ScryptParams::new(log_n, r, p).expect("Invalid Scrypt parameters");
                 scrypt(passphrase.as_bytes(), kdf_salt, &params, &mut key).expect("Scrypt failed");
             }
@@ -214,7 +216,7 @@ impl fmt::Display for Kdf {
 #[cfg(test)]
 pub mod tests {
     use super::*;
-    use tests::*;
+    use crate::tests::*;
 
     #[test]
     fn should_derive_key_via_pbkdf2() {

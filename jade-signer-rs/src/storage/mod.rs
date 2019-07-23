@@ -12,7 +12,6 @@ pub use self::keyfile::*;
 pub use self::storage_ctrl::StorageController;
 pub use self::KeystoreError;
 use std::boxed::Box;
-use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -31,26 +30,26 @@ pub struct Storages {
     not(target_os = "android")
 ))]
 pub fn default_path() -> PathBuf {
-    let mut config_dir = env::home_dir().expect("Expect path to home dir");
-    config_dir.push(".emerald");
+    let mut config_dir = dirs::home_dir().expect("Expect path to home dir");
+    config_dir.push(".jade_signer");
     config_dir
 }
 
 /// Default path (Mac OS X)
 #[cfg(target_os = "macos")]
 pub fn default_path() -> PathBuf {
-    let mut config_dir = env::home_dir().expect("Expect path to home dir");
+    let mut config_dir = dirs::home_dir().expect("Expect path to home dir");
     config_dir.push("Library");
-    config_dir.push("Emerald");
+    config_dir.push("JadeSigner");
     config_dir
 }
 
 /// Default path (Windows OS)
 #[cfg(target_os = "windows")]
 pub fn default_path() -> PathBuf {
-    let app_data_var = env::var("APPDATA").expect("Expect 'APPDATA' environment variable");
+    let app_data_var = dirs::data_dir().expect("Failed to get platform data dir");
     let mut config_dir = PathBuf::from(app_data_var);
-    config_dir.push(".emerald");
+    config_dir.push(".jade_signer");
     config_dir
 }
 
@@ -75,7 +74,7 @@ pub fn build_path(base_path: &Path, chain: &str, folder: &str) -> PathBuf {
 ///
 /// * `keystore_path` - path for `KeyFile` storage
 ///
-pub fn build_keyfile_storage<P>(path: P) -> Result<Box<KeyfileStorage>, KeystoreError>
+pub fn build_keyfile_storage<P>(path: P) -> Result<Box<dyn KeyfileStorage>, KeystoreError>
 where
     P: AsRef<Path>,
 {

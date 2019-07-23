@@ -15,7 +15,7 @@ pub const PRIVATE_KEY_BYTES: usize = 32;
 /// ECDSA crypto signature length in bytes
 pub const ECDSA_SIGNATURE_BYTES: usize = 65;
 
-lazy_static! {
+lazy_static::lazy_static! {
     static ref ECDSA: Secp256k1 = Secp256k1::with_caps(ContextFlag::SignOnly);
 }
 
@@ -37,7 +37,7 @@ impl From<[u8; ECDSA_SIGNATURE_BYTES]> for Signature {
         let mut sign = Signature::default();
 
         sign.v = data[0];
-        sign.r.copy_from_slice(&data[1..(1 + 32)]);
+        sign.r.copy_from_slice(&data[1..=32]);
         sign.s.copy_from_slice(&data[(1 + 32)..(1 + 32 + 32)]);
 
         sign
@@ -203,7 +203,7 @@ fn prefix(data: &[u8]) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tests::*;
+    use crate::tests::*;
 
     #[test]
     fn should_convert_into_address() {

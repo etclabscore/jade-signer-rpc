@@ -17,16 +17,13 @@ pub use self::serialize::Error as SerializeError;
 pub use self::serialize::{try_extract_address, CoreCrypto, Iv, Mac, SerializableKeyFileCore};
 use super::core::{self, Address, PrivateKey};
 use super::util::{self, keccak256, to_arr, KECCAK256_BYTES};
-#[cfg(feature = "hardware-wallet")]
-pub use hdwallet::HdwalletCrypto;
 
-#[cfg(feature = "hardware-wallet")]
-pub use self::serialize::SerializableKeyFileHD;
-
-use rand::{OsRng, Rng};
 use std::convert::From;
 use std::str::FromStr;
 use std::{cmp, fmt};
+
+use rand::{OsRng, Rng};
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 /// Key derivation function salt length in bytes
@@ -66,10 +63,6 @@ pub struct KeyFile {
 pub enum CryptoType {
     /// normal Web3 Secret Storage
     Core(CoreCrypto),
-
-    /// backed with HD Wallet
-    #[cfg(feature = "hardware-wallet")]
-    HdWallet(HdwalletCrypto),
 }
 
 impl KeyFile {
@@ -81,7 +74,7 @@ impl KeyFile {
     ///
     pub fn new(
         passphrase: &str,
-        sec_level: &KdfDepthLevel,
+        sec_level: KdfDepthLevel,
         name: Option<String>,
         description: Option<String>,
     ) -> Result<KeyFile, Error> {
@@ -90,7 +83,7 @@ impl KeyFile {
         let kdf = if cfg!(target_os = "windows") {
             Kdf::from_str(PBKDF2_KDF_NAME)?
         } else {
-            Kdf::from(*sec_level)
+            Kdf::from(sec_level)
         };
 
         Self::new_custom(
@@ -128,8 +121,8 @@ impl KeyFile {
             ..Default::default()
         };
 
-        if let CryptoType::Core(ref mut core) = kf.crypto {
-            core.kdf_params.kdf = kdf;
+        match &mut kf.crypto {
+            CryptoType::Core(core) => core.kdf_params.kdf = kdf,
         }
 
         kf.encrypt_key_custom(pk, passphrase, rng);
@@ -168,9 +161,6 @@ impl KeyFile {
                     &core.cipher_params.iv,
                 ))))
             }
-            _ => Err(Error::InvalidCrypto(
-                "HD Wallet crypto used instead of normal".to_string(),
-            )),
         }
     }
 
@@ -206,7 +196,6 @@ impl KeyFile {
                 v.extend_from_slice(&core.cipher_text);
                 core.mac = Mac::from(keccak256(&v));
             }
-            _ => debug!("HD Wallet crypto used instead of normal"),
         }
     }
 }
@@ -265,7 +254,7 @@ pub fn os_random() -> OsRng {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tests::*;
+    use crate::tests::*;
 
     #[test]
     fn should_create_keyfile() {

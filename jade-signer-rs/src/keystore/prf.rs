@@ -2,6 +2,7 @@
 
 use super::Error;
 use hmac::{Hmac, Mac};
+use serde::{Deserialize, Serialize};
 use sha2::{Sha256, Sha512};
 use std::fmt;
 use std::str::FromStr;
@@ -26,12 +27,12 @@ pub enum Prf {
 
 impl Prf {
     /// Calculate hashed message authentication code using SHA-256 digest
-    pub fn hmac(&self, passphrase: &str) -> Hmac<Sha256> {
+    pub fn hmac(self, passphrase: &str) -> Hmac<Sha256> {
         Hmac::new_varkey(passphrase.as_bytes()).expect("HMAC accepts all key sizes")
     }
 
     /// Calculate hashed message authentication code using SHA-512 digest
-    pub fn hmac512(&self, passphrase: &str) -> Hmac<Sha512> {
+    pub fn hmac512(self, passphrase: &str) -> Hmac<Sha512> {
         Hmac::new_varkey(passphrase.as_bytes()).expect("HMAC accepts all key sizes")
     }
 }
