@@ -14,12 +14,34 @@ pub use self::KeystoreError;
 use std::boxed::Box;
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::str::FromStr;
 
 /// Base dir for internal data, all chain-related should be store in subdirectories
 #[derive(Debug, Clone)]
 pub struct Storages {
     /// base dir
     base_dir: PathBuf,
+}
+
+/// Available storage types
+#[derive(Debug, Clone, Copy)]
+pub enum StorageType {
+    /// Store keyfiles on filesystem (as files)
+    Filesystem,
+    /// Store keyfiles in RocksDB
+    RocksDB,
+}
+
+impl FromStr for StorageType {
+    type Err = failure::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_ascii_lowercase().as_str() {
+            "filesystem" => Ok(StorageType::Filesystem),
+            "rocksdb" => Ok(StorageType::RocksDB),
+            other => Err(failure::format_err!("Unknown storage type {:?}, available types: ['rocksdb', 'filesystem']", other)),
+        }
+    }
 }
 
 /// Default path (*nix)
@@ -74,28 +96,23 @@ pub fn build_path(base_path: &Path, chain: &str, folder: &str) -> PathBuf {
 ///
 /// * `keystore_path` - path for `KeyFile` storage
 ///
-pub fn build_keyfile_storage<P>(path: P) -> Result<Box<dyn KeyfileStorage>, KeystoreError>
+pub fn build_keyfile_storage<P>(path: P, storage_type: StorageType) -> Result<Box<dyn KeyfileStorage>, KeystoreError>
 where
     P: AsRef<Path>,
 {
-    #[cfg(feature = "default")]
-    {
-        let mut p = PathBuf::new();
-        p.push(path);
-        p.push(".db");
-        match DbStorage::new(p) {
-            Ok(db) => Ok(Box::new(db)),
-            Err(_) => Err(KeystoreError::StorageError(
-                "Can't create database Keyfile storage".to_string(),
-            )),
-        }
-    }
-    #[cfg(feature = "fs-storage")]
-    match FsStorage::new(path) {
-        Ok(fs) => Ok(Box::new(fs)),
-        Err(_) => Err(KeystoreError::StorageError(
-            "Can't create filesystem Keyfile storage".to_string(),
-        )),
+    match storage_type {
+        StorageType::RocksDB => {
+            let mut p = PathBuf::new();
+            p.push(path);
+            p.push(".db");
+            match DbStorage::new(p) {
+                Ok(db) => Ok(Box::new(db)),
+                Err(_) => Err(KeystoreError::StorageError(
+                    "Can't create database Keyfile storage".to_string(),
+                )),
+            }
+        },
+        StorageType::Filesystem => Ok(Box::new(FsStorage::new(path))),
     }
 }
 

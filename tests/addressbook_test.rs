@@ -1,8 +1,8 @@
-extern crate jade_signer_rs;
+extern crate jade_signer;
 extern crate serde_json;
 extern crate tempdir;
 
-use jade_signer_rs::storage::{AddressbookError, AddressbookStorage};
+use jade_signer::storage::{AddressbookError, AddressbookStorage};
 use serde_json::Value;
 use std::path::PathBuf;
 use tempdir::TempDir;

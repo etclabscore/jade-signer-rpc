@@ -140,7 +140,6 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
         });
     }
 
-    #[cfg(feature = "default")]
     {
         let storage_ctrl = Arc::clone(&storage_ctrl);
         io.add_method("signer_signTransaction", move |p: Params| {
@@ -148,7 +147,6 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
         });
     }
 
-    #[cfg(feature = "default")]
     {
         let storage_ctrl = Arc::clone(&storage_ctrl);
         io.add_method("signer_sign", move |p: Params| {

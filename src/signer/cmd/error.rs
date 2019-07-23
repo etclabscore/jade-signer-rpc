@@ -3,8 +3,8 @@
 use hex;
 use http;
 use hyper;
-use jade_signer_rs::storage::KeystoreError;
-use jade_signer_rs::{self, keystore};
+use jade_signer::storage::KeystoreError;
+use jade_signer::{self, keystore};
 use reqwest;
 use serde_json;
 use std::net::AddrParseError;
@@ -43,12 +43,13 @@ from_err!(keystore::SerializeError);
 from_err!(reqwest::Error);
 from_err!(num::ParseIntError);
 from_err!(hex::FromHexError);
-from_err!(jade_signer_rs::Error);
-from_err!(jade_signer_rs::mnemonic::Error);
+from_err!(jade_signer::Error);
+from_err!(jade_signer::mnemonic::Error);
 from_err!(url::ParseError);
 from_err!(serde_json::Error);
 from_err!(hyper::error::Error);
 from_err!(http::uri::InvalidUri);
+from_err!(failure::Error);
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

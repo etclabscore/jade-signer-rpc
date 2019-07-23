@@ -65,7 +65,6 @@ impl Into<KeyFile> for SerializableKeyFileCore {
 }
 
 impl KeyFile {
-    #[cfg(feature = "default")]
     /// Decode `Keyfile` from JSON
     /// Handles different variants of `crypto` section
     ///
@@ -89,7 +88,6 @@ impl KeyFile {
 }
 
 impl Serialize for KeyFile {
-    #[cfg(feature = "default")]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,

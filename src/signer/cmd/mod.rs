@@ -11,12 +11,13 @@ pub use self::error::Error;
 use clap::ArgMatches;
 use std::net::SocketAddr;
 use std::path::PathBuf;
+use std::str::FromStr;
 
-use jade_signer_rs::keystore::{KdfDepthLevel, KeyFile};
-use jade_signer_rs::mnemonic::{gen_entropy, Language, Mnemonic, ENTROPY_BYTE_LENGTH};
-use jade_signer_rs::storage::{default_path, KeyfileStorage, StorageController};
-use jade_signer_rs::PrivateKey;
-use jade_signer_rs::{self, align_bytes, to_arr, to_even_str, trim_hex, Address};
+use jade_signer::keystore::{KdfDepthLevel, KeyFile};
+use jade_signer::mnemonic::{gen_entropy, Language, Mnemonic, ENTROPY_BYTE_LENGTH};
+use jade_signer::storage::{default_path, KeyfileStorage, StorageController, StorageType};
+use jade_signer::PrivateKey;
+use jade_signer::{self, align_bytes, to_arr, to_even_str, trim_hex, Address};
 
 type ExecResult = Result<(), Error>;
 
@@ -39,7 +40,15 @@ pub fn execute(matches: &ArgMatches) -> ExecResult {
         base_path = default_path();
     }
 
-    let storage_ctrl = StorageController::new(base_path)?;
+    let storage_type = if let Some(storage_type) = matches
+        .value_of("storage-type")
+    {
+        StorageType::from_str(storage_type)?
+    } else {
+        StorageType::RocksDB
+    };
+
+    let storage_ctrl = StorageController::new(base_path, storage_type)?;
     match matches.subcommand() {
         ("server", Some(sub_m)) => server_cmd(sub_m, storage_ctrl, chain),
         // ("account", Some(sub_m)) => account_cmd(sub_m, keystore, &env),
@@ -62,7 +71,7 @@ pub fn execute(matches: &ArgMatches) -> ExecResult {
 /// * chain - chain name
 ///
 fn server_cmd(matches: &ArgMatches, storage_ctrl: StorageController, chain: &str) -> ExecResult {
-    log::info!("Starting Jade Signer - v{}", jade_signer_rs::version());
+    log::info!("Starting Jade Signer - v{}",  jade_signer::version());
     let host = matches.value_of("host").unwrap_or_default();
     let port = matches.value_of("port").unwrap_or_default();
     let addr = format!("{}:{}", host, port).parse::<SocketAddr>()?;
@@ -71,7 +80,7 @@ fn server_cmd(matches: &ArgMatches, storage_ctrl: StorageController, chain: &str
     log::info!("Chain set to '{}'", chain);
     log::info!("Security level set to '{}'", sec_lvl);
 
-    jade_signer_rs::rpc::start(&addr, storage_ctrl, Some(sec_lvl));
+     jade_signer::rpc::start(&addr, storage_ctrl, Some(sec_lvl));
 
     Ok(())
 }

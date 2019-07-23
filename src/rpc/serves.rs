@@ -205,7 +205,6 @@ pub fn new_account(
     Ok(addr)
 }
 
-#[cfg(feature = "default")]
 pub fn sign_transaction(
     params: SignTxParams<
         (SignTxTransaction, String),
@@ -246,7 +245,6 @@ pub fn sign_transaction(
     }
 }
 
-#[cfg(feature = "default")]
 pub fn sign(
     params: SignParams<(String, String, String, CommonAdditional)>,
     storage: &Arc<Mutex<StorageController>>,

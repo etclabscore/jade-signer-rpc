@@ -1,8 +1,4 @@
-//! # CLI wrapper for `jade-rs`
-#![cfg(feature = "cli")]
-
-mod cmd;
-mod indicator;
+mod signer;
 
 use clap::App;
 use env_logger::Builder;
@@ -10,13 +6,6 @@ use log::Record;
 use std::env;
 use std::io::Write;
 use std::process::*;
-
-const VERSION: Option<&'static str> = option_env!("CARGO_PKG_VERSION");
-
-/// Get the current version.
-pub fn version() -> &'static str {
-    VERSION.unwrap_or("unknown")
-}
 
 fn main() {
     let yaml = clap::load_yaml!("../cli.yml");
@@ -42,11 +31,11 @@ fn main() {
     log_builder.init();
 
     if matches.is_present("version") {
-        println!("v{}", version());
+        println!("v{}", jade_signer::version());
         exit(0);
     }
 
-    match cmd::execute(&matches) {
+    match signer::cmd::execute(&matches) {
         Ok(_) => exit(0),
         Err(e) => {
             log::error!("{}", e.to_string());

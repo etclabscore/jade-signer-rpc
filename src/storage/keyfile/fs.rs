@@ -29,10 +29,10 @@ impl FsStorage {
     ///
     pub fn new<P>(dir: P) -> FsStorage
     where
-        P: AsRef<Path> + AsRef<OsStr>,
+        P: AsRef<Path>
     {
         FsStorage {
-            base_path: PathBuf::from(&dir),
+            base_path: dir.as_ref().to_owned(),
         }
     }
 

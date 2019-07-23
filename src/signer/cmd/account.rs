@@ -13,8 +13,8 @@ use serde_json;
 use super::arg_handlers::*;
 use super::{Address, KeyFile};
 use super::{EnvVars, Error, ExecResult, KeyfileStorage};
-use crate::indicator::ProgressIndicator;
-use jade_signer_rs::storage::KeystoreError;
+use crate::signer::indicator::ProgressIndicator;
+use jade_signer::storage::KeystoreError;
 
 /// Hide account from being listed
 ///

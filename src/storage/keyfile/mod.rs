@@ -40,7 +40,6 @@ pub struct AccountInfo {
     pub is_hidden: bool,
 }
 
-#[cfg(feature = "default")]
 impl From<KeyFile> for AccountInfo {
     fn from(kf: KeyFile) -> Self {
         let mut info = Self::default();
