@@ -15,7 +15,7 @@ pub use self::util::*;
 
 const VERSION: Option<&'static str> = option_env!("CARGO_PKG_VERSION");
 
-/// Get the current Emerald version.
+/// Get the current Jade Signer version.
 pub fn version() -> &'static str {
     VERSION.unwrap_or("unknown")
 }
