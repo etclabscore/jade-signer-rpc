@@ -8,8 +8,6 @@ mod language;
 
 pub use self::error::Error;
 pub use self::language::{Language, BIP39_ENGLISH_WORDLIST};
-#[cfg(feature = "hardware-wallet")]
-pub use hdwallet::bip32::{generate_key, HDPath};
 use keystore::{Kdf, Prf};
 use num::bigint::BigUint;
 use num::{FromPrimitive, ToPrimitive};

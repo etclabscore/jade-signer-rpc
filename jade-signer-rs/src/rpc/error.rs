@@ -3,8 +3,6 @@
 use super::core;
 use super::storage;
 use contract;
-#[cfg(feature = "hardware-wallet")]
-use hdwallet;
 use hex;
 use jsonrpc_core;
 use keystore;
@@ -94,13 +92,6 @@ impl From<contract::Error> for Error {
 
 impl From<mnemonic::Error> for Error {
     fn from(err: mnemonic::Error) -> Self {
-        Error::MnemonicError(err.to_string())
-    }
-}
-
-#[cfg(feature = "hardware-wallet")]
-impl From<hdwallet::Error> for Error {
-    fn from(err: hdwallet::Error) -> Self {
         Error::MnemonicError(err.to_string())
     }
 }

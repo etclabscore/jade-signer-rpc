@@ -9,15 +9,9 @@ use super::StorageController;
 use contract::Contract;
 use core::{Address, Transaction};
 
-#[cfg(feature = "hardware-wallet")]
-use hdwallet::bip32::to_prefixed_path;
-
-#[cfg(feature = "hardware-wallet")]
-use hdwallet::WManager;
 use jsonrpc_core::{Params, Value};
 use keystore::{CryptoType, KdfDepthLevel, KeyFile};
-#[cfg(feature = "hardware-wallet")]
-use mnemonic::HDPath;
+
 use mnemonic::{gen_entropy, Language, Mnemonic, ENTROPY_BYTE_LENGTH};
 use serde_json;
 use std::ops::Deref;
@@ -116,11 +110,6 @@ pub fn shake_account(
             )?;
             storage.put(&new_kf)?;
             debug!("Account shaked: {}", kf.address);
-        }
-        _ => {
-            return Err(Error::InvalidDataFormat(
-                "Can't shake account from HD wallet".to_string(),
-            ));
         }
     };
 
@@ -259,126 +248,6 @@ pub fn sign_transaction(
     }
 }
 
-#[cfg(feature = "hardware-wallet")]
-pub fn sign_transaction(
-    params: SignTxParams<
-        (SignTxTransaction, String),
-        (SignTxTransaction, String, SignTxAdditional),
-    >,
-    storage: &Arc<Mutex<StorageController>>,
-    wallet_manager: &Arc<Mutex<RefCell<WManager>>>,
-) -> Result<Params, Error> {
-    let storage_ctrl = storage.lock().unwrap();
-    let (transaction, passphrase, additional) = params.into_full();
-    let (chain, chain_id) = extract_chain_params(&additional)?;
-    let storage = storage_ctrl.get_keystore(&chain)?;
-    let addr = Address::from_str(&transaction.from)?;
-    let (_chain, chain_id) = extract_chain_params(&additional)?;
-
-    match storage.search_by_address(&addr) {
-        Ok((_, kf)) => {
-            match transaction.try_into() {
-                Ok(tr) => {
-                    match kf.crypto {
-                        CryptoType::Core(_) => {
-                            if passphrase.is_empty() {
-                                return Err(Error::InvalidDataFormat(
-                                    "Missing passphrase".to_string(),
-                                ));
-                            }
-
-                            if let Ok(pk) = kf.decrypt_key(&passphrase) {
-                                let raw = tr
-                                    .to_signed_raw(pk, chain_id)
-                                    .expect("Expect to sign a transaction");
-                                let signed = Transaction::to_raw_params(&raw);
-                                debug!("Signed transaction to: {:?}\n\t raw: {:?}", &tr.to, signed);
-
-                                Ok(signed)
-                            } else {
-                                Err(Error::InvalidDataFormat("Invalid passphrase".to_string()))
-                            }
-                        }
-
-                        #[cfg(feature = "hardware-wallet")]
-                        CryptoType::HdWallet(hw) => {
-                            let guard = wallet_manager.lock().unwrap();
-                            let mut wm = guard.borrow_mut();
-
-                            let hd_path = match to_prefixed_path(&hw.hd_path) {
-                                Ok(hd) => hd,
-                                Err(e) => return Err(Error::InvalidDataFormat(e.to_string())),
-                            };
-
-                            if let Err(e) = wm.update(Some(hd_path.clone())) {
-                                return Err(Error::InvalidDataFormat(format!(
-                                    "Can't update HD wallets list : {}",
-                                    e.to_string()
-                                )));
-                            }
-
-                            let mut err = String::new();
-                            let rlp = tr.to_rlp(Some(chain_id));
-                            for (addr, fd) in wm.devices() {
-                                debug!("Selected device: {:?} {:?}", &addr, &fd);
-
-                                // MUST verify address before making a signature, or a malicious
-                                // person can replace HD path with another one and convince user to
-                                // make signature from this address
-                                match wm.get_address(&fd, Some(hd_path.clone())) {
-                                    Ok(actual_addr) => {
-                                        if actual_addr != addr {
-                                            return Err(Error::InvalidDataFormat(
-                                                "Address for stored HD path is incorrect"
-                                                    .to_string(),
-                                            ));
-                                        }
-                                    }
-                                    Err(e) => {
-                                        return Err(Error::InvalidDataFormat(format!(
-                                            "Can't get Address for HD Path: {}",
-                                            e.to_string()
-                                        )));
-                                    }
-                                }
-
-                                match wm.sign_transaction(&fd, &rlp, Some(hd_path.clone())) {
-                                    Ok(s) => {
-                                        let raw = tr.raw_from_sig(chain_id, &s);
-                                        let signed = Transaction::to_raw_params(&raw);
-                                        debug!(
-                                            "HD wallet addr:{:?} path: {:?} signed transaction \
-                                             to: {:?}\n\t raw: {:?}",
-                                            addr, fd, &tr.to, signed
-                                        );
-                                        return Ok(signed);
-                                    }
-                                    Err(e) => {
-                                        err = format!(
-                                            "{}\nWallet addr:{} on path:{}, can't sign \
-                                             transaction: {}",
-                                            err,
-                                            addr,
-                                            fd,
-                                            e.to_string()
-                                        );
-                                        continue;
-                                    }
-                                }
-                            }
-
-                            Err(Error::InvalidDataFormat(err))
-                        }
-                    }
-                }
-                Err(err) => Err(Error::InvalidDataFormat(err.to_string())),
-            }
-        }
-
-        Err(_) => Err(Error::InvalidDataFormat("Can't find account".to_string())),
-    }
-}
-
 #[cfg(feature = "default")]
 pub fn sign(
     params: SignParams<(String, String, String, CommonAdditional)>,
@@ -402,104 +271,6 @@ pub fn sign(
                 Ok(Params::Array(vec![Value::String(signed.into())]))
             } else {
                 Err(Error::InvalidDataFormat("Invalid passphrase".to_string()))
-            }
-        }
-        Err(_) => Err(Error::InvalidDataFormat("Can't find account".to_string())),
-    }
-}
-
-#[cfg(feature = "hardware-wallet")]
-pub fn sign(
-    params: SignParams<(String, String, String, CommonAdditional)>,
-    storage: &Arc<Mutex<StorageController>>,
-    wallet_manager: &Arc<Mutex<RefCell<WManager>>>,
-) -> Result<Params, Error> {
-    let storage_ctrl = storage.lock().unwrap();
-    let (input, address, passphrase, additional) = params.into_full();
-    let (chain, chain_id) = extract_chain_params(&additional)?;
-    let storage = storage_ctrl.get_keystore(&chain)?;
-    let addr = Address::from_str(&address)?;
-    let hash = util::keccak256(
-        format!("\x19Ethereum Signed Message:\n{}{}", input.len(), input).as_bytes(),
-    );
-    match storage.search_by_address(&addr) {
-        Ok((_, kf)) => {
-            match kf.crypto {
-                CryptoType::Core(_) => {
-                    if passphrase.is_empty() {
-                        return Err(Error::InvalidDataFormat("Missing passphrase".to_string()));
-                    }
-                    if let Ok(pk) = kf.decrypt_key(&passphrase) {
-                        let signed = pk.sign_hash(hash)?;
-                        Ok(Params::Array(vec![Value::String(signed.into())]))
-                    } else {
-                        Err(Error::InvalidDataFormat("Invalid passphrase".to_string()))
-                    }
-                }
-
-                CryptoType::HdWallet(hw) => {
-                    let guard = wallet_manager.lock().unwrap();
-                    let mut wm = guard.borrow_mut();
-
-                    let hd_path = match to_prefixed_path(&hw.hd_path) {
-                        Ok(hd) => hd,
-                        Err(e) => return Err(Error::InvalidDataFormat(e.to_string())),
-                    };
-
-                    if let Err(e) = wm.update(Some(hd_path.clone())) {
-                        return Err(Error::InvalidDataFormat(format!(
-                            "Can't update HD wallets list : {}",
-                            e.to_string()
-                        )));
-                    }
-
-                    let mut err = String::new();
-                    for (addr, fd) in wm.devices() {
-                        debug!("Selected device: {:?} {:?}", &addr, &fd);
-
-                        // MUST verify address before making a signature, or a malicious
-                        // person can replace HD path with another one and convince user to
-                        // make signature from this address
-                        match wm.get_address(&fd, Some(hd_path.clone())) {
-                            Ok(actual_addr) => {
-                                if actual_addr != addr {
-                                    return Err(Error::InvalidDataFormat(
-                                        "Address for stored HD path is incorrect".to_string(),
-                                    ));
-                                }
-                            }
-                            Err(e) => {
-                                return Err(Error::InvalidDataFormat(format!(
-                                    "Can't get Address for HD Path: {}",
-                                    e.to_string()
-                                )));
-                            }
-                        }
-
-                        match wm.sign(&fd, &hash, &Some(hd_path.clone())) {
-                            Ok(s) => {
-                                debug!(
-                                    "HD wallet addr:{:?} path: {:?} signed data to: {:?}\n\t raw: \
-                                     {:?}",
-                                    addr, fd, input, s
-                                );
-                                return Ok(Params::Array(vec![Value::String(s.into())]));
-                            }
-                            Err(e) => {
-                                err = format!(
-                                    "{}\nWallet addr:{} on path:{}, can't sign data: {}",
-                                    err,
-                                    addr,
-                                    fd,
-                                    e.to_string()
-                                );
-                                continue;
-                            }
-                        }
-                    }
-
-                    Err(Error::InvalidDataFormat(err))
-                }
             }
         }
         Err(_) => Err(Error::InvalidDataFormat("Can't find account".to_string())),
@@ -591,45 +362,4 @@ pub fn generate_mnemonic() -> Result<String, Error> {
     let mnemonic = Mnemonic::new(Language::English, &entropy)?;
 
     Ok(mnemonic.sentence())
-}
-
-#[cfg(feature = "hardware-wallet")]
-pub fn import_mnemonic(
-    params: Either<(NewMnemonicAccount,), (NewMnemonicAccount, CommonAdditional)>,
-    sec: &KdfDepthLevel,
-    storage: &Arc<Mutex<StorageController>>,
-) -> Result<String, Error> {
-    let storage_ctrl = storage.lock().unwrap();
-    let (account, additional) = params.into_full();
-    let (chain, _) = extract_chain_params(&additional)?;
-    let storage = storage_ctrl.get_keystore(&chain)?;
-    if account.passphrase.is_empty() {
-        return Err(Error::InvalidDataFormat("Empty passphrase".to_string()));
-    }
-
-    let mnemonic = Mnemonic::try_from(Language::English, &account.mnemonic)?;
-    let hd_path = HDPath::try_from(&account.hd_path)?;
-    let pk = mnemonic::generate_key(&hd_path, &mnemonic.seed(""))?;
-
-    let kdf = if cfg!(target_os = "windows") {
-        Kdf::from_str(PBKDF2_KDF_NAME)?
-    } else {
-        Kdf::from(*sec)
-    };
-
-    let mut rng = os_random();
-    let kf = KeyFile::new_custom(
-        pk,
-        &account.passphrase,
-        kdf,
-        &mut rng,
-        Some(account.name),
-        Some(account.description),
-    )?;
-
-    let addr = kf.address.to_string();
-    storage.put(&kf)?;
-    debug!("New mnemonic account generated: {}", kf.address);
-
-    Ok(addr)
 }

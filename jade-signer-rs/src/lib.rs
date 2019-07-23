@@ -1,6 +1,4 @@
 //! # Ethereum Classic web3 like connector library
-#![cfg_attr(feature = "dev", feature(plugin))]
-#![cfg_attr(feature = "dev", plugin(clippy))]
 #![deny(missing_docs)]
 
 #[macro_use]
@@ -19,7 +17,6 @@ extern crate chrono;
 extern crate ethabi;
 extern crate glob;
 extern crate hex;
-extern crate hidapi;
 extern crate hmac;
 extern crate jsonrpc_core;
 extern crate jsonrpc_http_server;
@@ -39,8 +36,6 @@ extern crate time;
 extern crate uuid;
 mod contract;
 mod core;
-#[cfg(feature = "hardware-wallet")]
-mod hdwallet;
 pub mod keystore;
 pub mod mnemonic;
 pub mod rpc;

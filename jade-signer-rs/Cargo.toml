@@ -50,9 +50,7 @@ hmac = "0.6"
 rocksdb =  { version = "0.12", optional = true }
 hyper = { version = "0.12", optional = true }
 reqwest = { version = "0.9", optional = true }
-clippy = { version = "0.0", optional = true }
 chrono = "0.4.6"
-hidapi = { version = "0.4", optional = true }
 
 [dev-dependencies]
 tempdir = "0.3.7"
@@ -62,6 +60,4 @@ quickcheck = "0.8.2"
 [features]
 default = ["http", "rocksdb"]
 http = ["hyper", "reqwest"]
-dev = ["clippy"]
 fs-storage = []
-hardware-wallet = ["hidapi"]

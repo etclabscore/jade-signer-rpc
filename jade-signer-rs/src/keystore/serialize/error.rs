@@ -1,6 +1,4 @@
 //! # Serialize keystore files (UTC / JSON) module errors
-#[cfg(feature = "hardware-wallet")]
-use hdwallet;
 use rpc;
 use serde_json;
 
@@ -43,18 +41,6 @@ impl From<io::Error> for Error {
 impl From<serde_json::Error> for Error {
     fn from(err: serde_json::Error) -> Self {
         Error::InvalidEncoding(err)
-    }
-}
-
-//impl From<serde_json::Error> for Error {
-//    fn from(err: serde_json::Error) -> Self {
-//        Error::InvalidDecoding(err)
-//    }
-//}
-#[cfg(feature = "hardware-wallet")]
-impl From<hdwallet::Error> for Error {
-    fn from(err: hdwallet::Error) -> Self {
-        Error::InvalidCrypto(err.to_string())
     }
 }
 

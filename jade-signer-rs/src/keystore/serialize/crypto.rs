@@ -76,7 +76,6 @@ impl CoreCrypto {
                 },
                 mac: Mac::from(core.mac.0),
             }),
-            _ => Err(Error::NotFound),
         }
     }
 }

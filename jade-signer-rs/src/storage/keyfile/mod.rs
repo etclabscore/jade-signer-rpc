@@ -64,33 +64,6 @@ impl From<KeyFile> for AccountInfo {
     }
 }
 
-#[cfg(feature = "hardware-wallet")]
-impl From<KeyFile> for AccountInfo {
-    fn from(kf: KeyFile) -> Self {
-        let mut info = Self::default();
-        info.address = kf.address.to_string();
-
-        if let Some(name) = kf.name {
-            info.name = name;
-        };
-
-        if let Some(desc) = kf.description {
-            info.description = desc;
-        };
-
-        if let Some(visible) = kf.visible {
-            info.is_hidden = !visible;
-        };
-
-        info.is_hardware = match kf.crypto {
-            CryptoType::Core(_) => false,
-            CryptoType::HdWallet(_) => true,
-        };
-
-        info
-    }
-}
-
 /// Storage for `KeyFiles`
 ///
 pub trait KeyfileStorage: Send + Sync {

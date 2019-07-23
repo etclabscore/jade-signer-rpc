@@ -17,11 +17,6 @@ pub use self::serialize::Error as SerializeError;
 pub use self::serialize::{try_extract_address, CoreCrypto, Iv, Mac, SerializableKeyFileCore};
 use super::core::{self, Address, PrivateKey};
 use super::util::{self, keccak256, to_arr, KECCAK256_BYTES};
-#[cfg(feature = "hardware-wallet")]
-pub use hdwallet::HdwalletCrypto;
-
-#[cfg(feature = "hardware-wallet")]
-pub use self::serialize::SerializableKeyFileHD;
 
 use rand::{OsRng, Rng};
 use std::convert::From;
@@ -66,10 +61,6 @@ pub struct KeyFile {
 pub enum CryptoType {
     /// normal Web3 Secret Storage
     Core(CoreCrypto),
-
-    /// backed with HD Wallet
-    #[cfg(feature = "hardware-wallet")]
-    HdWallet(HdwalletCrypto),
 }
 
 impl KeyFile {
@@ -168,9 +159,6 @@ impl KeyFile {
                     &core.cipher_params.iv,
                 ))))
             }
-            _ => Err(Error::InvalidCrypto(
-                "HD Wallet crypto used instead of normal".to_string(),
-            )),
         }
     }
 
