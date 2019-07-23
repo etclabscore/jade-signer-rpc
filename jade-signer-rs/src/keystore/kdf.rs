@@ -144,7 +144,7 @@ impl Kdf {
                 };
             }
             Kdf::Scrypt { n, r, p } => {
-                let log_n = (n as f64).log2().round() as u8;
+                let log_n = f64::from(n).log2().round() as u8;
                 let params = ScryptParams::new(log_n, r, p).expect("Invalid Scrypt parameters");
                 scrypt(passphrase.as_bytes(), kdf_salt, &params, &mut key).expect("Scrypt failed");
             }

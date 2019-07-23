@@ -136,7 +136,7 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
     {
         let storage_ctrl = Arc::clone(&storage_ctrl);
         io.add_method("signer_newAccount", move |p: Params| {
-            wrapper(serves::new_account(parse(p)?, &sec_level, &storage_ctrl))
+            wrapper(serves::new_account(parse(p)?, sec_level, &storage_ctrl))
         });
     }
 

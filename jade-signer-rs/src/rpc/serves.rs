@@ -180,7 +180,7 @@ pub fn export_account(
 
 pub fn new_account(
     params: Either<(NewAccountAccount,), (NewAccountAccount, CommonAdditional)>,
-    sec: &KdfDepthLevel,
+    sec: KdfDepthLevel,
     storage: &Arc<Mutex<StorageController>>,
 ) -> Result<String, Error> {
     let storage_ctrl = storage.lock().unwrap();
@@ -231,7 +231,7 @@ pub fn sign_transaction(
                     let raw = tr
                         .to_signed_raw(pk, chain_id)
                         .expect("Expect to sign a transaction");
-                    let signed = Transaction::to_raw_params(&raw);
+                    let signed = Transaction::signed_rpl_into_raw_params(&raw);
                     log::debug!("Signed transaction to: {:?}\n\t raw: {:?}", &tr.to, signed);
 
                     Ok(signed)

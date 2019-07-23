@@ -74,7 +74,7 @@ impl KeyFile {
     ///
     pub fn new(
         passphrase: &str,
-        sec_level: &KdfDepthLevel,
+        sec_level: KdfDepthLevel,
         name: Option<String>,
         description: Option<String>,
     ) -> Result<KeyFile, Error> {
@@ -83,7 +83,7 @@ impl KeyFile {
         let kdf = if cfg!(target_os = "windows") {
             Kdf::from_str(PBKDF2_KDF_NAME)?
         } else {
-            Kdf::from(*sec_level)
+            Kdf::from(sec_level)
         };
 
         Self::new_custom(

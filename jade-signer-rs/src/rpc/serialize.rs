@@ -31,7 +31,7 @@ impl SignTxTransaction {
 
 impl Transaction {
     /// Signed transaction into raw data
-    pub fn to_raw_params(signed_rlp: &[u8]) -> Params {
+    pub fn signed_rpl_into_raw_params(signed_rlp: &[u8]) -> Params {
         let str = format!("0x{}", signed_rlp.to_hex());
         Params::Array(vec![JsonRpcValue::String(str)])
     }

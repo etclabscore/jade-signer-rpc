@@ -37,7 +37,7 @@ impl From<[u8; ECDSA_SIGNATURE_BYTES]> for Signature {
         let mut sign = Signature::default();
 
         sign.v = data[0];
-        sign.r.copy_from_slice(&data[1..(1 + 32)]);
+        sign.r.copy_from_slice(&data[1..=32]);
         sign.s.copy_from_slice(&data[(1 + 32)..(1 + 32 + 32)]);
 
         sign

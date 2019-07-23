@@ -58,24 +58,20 @@ pub fn extract_chain_params(p: &dyn CommonChainParams) -> Result<(String, u8), E
 fn check_chain_name(n: &str) -> Result<u8, Error> {
     match util::to_chain_id(n) {
         Some(id) => Ok(id),
-        None => {
-            return Err(Error::InvalidDataFormat(format!(
-                "Invalid chain name: {}",
-                n
-            )));
-        }
+        None => Err(Error::InvalidDataFormat(format!(
+            "Invalid chain name: {}",
+            n
+        ))),
     }
 }
 
 fn check_chain_id(id: u8) -> Result<String, Error> {
     match util::to_chain_name(id) {
         Some(n) => Ok(n.to_string()),
-        None => {
-            return Err(Error::InvalidDataFormat(format!(
-                "Invalid chain id: {}",
-                id
-            )));
-        }
+        None => Err(Error::InvalidDataFormat(format!(
+            "Invalid chain id: {}",
+            id
+        ))),
     }
 }
 

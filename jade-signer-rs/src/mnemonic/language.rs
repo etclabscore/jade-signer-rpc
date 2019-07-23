@@ -16,8 +16,8 @@ pub enum Language {
 
 impl Language {
     /// Get list of word sor specific `Language`
-    pub fn wordlist(&self) -> &'static Vec<String> {
-        match *self {
+    pub fn wordlist(self) -> &'static Vec<String> {
+        match self {
             Language::English => &BIP39_ENGLISH_WORDLIST,
         }
     }
