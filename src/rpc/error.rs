@@ -26,8 +26,6 @@ pub enum Error {
     ContractAbiError(String),
     /// Mnemonic phrase operations error
     MnemonicError(String),
-    /// Addressbook operations error
-    AddressbookError(String),
 }
 
 impl From<keystore::Error> for Error {
@@ -105,7 +103,6 @@ impl fmt::Display for Error {
             Error::StorageError(ref str) => write!(f, "Keyfile storage error: {}", str),
             Error::ContractAbiError(ref str) => write!(f, "Contract ABI error: {}", str),
             Error::MnemonicError(ref str) => write!(f, "Mnemonic error: {}", str),
-            Error::AddressbookError(ref str) => write!(f, "Addressbook error: {}", str),
         }
     }
 }

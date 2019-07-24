@@ -1,6 +1,10 @@
 //! # Ethereum Classic web3 like connector library
 #![deny(missing_docs)]
 
+#![cfg_attr(feature = "nightly", feature(test))]
+#[cfg(feature = "nightly")]
+extern crate test;
+
 mod contract;
 mod core;
 mod keystore;

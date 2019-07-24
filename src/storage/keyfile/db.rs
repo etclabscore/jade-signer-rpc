@@ -216,4 +216,42 @@ mod tests {
         }"#
         )
     }
+
+    #[cfg(feature = "nightly")]
+    mod benches {
+        use super::*;
+        use crate::keystore::{Kdf, KeyFile};
+        use crate::PrivateKey;
+        use std::fs::File;
+        use std::path::PathBuf;
+        use tempdir::TempDir;
+        use test::Bencher;
+
+        pub fn temp_dir() -> PathBuf {
+            let dir = TempDir::new("jade").unwrap();
+            File::create(dir.path()).ok();
+            dir.into_path()
+        }
+
+        pub fn get_keyfile() -> KeyFile {
+            let pk = PrivateKey::gen();
+            let kdf = Kdf::from((8, 2, 1));
+
+            KeyFile::new_custom(pk, "1234567890", kdf, &mut rand::thread_rng(), None, None).unwrap()
+        }
+
+        fn time<F: FnOnce()>(f: F) -> u64 {
+            let start = ::std::time::Instant::now();
+            f();
+            start.elapsed().as_secs()
+        }
+
+        #[bench]
+        fn db_put(b: &mut Bencher) {
+            let db = DbStorage::new(temp_dir().as_path()).unwrap();
+            b.iter(|| {
+                db.put(&get_keyfile()).unwrap();
+            })
+        }
+    }
 }

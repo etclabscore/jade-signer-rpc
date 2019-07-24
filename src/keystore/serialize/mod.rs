@@ -104,7 +104,6 @@ mod tests {
     use super::*;
     use crate::storage::generate_filename;
     use regex::Regex;
-    use crate::tests::*;
 
     #[test]
     fn should_catch_unsupported_keyfile_version() {

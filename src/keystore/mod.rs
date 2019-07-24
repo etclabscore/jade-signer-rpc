@@ -533,4 +533,56 @@ mod tests {
             "a928d7c2-b37b-464c-a70b-b9979d59fac4".parse().unwrap()
         );
     }
+
+    #[cfg(feature = "nightly")]
+    mod bench {
+        use super::*;
+        use crate::keccak256;
+        use crate::keystore::{os_random, Kdf, KdfDepthLevel, KeyFile};
+        use crate::PrivateKey;
+        use test::Bencher;
+
+        #[bench]
+        fn decrypt_scrypt(b: &mut Bencher) {
+            let path =
+                keyfile_path("UTC--2017-03-17T10-52-08.229Z--0047201aed0b69875b24b614dda0270bcd9f11cc");
+
+            let keyfile = KeyFile::decode(&file_content(path)).unwrap();
+
+            b.iter(|| keyfile.decrypt_key("1234567890"));
+        }
+
+        #[bench]
+        fn decrypt_pbkdf2(b: &mut Bencher) {
+            let path = keyfile_path("UTC--2017-03-20T17-03-12Z--37e0d14f-7269-7ca0-4419-d7b13abfeea9");
+            let keyfile = KeyFile::decode(&file_content(path)).unwrap();
+
+            b.iter(|| keyfile.decrypt_key("1234567890"));
+        }
+
+        #[bench]
+        #[ignore]
+        fn encrypt_scrypt(b: &mut Bencher) {
+            let sec = KdfDepthLevel::Ultra;
+            b.iter(|| KeyFile::new("1234567890", sec, None, None));
+        }
+
+        #[bench]
+        fn encrypt_pbkdf2(b: &mut Bencher) {
+            let mut rng = os_random();
+            let pk = PrivateKey::gen_custom(&mut rng);
+
+            b.iter(|| KeyFile::new_custom(pk, "1234567890", Kdf::from(10240), &mut rng, None, None));
+        }
+
+        #[bench]
+        fn small_sha3(b: &mut Bencher) {
+            b.iter(|| keccak256(&[b'-'; 16]));
+        }
+
+        #[bench]
+        fn big_sha3(b: &mut Bencher) {
+            b.iter(|| keccak256(&[b'-'; 1024]));
+        }
+    }
 }
