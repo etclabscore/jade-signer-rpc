@@ -30,12 +30,6 @@ pub enum Error {
     AddressbookError(String),
 }
 
-impl From<storage::addressbook::error::AddressbookError> for Error {
-    fn from(err: storage::addressbook::error::AddressbookError) -> Self {
-        Error::AddressbookError(err.to_string())
-    }
-}
-
 impl From<keystore::Error> for Error {
     fn from(err: keystore::Error) -> Self {
         Error::InvalidDataFormat(format!("keystore: {}", err.to_string()))

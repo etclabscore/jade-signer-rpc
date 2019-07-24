@@ -306,44 +306,6 @@ pub fn import_contract(
     Ok(())
 }
 
-pub fn list_addresses(
-    params: Either<(), (CommonAdditional,)>,
-    storage: &Arc<Mutex<StorageController>>,
-) -> Result<Vec<serde_json::Value>, Error> {
-    let storage_ctrl = storage.lock().unwrap();
-    let (additional,) = params.into_right();
-    let (chain, _chain_id) = extract_chain_params(&additional)?;
-    let storage = storage_ctrl.get_addressbook(&chain)?;
-
-    Ok(storage.list())
-}
-
-pub fn import_address(
-    params: Either<(Value,), (Value, CommonAdditional)>,
-    storage: &Arc<Mutex<StorageController>>,
-) -> Result<String, Error> {
-    let storage_ctrl = storage.lock().unwrap();
-    let (raw, additional) = params.into_full();
-    let (chain, _chain_id) = extract_chain_params(&additional)?;
-    let storage = storage_ctrl.get_addressbook(&chain)?;
-
-    storage.add(&raw)?;
-    Ok(raw.get("address").unwrap().to_string())
-}
-
-pub fn delete_address(
-    params: Either<(Value,), (Value, CommonAdditional)>,
-    storage: &Arc<Mutex<StorageController>>,
-) -> Result<(), Error> {
-    let storage_ctrl = storage.lock().unwrap();
-    let (addr, additional) = params.into_full();
-    let (chain, _chain_id) = extract_chain_params(&additional)?;
-    let storage = storage_ctrl.get_addressbook(&chain)?;
-
-    storage.delete(&addr)?;
-    Ok(())
-}
-
 //pub fn export_contract(
 //    params: Either<(Value,), (Value, FunctionParams)>,
 //    storage: &Arc<Mutex<StorageController>>,

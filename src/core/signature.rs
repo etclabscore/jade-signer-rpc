@@ -85,8 +85,8 @@ impl PrivateKey {
     /// # Example
     ///
     /// ```
-    /// const PKB: usize = jade_signer::PRIVATE_KEY_BYTES;
-    /// let pk = jade_signer::PrivateKey::try_from(&[0u8; PKB]).unwrap();
+    /// const PKB: usize = crate::PRIVATE_KEY_BYTES;
+    /// let pk = crate::PrivateKey::try_from(&[0u8; PKB]).unwrap();
     /// assert_eq!(pk.to_string(),
     ///            "0x0000000000000000000000000000000000000000000000000000000000000000");
     /// ```

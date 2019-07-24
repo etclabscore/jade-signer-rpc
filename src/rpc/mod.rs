@@ -63,27 +63,6 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
 
     {
         let storage_ctrl = Arc::clone(&storage_ctrl);
-        io.add_method("signer_listAddresses", move |p: Params| {
-            wrapper(serves::list_addresses(parse(p)?, &storage_ctrl))
-        });
-    }
-
-    {
-        let storage_ctrl = Arc::clone(&storage_ctrl);
-        io.add_method("signer_importAddress", move |p: Params| {
-            wrapper(serves::import_address(parse(p)?, &storage_ctrl))
-        });
-    }
-
-    {
-        let storage_ctrl = Arc::clone(&storage_ctrl);
-        io.add_method("signer_deleteAddress", move |p: Params| {
-            wrapper(serves::delete_address(parse(p)?, &storage_ctrl))
-        });
-    }
-
-    {
-        let storage_ctrl = Arc::clone(&storage_ctrl);
 
         io.add_method("signer_listAccounts", move |p: Params| {
             wrapper(serves::list_accounts(parse(p)?, &storage_ctrl))

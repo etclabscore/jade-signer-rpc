@@ -1,4 +1,32 @@
+//! # Ethereum Classic web3 like connector library
+#![deny(missing_docs)]
+
+mod contract;
+mod core;
+mod keystore;
+mod mnemonic;
+mod rpc;
+mod storage;
+mod util;
 mod signer;
+
+use self::core::*;
+use self::rpc::start;
+use self::util::*;
+
+#[cfg(test)]
+mod tests {
+    pub use super::*;
+    pub use hex::{FromHex, ToHex};
+    pub use regex::Regex;
+}
+
+const VERSION: Option<&'static str> = option_env!("CARGO_PKG_VERSION");
+
+/// Get the current Jade Signer version.
+pub fn version() -> &'static str {
+    VERSION.unwrap_or("unknown")
+}
 
 use clap::App;
 use env_logger::Builder;
@@ -31,7 +59,7 @@ fn main() {
     log_builder.init();
 
     if matches.is_present("version") {
-        println!("v{}", jade_signer::version());
+        println!("v{}", crate::version());
         exit(0);
     }
 

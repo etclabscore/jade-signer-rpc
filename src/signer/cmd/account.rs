@@ -14,7 +14,7 @@ use super::arg_handlers::*;
 use super::{Address, KeyFile};
 use super::{EnvVars, Error, ExecResult, KeyfileStorage};
 use crate::signer::indicator::ProgressIndicator;
-use jade_signer::storage::KeystoreError;
+use crate::storage::KeystoreError;
 
 /// Hide account from being listed
 ///

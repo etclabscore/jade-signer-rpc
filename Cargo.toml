@@ -8,20 +8,11 @@ readme = "README.md"
 license = "Apache-2.0"
 edition = "2018"
 publish = false
-autobins = false
 
 [badges]
 travis-ci = { repository = "etclabscore/jade-signer-rs" }
 appveyor = { repository = "etclabscore/jade-signer-rs" }
 circle-ci = { repository = "etclabscore/jade-signer-rs" }
-
-[lib]
-name = "jade_signer"
-path = "src/lib.rs"
-
-[[bin]]
-name = "jade-signer"
-path = "src/main.rs"
 
 [dependencies]
 time = "0.1"
