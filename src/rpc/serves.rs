@@ -86,7 +86,7 @@ pub fn shake_account(
     params: Either<(ShakeAccountAccount,), (ShakeAccountAccount, CommonAdditional)>,
     storage: &Arc<Mutex<StorageController>>,
 ) -> Result<bool, Error> {
-    use crate::keystore::os_random;
+    use crate::util::os_random;
 
     let storage_ctrl = storage.lock().unwrap();
     let (account, additional) = params.into_full();

@@ -9,6 +9,7 @@ use chrono::prelude::Utc;
 use hex::FromHex;
 use std::io::Cursor;
 use std::mem::transmute;
+use rand::{Rng, CryptoRng, RngCore};
 
 static HEX_CHARS: &'static [u8] = b"0123456789abcdef";
 
@@ -238,6 +239,37 @@ pub fn to_20bytes(hex: &str) -> [u8; 20] {
 ///
 pub fn to_32bytes(hex: &str) -> [u8; 32] {
     to_arr(Vec::from_hex(&hex).unwrap().as_slice())
+}
+
+/// Get OsRng
+#[cfg(not(feature = "fixed-seed"))]
+pub fn os_random() -> impl CryptoRng + RngCore + Rng {
+    use rand::rngs::OsRng;
+    OsRng::new().expect("Could not create an OsRng generator")
+}
+
+#[cfg(feature = "fixed-seed")]
+mod fixed_seed {
+    #[cfg(not(debug_assertions))]
+    compile_error!("Don't use fixed-seed feature in production builds, it's only for testing in debug builds!");
+
+    use std::sync::atomic::{AtomicUsize, Ordering};
+
+    lazy_static::lazy_static! {
+        static ref RNG_SEED: AtomicUsize = AtomicUsize::new(0xDEADBEEF);
+    }
+
+    pub fn next_seed() -> usize {
+        RNG_SEED.fetch_add(1, Ordering::SeqCst)
+    }
+}
+
+/// Get OsRng with fixed seed
+#[cfg(feature = "fixed-seed")]
+pub fn os_random() -> impl CryptoRng + RngCore + Rng {
+    use rand::SeedableRng;
+    use rand::rngs::StdRng;
+    StdRng::seed_from_u64(self::fixed_seed::next_seed() as u64)
 }
 
 #[cfg(test)]

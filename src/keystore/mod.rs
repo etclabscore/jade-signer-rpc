@@ -16,13 +16,12 @@ pub use self::prf::Prf;
 pub use self::serialize::Error as SerializeError;
 pub use self::serialize::{try_extract_address, CoreCrypto, Iv, Mac, SerializableKeyFileCore};
 use super::core::{self, Address, PrivateKey};
-use super::util::{self, keccak256, to_arr, KECCAK256_BYTES};
+use super::util::{self, keccak256, to_arr, KECCAK256_BYTES, os_random};
 
 use std::convert::From;
 use std::str::FromStr;
 use std::{cmp, fmt};
-
-use rand::{rngs::OsRng, Rng};
+use rand::{Rng};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -244,11 +243,6 @@ impl fmt::Display for KeyFile {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Keystore file: {}", self.uuid)
     }
-}
-
-/// Create random number generator
-pub fn os_random() -> OsRng {
-    OsRng::new().expect("Expect OS specific random number generator")
 }
 
 #[cfg(test)]
