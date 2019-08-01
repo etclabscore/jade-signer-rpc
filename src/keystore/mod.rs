@@ -22,7 +22,7 @@ use std::convert::From;
 use std::str::FromStr;
 use std::{cmp, fmt};
 
-use rand::{OsRng, Rng};
+use rand::{rngs::OsRng, Rng};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -115,7 +115,7 @@ impl KeyFile {
         description: Option<String>,
     ) -> Result<KeyFile, Error> {
         let mut kf = KeyFile {
-            uuid: rng.gen::<Uuid>(),
+            uuid: Uuid::from_bytes(rng.gen()),
             name,
             description,
             ..Default::default()
