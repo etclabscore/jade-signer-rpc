@@ -16,8 +16,23 @@ impl Drop for ChildKiller {
 #[cfg(any(target_os = "linux", target_os = "macos"))]
 #[test]
 fn openrpc_test_cov() {
+    // Build server
+    let status = Command::new("cargo")
+        .arg("build")
+        .arg("--features")
+        .arg("fixed-seed")
+        .status()
+        .expect("failed to start server");
+
+    if !status.success() {
+        panic!("failed to build jade-signer");
+    }
+
+    // Start server
     let mut server = Command::new("cargo")
         .arg("run")
+        .arg("--features")
+        .arg("fixed-seed")
         .arg("--")
         .arg("server")
         .spawn()
@@ -25,8 +40,10 @@ fn openrpc_test_cov() {
 
     let guard = ChildKiller { child: server };
 
-    sleep(Duration::from_secs(1));
+    // Wait for server to spin-up
+    sleep(Duration::from_secs(5));
 
+    // Run open-rpc-test-coverage tool
     let status = Command::new("open-rpc-test-coverage")
         .arg("-s")
         .arg("./openrpc.json")
