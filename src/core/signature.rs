@@ -4,9 +4,9 @@ use super::util::{keccak256, to_arr, KECCAK256_BYTES};
 use super::Address;
 use super::Error;
 use hex;
-use rand::{OsRng, Rng};
+use rand::{rngs::OsRng, Rng, RngCore};
 use secp256k1::key::{PublicKey, SecretKey};
-use secp256k1::{ContextFlag, Message, Secp256k1};
+use secp256k1::{SignOnly, Message, Secp256k1};
 use std::{fmt, ops, str};
 
 /// Private key length in bytes
@@ -16,7 +16,7 @@ pub const PRIVATE_KEY_BYTES: usize = 32;
 pub const ECDSA_SIGNATURE_BYTES: usize = 65;
 
 lazy_static::lazy_static! {
-    static ref ECDSA: Secp256k1 = Secp256k1::with_caps(ContextFlag::SignOnly);
+    static ref ECDSA: Secp256k1<SignOnly> = Secp256k1::signing_only();
 }
 
 /// Transaction sign data (see Appendix F. "Signing Transactions" from Yellow Paper)
@@ -72,8 +72,8 @@ impl PrivateKey {
     }
 
     /// Generate a new `PrivateKey` with given custom random generator
-    pub fn gen_custom<R: Rng>(rng: &mut R) -> Self {
-        PrivateKey::from(SecretKey::new(&ECDSA, rng))
+    pub fn gen_custom<R: Rng + RngCore>(rng: &mut R) -> Self {
+        PrivateKey::from(SecretKey::new(rng))
     }
 
     /// Try to convert a byte slice into `PrivateKey`.
@@ -100,7 +100,7 @@ impl PrivateKey {
 
     /// Extract `Address` from current private key.
     pub fn to_address(self) -> Result<Address, Error> {
-        let key = PublicKey::from_secret_key(&ECDSA, &self.into())?;
+        let key = PublicKey::from_secret_key(&ECDSA, &self.into());
         let hash = keccak256(&key.serialize_uncompressed()[1..] /* cut '04' */);
         Ok(Address(to_arr(&hash[12..])))
     }
@@ -118,10 +118,10 @@ impl PrivateKey {
     /// Sign hash from message (Keccak-256)
     pub fn sign_hash(&self, hash: [u8; KECCAK256_BYTES]) -> Result<Signature, Error> {
         let msg = Message::from_slice(&hash)?;
-        let key = SecretKey::from_slice(&ECDSA, self)?;
+        let key = SecretKey::from_slice(self)?;
 
-        let s = ECDSA.sign_recoverable(&msg, &key)?;
-        let (rid, sig) = s.serialize_compact(&ECDSA);
+        let s = ECDSA.sign_recoverable(&msg, &key);
+        let (rid, sig) = s.serialize_compact();
 
         let mut buf = [0u8; ECDSA_SIGNATURE_BYTES];
         buf[0] = (rid.to_i32() + 27) as u8;
@@ -153,7 +153,7 @@ impl From<SecretKey> for PrivateKey {
 
 impl Into<SecretKey> for PrivateKey {
     fn into(self) -> SecretKey {
-        SecretKey::from_slice(&ECDSA, &self).expect("Expect secret key")
+        SecretKey::from_slice(&self).expect("Expect secret key")
     }
 }
 

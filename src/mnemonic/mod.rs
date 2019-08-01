@@ -11,7 +11,7 @@ pub use self::language::{Language, BIP39_ENGLISH_WORDLIST};
 use crate::keystore::{Kdf, Prf};
 use num::bigint::BigUint;
 use num::{FromPrimitive, ToPrimitive};
-use rand::{OsRng, Rng};
+use rand::{rngs::OsRng, Rng};
 use sha2::{self, Digest};
 use std::ops::{BitAnd, Shr};
 
@@ -142,8 +142,9 @@ impl Mnemonic {
 /// * `byte_length` - size of entropy in bytes
 ///
 pub fn gen_entropy(byte_length: usize) -> Result<Vec<u8>, Error> {
-    let mut rng = OsRng::new()?;
-    let entropy = rng.gen_iter::<u8>().take(byte_length).collect::<Vec<u8>>();
+    use std::iter;
+    let mut rng = OsRng::new().expect("failed to create OsRng");
+    let entropy = iter::repeat_with(|| rng.gen()).take(byte_length).collect::<Vec<u8>>();
 
     Ok(entropy)
 }

@@ -15,7 +15,6 @@ mod util;
 mod signer;
 
 use self::core::*;
-use self::rpc::start;
 use self::util::*;
 
 #[cfg(test)]

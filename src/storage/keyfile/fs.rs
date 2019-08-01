@@ -7,7 +7,6 @@ use crate::keystore::try_extract_address;
 use crate::keystore::KeyFile;
 
 use serde_json;
-use std::ffi::OsStr;
 use std::fs::{self, read_dir, File};
 use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
