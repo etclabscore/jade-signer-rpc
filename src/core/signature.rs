@@ -3,8 +3,9 @@
 use super::util::{keccak256, to_arr, KECCAK256_BYTES};
 use super::Address;
 use super::Error;
+use crate::util::os_random;
 use hex;
-use rand::{rngs::OsRng, Rng, RngCore};
+use rand::{Rng, RngCore};
 use secp256k1::key::{PublicKey, SecretKey};
 use secp256k1::{SignOnly, Message, Secp256k1};
 use std::{fmt, ops, str};
@@ -179,10 +180,6 @@ impl fmt::Display for PrivateKey {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "0x{}", hex::encode(self.0))
     }
-}
-
-fn os_random() -> OsRng {
-    OsRng::new().expect("Expect OS specific random number generator")
 }
 
 fn message_hash(msg: &str) -> [u8; KECCAK256_BYTES] {

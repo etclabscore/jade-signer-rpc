@@ -60,4 +60,5 @@ quickcheck = "0.8.2"
 [features]
 default = []
 nightly = []
+fixed-seed = []
 

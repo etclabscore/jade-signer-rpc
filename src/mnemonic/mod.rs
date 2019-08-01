@@ -9,9 +9,10 @@ mod language;
 pub use self::error::Error;
 pub use self::language::{Language, BIP39_ENGLISH_WORDLIST};
 use crate::keystore::{Kdf, Prf};
+use crate::util::os_random;
 use num::bigint::BigUint;
 use num::{FromPrimitive, ToPrimitive};
-use rand::{rngs::OsRng, Rng};
+use rand::{Rng};
 use sha2::{self, Digest};
 use std::ops::{BitAnd, Shr};
 
@@ -143,7 +144,7 @@ impl Mnemonic {
 ///
 pub fn gen_entropy(byte_length: usize) -> Result<Vec<u8>, Error> {
     use std::iter;
-    let mut rng = OsRng::new().expect("failed to create OsRng");
+    let mut rng = os_random();
     let entropy = iter::repeat_with(|| rng.gen()).take(byte_length).collect::<Vec<u8>>();
 
     Ok(entropy)
