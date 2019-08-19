@@ -222,6 +222,7 @@ jobs:
     <<: *defaults
     docker:
       - image: etclabscore/semantic-rs
+    resource_class: large
     steps:
       - setup_remote_docker
       - run: apt update && apt install -y cmake clang libclang-dev
@@ -234,6 +235,7 @@ jobs:
     <<: *defaults
     docker:
       - image: etclabscore/semantic-rs
+    resource_class: large
     steps:
       - setup_remote_docker
       - run: apt update && apt install -y cmake clang libclang-dev
