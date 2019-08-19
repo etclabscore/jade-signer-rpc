@@ -44,6 +44,8 @@ fn derive_skip_list() -> Vec<String> {
         }
     }
 
+    skip_list.push("signer_importMnemonic".into());
+
     skip_list
 }
 
