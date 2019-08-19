@@ -7,9 +7,9 @@ pub use self::rlp::{RLPList, WriteRLP};
 use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
 use chrono::prelude::Utc;
 use hex::FromHex;
+use rand::{CryptoRng, Rng, RngCore};
 use std::io::Cursor;
 use std::mem::transmute;
-use rand::{Rng, CryptoRng, RngCore};
 
 static HEX_CHARS: &'static [u8] = b"0123456789abcdef";
 
@@ -251,7 +251,9 @@ pub fn os_random() -> impl CryptoRng + RngCore + Rng {
 #[cfg(feature = "fixed-seed")]
 mod fixed_seed {
     #[cfg(not(debug_assertions))]
-    compile_error!("Don't use fixed-seed feature in production builds, it's only for testing in debug builds!");
+    compile_error!(
+        "Don't use fixed-seed feature in production builds, it's only for testing in debug builds!"
+    );
 
     use std::sync::atomic::{AtomicUsize, Ordering};
 
@@ -267,8 +269,8 @@ mod fixed_seed {
 /// Get OsRng with fixed seed
 #[cfg(feature = "fixed-seed")]
 pub fn os_random() -> impl CryptoRng + RngCore + Rng {
-    use rand::SeedableRng;
     use rand::rngs::StdRng;
+    use rand::SeedableRng;
     StdRng::seed_from_u64(self::fixed_seed::next_seed() as u64)
 }
 

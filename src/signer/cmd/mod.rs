@@ -40,9 +40,7 @@ pub fn execute(matches: &ArgMatches) -> ExecResult {
         base_path = default_path();
     }
 
-    let storage_type = if let Some(storage_type) = matches
-        .value_of("storage-type")
-    {
+    let storage_type = if let Some(storage_type) = matches.value_of("storage-type") {
         StorageType::from_str(storage_type)?
     } else {
         StorageType::RocksDB
@@ -71,7 +69,7 @@ pub fn execute(matches: &ArgMatches) -> ExecResult {
 /// * chain - chain name
 ///
 fn server_cmd(matches: &ArgMatches, storage_ctrl: StorageController, chain: &str) -> ExecResult {
-    log::info!("Starting Jade Signer - v{}",  crate::version());
+    log::info!("Starting Jade Signer - v{}", crate::version());
     let host = matches.value_of("host").unwrap_or_default();
     let port = matches.value_of("port").unwrap_or_default();
     let addr = format!("{}:{}", host, port).parse::<SocketAddr>()?;
@@ -80,7 +78,7 @@ fn server_cmd(matches: &ArgMatches, storage_ctrl: StorageController, chain: &str
     log::info!("Chain set to '{}'", chain);
     log::info!("Security level set to '{}'", sec_lvl);
 
-     crate::rpc::start(&addr, storage_ctrl, Some(sec_lvl));
+    crate::rpc::start(&addr, storage_ctrl, Some(sec_lvl));
 
     Ok(())
 }

@@ -1,0 +1,50 @@
+[plugins]
+git = "builtin"
+clog = "builtin"
+github = "builtin"
+rust = "builtin"
+docker = "builtin"
+
+[steps]
+pre_flight = "discover"
+get_last_release = "git"
+derive_next_version = [ "clog" ]
+generate_notes = "clog"
+prepare = "discover"
+verify_release = "discover"
+commit = "git"
+publish = [ "github", "docker" ]
+notify = "discover"
+
+[cfg]
+
+[cfg.clog]
+ignore = ["ci"]
+
+[cfg.git]
+branch = "master"
+force_https = true
+
+[cfg.github]
+prerelease = true
+assets = [
+    "/workspace/bin/*",
+    "Changelog.md"
+]
+
+[cfg.docker]
+repo_url = "https://github.com/etclabscore/jade-signer-rpc.git"
+repo_branch = "master"
+
+[[cfg.docker.images]]
+registry = "dockerhub"
+namespace = "etclabscore"
+dockerfile = ".docker/Dockerfile"
+name = "jade-signer-rpc"
+tag = "latest"
+binary_path = "target/release/jade-signer"
+cleanup = true
+build_cmd = "cargo build --release"
+exec_cmd = "/bin/jade-signer server"
+
+
