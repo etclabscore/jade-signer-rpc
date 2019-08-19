@@ -1,10 +1,10 @@
 //! # Errors for command executor
 
+use crate::keystore;
+use crate::storage::KeystoreError;
 use hex;
 use http;
 use hyper;
-use crate::storage::KeystoreError;
-use crate::keystore;
 use reqwest;
 use serde_json;
 use std::net::AddrParseError;

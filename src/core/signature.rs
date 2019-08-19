@@ -7,7 +7,7 @@ use crate::util::os_random;
 use hex;
 use rand::{Rng, RngCore};
 use secp256k1::key::{PublicKey, SecretKey};
-use secp256k1::{SignOnly, Message, Secp256k1};
+use secp256k1::{Message, Secp256k1, SignOnly};
 use std::{fmt, ops, str};
 
 /// Private key length in bytes

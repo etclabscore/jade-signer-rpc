@@ -36,7 +36,10 @@ impl FromStr for StorageType {
         match s.to_ascii_lowercase().as_str() {
             "filesystem" => Ok(StorageType::Filesystem),
             "rocksdb" => Ok(StorageType::RocksDB),
-            other => Err(failure::format_err!("Unknown storage type {:?}, available types: ['rocksdb', 'filesystem']", other)),
+            other => Err(failure::format_err!(
+                "Unknown storage type {:?}, available types: ['rocksdb', 'filesystem']",
+                other
+            )),
         }
     }
 }
@@ -93,7 +96,10 @@ pub fn build_path(base_path: &Path, chain: &str, folder: &str) -> PathBuf {
 ///
 /// * `keystore_path` - path for `KeyFile` storage
 ///
-pub fn build_keyfile_storage<P>(path: P, storage_type: StorageType) -> Result<Box<dyn KeyfileStorage>, KeystoreError>
+pub fn build_keyfile_storage<P>(
+    path: P,
+    storage_type: StorageType,
+) -> Result<Box<dyn KeyfileStorage>, KeystoreError>
 where
     P: AsRef<Path>,
 {
@@ -108,7 +114,7 @@ where
                     "Can't create database Keyfile storage".to_string(),
                 )),
             }
-        },
+        }
         StorageType::Filesystem => Ok(Box::new(FsStorage::new(path))),
     }
 }

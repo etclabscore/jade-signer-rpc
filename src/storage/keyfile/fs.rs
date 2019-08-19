@@ -28,7 +28,7 @@ impl FsStorage {
     ///
     pub fn new<P>(dir: P) -> FsStorage
     where
-        P: AsRef<Path>
+        P: AsRef<Path>,
     {
         FsStorage {
             base_path: dir.as_ref().to_owned(),

@@ -16,13 +16,13 @@ pub use self::prf::Prf;
 pub use self::serialize::Error as SerializeError;
 pub use self::serialize::{try_extract_address, CoreCrypto, Iv, Mac, SerializableKeyFileCore};
 use super::core::{self, Address, PrivateKey};
-use super::util::{self, keccak256, to_arr, KECCAK256_BYTES, os_random};
+use super::util::{self, keccak256, os_random, to_arr, KECCAK256_BYTES};
 
+use rand::Rng;
+use serde::{Deserialize, Serialize};
 use std::convert::From;
 use std::str::FromStr;
 use std::{cmp, fmt};
-use rand::{Rng};
-use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 /// Key derivation function salt length in bytes
@@ -248,10 +248,10 @@ impl fmt::Display for KeyFile {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::tests::*;
-    use hex::FromHex;
     use crate::storage::{DbStorage, FsStorage, KeyfileStorage};
+    use crate::tests::*;
     use crate::{Address, KECCAK256_BYTES};
+    use hex::FromHex;
     use std::fs::File;
     use std::io::Read;
     use std::path::{Path, PathBuf};
@@ -352,24 +352,25 @@ mod tests {
             c: 10240,
         };
         crypto.kdf_params.salt = Salt::from(arr!(
-        &Vec::from_hex("095a4028fa2474bb2191f9fc1d876c79a9ff76ed029aa7150d37da785a00175b",)
-            .unwrap(),
-        KDF_SALT_BYTES
-    ));
+            &Vec::from_hex("095a4028fa2474bb2191f9fc1d876c79a9ff76ed029aa7150d37da785a00175b",)
+                .unwrap(),
+            KDF_SALT_BYTES
+        ));
         crypto.cipher = Cipher::default();
         crypto.cipher_text =
-            Vec::from_hex("9c9e3ebbf01a512f3bea41ac6fe7676344c0da77236b38847c02718ec9b66126").unwrap();
+            Vec::from_hex("9c9e3ebbf01a512f3bea41ac6fe7676344c0da77236b38847c02718ec9b66126")
+                .unwrap();
 
         crypto.cipher_params.iv = Iv::from(arr!(
-        &Vec::from_hex("58d54158c3e27131b0a0f2b91201aedc").unwrap(),
-        CIPHER_IV_BYTES
-    ));
+            &Vec::from_hex("58d54158c3e27131b0a0f2b91201aedc").unwrap(),
+            CIPHER_IV_BYTES
+        ));
 
         crypto.mac = Mac::from(arr!(
-        &Vec::from_hex("83c175d2ef1229ab10eb6726500a4303ab729e6e44dfaac274fe75c870b23a63",)
-            .unwrap(),
-        KECCAK256_BYTES
-    ));
+            &Vec::from_hex("83c175d2ef1229ab10eb6726500a4303ab729e6e44dfaac274fe75c870b23a63",)
+                .unwrap(),
+            KECCAK256_BYTES
+        ));
 
         let exp = KeyFile {
             visible: None,
@@ -413,24 +414,25 @@ mod tests {
         };
         crypto.kdf_params.dklen = 32;
         crypto.kdf_params.salt = Salt::from(arr!(
-        &Vec::from_hex("fd4acb81182a2c8fa959d180967b374277f2ccf2f7f401cb08d042cc785464b4",)
-            .unwrap(),
-        KDF_SALT_BYTES
-    ));
+            &Vec::from_hex("fd4acb81182a2c8fa959d180967b374277f2ccf2f7f401cb08d042cc785464b4",)
+                .unwrap(),
+            KDF_SALT_BYTES
+        ));
         crypto.cipher = Cipher::default();
         crypto.cipher_text =
-            Vec::from_hex("c3dfc95ca91dce73fe8fc4ddbaed33bad522e04a6aa1af62bba2a0bb90092fa1").unwrap();
+            Vec::from_hex("c3dfc95ca91dce73fe8fc4ddbaed33bad522e04a6aa1af62bba2a0bb90092fa1")
+                .unwrap();
 
         crypto.cipher_params.iv = Iv::from(arr!(
-        &Vec::from_hex("9df1649dd1c50f2153917e3b9e7164e9").unwrap(),
-        CIPHER_IV_BYTES
-    ));
+            &Vec::from_hex("9df1649dd1c50f2153917e3b9e7164e9").unwrap(),
+            CIPHER_IV_BYTES
+        ));
 
         crypto.mac = Mac::from(arr!(
-        &Vec::from_hex("9f8a85347fd1a81f14b99f69e2b401d68fb48904efe6a66b357d8d1d61ab14e5",)
-            .unwrap(),
-        KECCAK256_BYTES
-    ));
+            &Vec::from_hex("9f8a85347fd1a81f14b99f69e2b401d68fb48904efe6a66b357d8d1d61ab14e5",)
+                .unwrap(),
+            KECCAK256_BYTES
+        ));
 
         let exp = KeyFile {
             visible: None,
@@ -464,7 +466,7 @@ mod tests {
     }
 
     #[test]
-//TODO:1 remove condition after fix for `scrypt` on Windows
+    //TODO:1 remove condition after fix for `scrypt` on Windows
     #[cfg(not(target_os = "windows"))]
     fn should_use_security_level() {
         let sec = KdfDepthLevel::Normal;
@@ -538,8 +540,9 @@ mod tests {
 
         #[bench]
         fn decrypt_scrypt(b: &mut Bencher) {
-            let path =
-                keyfile_path("UTC--2017-03-17T10-52-08.229Z--0047201aed0b69875b24b614dda0270bcd9f11cc");
+            let path = keyfile_path(
+                "UTC--2017-03-17T10-52-08.229Z--0047201aed0b69875b24b614dda0270bcd9f11cc",
+            );
 
             let keyfile = KeyFile::decode(&file_content(path)).unwrap();
 
@@ -548,7 +551,8 @@ mod tests {
 
         #[bench]
         fn decrypt_pbkdf2(b: &mut Bencher) {
-            let path = keyfile_path("UTC--2017-03-20T17-03-12Z--37e0d14f-7269-7ca0-4419-d7b13abfeea9");
+            let path =
+                keyfile_path("UTC--2017-03-20T17-03-12Z--37e0d14f-7269-7ca0-4419-d7b13abfeea9");
             let keyfile = KeyFile::decode(&file_content(path)).unwrap();
 
             b.iter(|| keyfile.decrypt_key("1234567890"));
@@ -566,7 +570,9 @@ mod tests {
             let mut rng = os_random();
             let pk = PrivateKey::gen_custom(&mut rng);
 
-            b.iter(|| KeyFile::new_custom(pk, "1234567890", Kdf::from(10240), &mut rng, None, None));
+            b.iter(|| {
+                KeyFile::new_custom(pk, "1234567890", Kdf::from(10240), &mut rng, None, None)
+            });
         }
 
         #[bench]
