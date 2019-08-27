@@ -26,7 +26,7 @@ branch = "master"
 force_https = true
 
 [cfg.github]
-prerelease = true
+pre_release = true
 assets = [
     "/workspace/bin/*",
     "Changelog.md"
