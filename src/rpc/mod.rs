@@ -166,6 +166,17 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
         });
     }
 
+    {
+        let storage_ctrl = Arc::clone(&storage_ctrl);
+        io.add_method("signer_importMnemonic", move |p: Params| {
+            wrapper(serves::import_mnemonic(
+                parse(p)?,
+                &sec_level,
+                &storage_ctrl,
+            ))
+        });
+    }
+
     let server = ServerBuilder::new(io)
         .cors(DomainsValidation::AllowOnly(vec![
             AccessControlAllowOrigin::Any,

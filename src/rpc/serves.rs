@@ -7,8 +7,9 @@ use super::Error;
 use super::StorageController;
 use crate::contract::Contract;
 use crate::core::{Address, Transaction};
-use crate::keystore::{CryptoType, KdfDepthLevel, KeyFile};
-use crate::mnemonic::{gen_entropy, Language, Mnemonic, ENTROPY_BYTE_LENGTH};
+use crate::keystore::{CryptoType, Kdf, KdfDepthLevel, KeyFile, PBKDF2_KDF_NAME};
+use crate::mnemonic::{gen_entropy, hd_path, HDPath, Language, Mnemonic, ENTROPY_BYTE_LENGTH};
+use crate::rpc::common::NewMnemonicAccount;
 use crate::util;
 use jsonrpc_core::{Params, Value};
 use serde_json;
@@ -320,4 +321,44 @@ pub fn generate_mnemonic() -> Result<String, Error> {
     let mnemonic = Mnemonic::new(Language::English, &entropy)?;
 
     Ok(mnemonic.sentence())
+}
+
+pub fn import_mnemonic(
+    params: Either<(NewMnemonicAccount,), (NewMnemonicAccount, CommonAdditional)>,
+    sec: &KdfDepthLevel,
+    storage: &Arc<Mutex<StorageController>>,
+) -> Result<String, Error> {
+    let storage_ctrl = storage.lock().unwrap();
+    let (account, additional) = params.into_full();
+    let (chain, _) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_keystore(&chain)?;
+    if account.passphrase.is_empty() {
+        return Err(Error::InvalidDataFormat("Empty passphrase".to_string()));
+    }
+
+    let mnemonic = Mnemonic::try_from(Language::English, &account.mnemonic)?;
+    let hd_path = HDPath::try_from(&account.hd_path)?;
+    let pk = hd_path::generate_key(&hd_path, &mnemonic.seed(""))?;
+
+    let kdf = if cfg!(target_os = "windows") {
+        Kdf::from_str(PBKDF2_KDF_NAME)?
+    } else {
+        Kdf::from(*sec)
+    };
+
+    let mut rng = util::os_random();
+    let kf = KeyFile::new_custom(
+        pk,
+        &account.passphrase,
+        kdf,
+        &mut rng,
+        Some(account.name),
+        Some(account.description),
+    )?;
+
+    let addr = kf.address.to_string();
+    storage.put(&kf)?;
+    log::debug!("New mnemonic account generated: {}", kf.address);
+
+    Ok(addr)
 }

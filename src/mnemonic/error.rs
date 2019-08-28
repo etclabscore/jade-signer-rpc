@@ -30,6 +30,24 @@ impl<'a> From<&'a str> for Error {
     }
 }
 
+impl From<String> for Error {
+    fn from(err: String) -> Self {
+        Error::MnemonicError(err)
+    }
+}
+
+impl From<bitcoin::Error> for Error {
+    fn from(e: bitcoin::Error) -> Self {
+        Error::KeyGenerationError(e.to_string())
+    }
+}
+
+impl From<bitcoin::util::bip32::Error> for Error {
+    fn from(e: bitcoin::util::bip32::Error) -> Self {
+        Error::KeyGenerationError(e.to_string())
+    }
+}
+
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {

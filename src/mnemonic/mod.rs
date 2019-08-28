@@ -4,9 +4,11 @@
 //! [BIP39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki)
 
 mod error;
+pub mod hd_path;
 mod language;
 
 pub use self::error::Error;
+pub use self::hd_path::HDPath;
 pub use self::language::{Language, BIP39_ENGLISH_WORDLIST};
 use crate::keystore::{Kdf, Prf};
 use crate::util::os_random;
