@@ -46,7 +46,7 @@
         "name": "hideAccountResult",
         "description": "`true` if required account exists",
         "schema": {
-          "type": "boolean"
+          "$ref": "#/components/schemas/AccountExists"
         }
       }
     },
@@ -65,7 +65,7 @@
         "name": "unhideAccountResult",
         "description": "`accept` (Boolean) - `true` if required account exists",
         "schema": {
-          "type": "boolean"
+          "$ref": "#/components/schemas/AccountExists"
         }
       }
     },
@@ -77,13 +77,16 @@
           "name": "newAccount",
           "description": "Creates a new account and stores it locally as a passphrase-encoded keystore file.",
           "schema": {
+            "title": "newAccount",
             "type": "object",
             "properties": {
               "name": {
+                "title": "accountName",
                 "description": "account name",
                 "type": "string"
               },
               "description": {
+                "title": "accountDescription",
                 "description": "account description",
                 "type": "string"
               },
@@ -128,6 +131,80 @@
       ]
     },
     {
+      "name": "signer_signTypedData",
+      "description": "The sign method calculates an Ethereum specific signature with: sign(keccak256(\"\\x19Ethereum Signed Message:\n\" + len(message) + message))).",
+      "summary": "hashing and signing of typed structured data",
+      "params": [
+        {
+          "$ref": "#/components/contentDescriptors/Address"
+        },
+        {
+          "name": "TypedData",
+          "description": "Typed data is a JSON object containing type information, domain separator parameters and the message object. ",
+          "summary": "Typed structured data to be signed.",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "types": {
+                "type": "object",
+                "properties": {
+                  "EIP712Domain": {
+                    "type": "array"
+                  }
+                },
+                "additionalProperties": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["name", "type"]
+                  }
+                },
+                "required": ["EIP712Domain"]
+              },
+              "primaryType": {
+                "type": "string"
+              },
+              "domain": {
+                "type": "object"
+              },
+              "message": {
+                "type": "object"
+              }
+            },
+            "required": ["types", "primaryType", "domain", "message"]
+          }
+        },
+        {
+          "name": "passphrase",
+          "required": true,
+          "description": "passphrase to keyfile",
+          "summary": "keyfile passphrase",
+          "schema": {
+            "$ref": "#/components/schemas/Passphrase"
+          }
+        },
+        {
+          "$ref": "#/components/contentDescriptors/Additional"
+        }
+      ],
+      "result": {
+        "name": "signedTransaction",
+        "description": "Hex-encoded signed raw transaction data",
+        "schema": {
+          "$ref": "#/components/schemas/HexString"
+        }
+      }
+    },
+    {
       "name": "signer_signTransaction",
       "summary": "Signs transaction offline with private key from keystore file with given from address and passphrase.",
       "params": [
@@ -157,8 +234,7 @@
         "name": "signedTransaction",
         "description": "Hex-encoded signed raw transaction data",
         "schema": {
-          "type": "string",
-          "pattern": "^0x[a-fA-F0-9]+$"
+          "$ref": "#/components/schemas/HexString"
         }
       }
     },
@@ -187,8 +263,7 @@
         "name": "mnemonicPhrase",
         "description": "Mnemonic phrase is a list of 24 words",
         "schema": {
-          "type": "string",
-          "description": "a list of 24 words"
+          "$ref": "#/components/schemas/Mnemonic"
         }
       }
     },
@@ -208,18 +283,21 @@
             ],
             "properties": {
               "mnemonic": {
-                "type": "string"
+                "$ref": "#/components/schemas/Mnemonic"
               },
               "name": {
+                "title": "mnemonicName",
                 "type": "string"
               },
               "description": {
+                "title": "mnemonicDescription",
                 "type": "string"
               },
               "passphrase": {
                 "$ref": "#/components/schemas/Passphrase"
               },
               "hd_path": {
+                "title": "mnemonicHDPath",
                 "type": "string"
               }
             }
@@ -244,7 +322,7 @@
                 "name": "my imported wallet",
                 "description": "my imported wallet description",
                 "passphrase": "baz",
-                "hd_path": "m/44'/60'/160720'/0'",
+                "hd_path": "m/44/60/160720/0",
                 "mnemonic": "icon suggest road current ripple engage spell clay route large arena climb oxygen electric cupboard dream title immune fit beyond mouse slab bronze salad"
               }
             },
@@ -290,8 +368,7 @@
           "description": "data to sign",
           "summary": "sign data",
           "schema": {
-            "type": "string",
-            "pattern": "^0x[a-fA-F0-9]+$"
+            "$ref": "#/components/schemas/HexString"
           }
         },
         {
@@ -312,22 +389,28 @@
         "name": "signedMessageData",
         "description": "signature hash of the provided data",
         "schema": {
-          "type": "string",
-          "pattern": "^0x[a-fA-F0-9]+$"
+          "$ref": "#/components/schemas/HexString"
         }
       }
     }
   ],
   "components": {
     "schemas": {
+      "AccountExists": {
+        "title": "AccountExists",
+        "type": "boolean"
+      },
       "Address": {
+        "title": "address",
         "type": "string",
         "pattern": "^0x[a-fA-F\\d]{40}$"
       },
       "Additional": {
+        "title": "additionalParams",
         "type": "object",
         "properties": {
           "chain": {
+            "title": "chain",
             "description": "chain name, by default etc, other possible variant morden.",
             "type": "string",
             "enum": [
@@ -336,10 +419,12 @@
             ]
           },
           "chain_id": {
+            "title": "chainId",
             "description": "Chain id number, by default for mainnet it equals 61.",
             "type": "number"
           },
           "show_hidden": {
+            "title": "showHidden",
             "description": "show hidden accounts",
             "type": "boolean"
           }
@@ -357,23 +442,33 @@
             "$ref": "#/components/schemas/Address"
           },
           "name": {
+            "title": "accountName",
             "type": "string"
           },
           "description": {
+            "title": "accountDescription",
             "type": "string"
           },
           "is_hidden": {
+            "title": "accountIsHidden",
             "type": "boolean"
           }
         }
       },
       "Accounts": {
+        "title": "accounts",
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/Account"
         }
       },
+      "HexString": {
+        "title": "hexString",
+        "type": "string",
+        "pattern": "^0x[a-fA-F0-9]+$"
+      },
       "Keyfile": {
+        "title": "keyfile",
         "type": "object",
         "properties": {
           "version": {
@@ -386,6 +481,7 @@
             "type": "string"
           },
           "crypto": {
+            "title": "crypto",
             "type": "object",
             "properties": {
               "ciphertext": {
@@ -395,6 +491,7 @@
                 "type": "object",
                 "properties": {
                   "iv": {
+                    "title": "iv",
                     "type": "string"
                   }
                 }
@@ -409,6 +506,7 @@
                 "type": "object",
                 "properties": {
                   "dklen": {
+                    "title": "dklen",
                     "type": "number"
                   },
                   "salt": {
@@ -433,15 +531,23 @@
         }
       },
       "Nonce": {
+        "title": "nonce",
         "description": "A number only to be used once",
         "pattern": "^0x[a-fA-F0-9]+$",
         "type": "string"
       },
+      "Mnemonic": {
+        "title": "mnemonic",
+        "type": "string",
+        "description": "a list of 24 words"
+      },
       "Passphrase": {
+        "title": "passphrase",
         "description": "passphrase used to encode keyfile (recommend to use 8+ words with good entropy)",
         "type": "string"
       },
       "Transaction": {
+        "title": "transaction",
         "type": "object",
         "required": [
           "from",
@@ -456,21 +562,25 @@
             "$ref": "#/components/schemas/Address"
           },
           "gas": {
+            "title": "gas",
             "type": "string",
             "pattern": "^0x[a-fA-F0-9]+$",
             "description": "The gas limit provided by the sender in Wei"
           },
           "gasPrice": {
+            "title": "gasPrice",
             "type": "string",
             "pattern": "^0x[a-fA-F0-9]+$",
             "description": "The gas price willing to be paid by the sender in Wei"
           },
           "data": {
+            "title": "data",
             "type": "string",
             "pattern": "^0x[a-fA-F0-9]+$",
             "description": "The data field sent with the transaction"
           },
           "nonce": {
+            "title": "nonce",
             "description": "The total number of prior transactions made by the sender",
             "$ref": "#/components/schemas/Nonce"
           },
@@ -485,6 +595,7 @@
         }
       },
       "Wei": {
+        "title": "wei",
         "type": "string",
         "description": "Hex representation of Wei",
         "pattern": "^0x[a-fA-F0-9]+$"
