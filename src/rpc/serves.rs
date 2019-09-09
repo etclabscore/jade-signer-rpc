@@ -9,7 +9,7 @@ use crate::contract::Contract;
 use crate::core::{Address, Transaction};
 use crate::keystore::{CryptoType, Kdf, KdfDepthLevel, KeyFile, PBKDF2_KDF_NAME};
 use crate::mnemonic::{gen_entropy, hd_path, HDPath, Language, Mnemonic, ENTROPY_BYTE_LENGTH};
-use crate::rpc::common::NewMnemonicAccount;
+use crate::rpc::common::{NewMnemonicAccount, SignTypedDataParams};
 use crate::util;
 use jsonrpc_core::{Params, Value};
 use serde_json;
@@ -17,7 +17,7 @@ use std::ops::Deref;
 use std::str::FromStr;
 use std::sync::{Arc, Mutex};
 
-static OPENRPC_SCHEMA: &'static [u8] = include_bytes!("../../openrpc.json");
+static OPENRPC_SCHEMA: &[u8] = include_bytes!("../../openrpc.json");
 
 pub fn openrpc_discover() -> Result<String, Error> {
     let contents = String::from_utf8_lossy(OPENRPC_SCHEMA).deref().to_string();
@@ -258,6 +258,35 @@ pub fn sign(
     let hash = util::keccak256(
         format!("\x19Ethereum Signed Message:\n{}{}", input.len(), input).as_bytes(),
     );
+    match storage.search_by_address(&addr) {
+        Ok((_, kf)) => {
+            if passphrase.is_empty() {
+                return Err(Error::InvalidDataFormat("Missing passphrase".to_string()));
+            }
+            if let Ok(pk) = kf.decrypt_key(&passphrase) {
+                let signed = pk.sign_hash(hash)?;
+                Ok(Params::Array(vec![Value::String(signed.into())]))
+            } else {
+                Err(Error::InvalidDataFormat("Invalid passphrase".to_string()))
+            }
+        }
+        Err(_) => Err(Error::InvalidDataFormat("Can't find account".to_string())),
+    }
+}
+
+pub fn sign_typed_data(
+    params: SignTypedDataParams<(String, Value, String, CommonAdditional)>,
+    storage: &Arc<Mutex<StorageController>>,
+) -> Result<Params, Error> {
+    let storage_ctrl = storage.lock().unwrap();
+    let (address, typed_data, passphrase, additional) = params.into_full();
+    let (chain, _chain_id) = extract_chain_params(&additional)?;
+    let storage = storage_ctrl.get_keystore(&chain)?;
+    let addr = Address::from_str(&address)?;
+
+    let hash =
+        util::typed::hash(typed_data).map_err(|err| Error::TypedDataError(err.to_string()))?;
+
     match storage.search_by_address(&addr) {
         Ok((_, kf)) => {
             if passphrase.is_empty() {

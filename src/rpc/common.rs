@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 
 use super::Error;
 use crate::util;
+use serde_json::Value;
 
 /// Trait to access a common chain name and id params
 ///
@@ -121,6 +122,31 @@ impl<U: Default> SignParams<(String, String, String, U)> {
         match self {
             SignParams::Left(t, p, s) => (t, p, s, U::default()),
             SignParams::Right((t, p, s, u)) => (t, p, s, u),
+        }
+    }
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(untagged)]
+pub enum SignTypedDataParams<U> {
+    Left(String, Value, String),
+    Right(U),
+}
+
+impl<U: Default> SignTypedDataParams<U> {
+    pub fn into_right(self) -> U {
+        match self {
+            SignTypedDataParams::Left(_, _, _) => U::default(),
+            SignTypedDataParams::Right(u) => u,
+        }
+    }
+}
+
+impl<U: Default> SignTypedDataParams<(String, Value, String, U)> {
+    pub fn into_full(self) -> (String, Value, String, U) {
+        match self {
+            SignTypedDataParams::Left(t, p, s) => (t, p, s, U::default()),
+            SignTypedDataParams::Right((t, p, s, u)) => (t, p, s, u),
         }
     }
 }

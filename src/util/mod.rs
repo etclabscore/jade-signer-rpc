@@ -1,6 +1,7 @@
 //! # Util functions module
 mod crypto;
 mod rlp;
+pub mod typed;
 
 pub use self::crypto::{keccak256, KECCAK256_BYTES};
 pub use self::rlp::{RLPList, WriteRLP};
@@ -11,7 +12,7 @@ use rand::{CryptoRng, Rng, RngCore};
 use std::io::Cursor;
 use std::mem::transmute;
 
-static HEX_CHARS: &'static [u8] = b"0123456789abcdef";
+static HEX_CHARS: &[u8] = b"0123456789abcdef";
 
 const ETH: &str = "eth";
 const MORDEN: &str = "morden";
