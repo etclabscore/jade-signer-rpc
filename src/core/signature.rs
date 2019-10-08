@@ -68,6 +68,7 @@ pub struct PrivateKey(pub [u8; PRIVATE_KEY_BYTES]);
 
 impl PrivateKey {
     /// Generate a new `PrivateKey` at random (`rand::OsRng`)
+    #[allow(dead_code)]
     pub fn gen() -> Self {
         Self::gen_custom(&mut os_random())
     }
@@ -107,11 +108,13 @@ impl PrivateKey {
     }
 
     /// Sign message
+    #[allow(dead_code)]
     pub fn sign_message(&self, msg: &str) -> Result<Signature, Error> {
         self.sign_hash(message_hash(msg))
     }
 
     /// Sign a slice of bytes
+    #[allow(dead_code)]
     pub fn sign_bytes(&self, data: &[u8]) -> Result<Signature, Error> {
         self.sign_hash(bytes_hash(data))
     }
@@ -200,7 +203,7 @@ fn prefix(data: &[u8]) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::tests::*;
+    use crate::util::to_32bytes;
 
     #[test]
     fn should_convert_into_address() {

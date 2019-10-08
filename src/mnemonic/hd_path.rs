@@ -12,9 +12,6 @@ use regex::Regex;
 use secp256k1::Secp256k1;
 use std::ops;
 
-const GET_ETH_ADDRESS: u8 = 0x02;
-const SIGN_ETH_TRANSACTION: u8 = 0x04;
-const CHUNK_SIZE: usize = 255;
 const DERIVATION_INDEX_SIZE: usize = 4;
 
 lazy_static::lazy_static! {
@@ -104,6 +101,7 @@ pub fn generate_key(path: &HDPath, seed: &[u8]) -> Result<PrivateKey, Error> {
 ///
 /// * hd_str - path string
 ///
+#[allow(dead_code)]
 pub fn path_to_arr(hd_str: &str) -> Result<Vec<u8>, Error> {
     if !HD_PATH_RE.is_match(hd_str) {
         return Err(format!("Invalid `hd_path` format: {}", hd_str).into());
@@ -138,6 +136,7 @@ pub fn path_to_arr(hd_str: &str) -> Result<Vec<u8>, Error> {
 
 /// Parse HD path into byte array
 /// prefixed with count of derivation indexes
+#[allow(dead_code)]
 pub fn to_prefixed_path(hd_str: &str) -> Result<Vec<u8>, failure::Error> {
     let v = path_to_arr(hd_str)?;
     let count = (v.len() / DERIVATION_INDEX_SIZE) as u8;

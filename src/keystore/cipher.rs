@@ -60,6 +60,7 @@ impl fmt::Display for Cipher {
 mod tests {
     use super::*;
     use crate::tests::*;
+    use crate::util::to_16bytes;
 
     #[test]
     fn should_encrypt_with_aes_ctr() {

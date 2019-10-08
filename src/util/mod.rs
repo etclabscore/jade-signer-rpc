@@ -227,21 +227,6 @@ pub fn timestamp() -> String {
         .to_string()
 }
 
-///
-pub fn to_16bytes(hex: &str) -> [u8; 16] {
-    to_arr(Vec::from_hex(&hex).unwrap().as_slice())
-}
-
-///
-pub fn to_20bytes(hex: &str) -> [u8; 20] {
-    to_arr(Vec::from_hex(&hex).unwrap().as_slice())
-}
-
-///
-pub fn to_32bytes(hex: &str) -> [u8; 32] {
-    to_arr(Vec::from_hex(&hex).unwrap().as_slice())
-}
-
 /// Get OsRng
 #[cfg(not(feature = "fixed-seed"))]
 pub fn os_random() -> impl CryptoRng + RngCore + Rng {
@@ -273,6 +258,24 @@ pub fn os_random() -> impl CryptoRng + RngCore + Rng {
     use rand::rngs::StdRng;
     use rand::SeedableRng;
     StdRng::seed_from_u64(self::fixed_seed::next_seed() as u64)
+}
+
+///
+#[allow(dead_code)]
+pub fn to_16bytes(hex: &str) -> [u8; 16] {
+    to_arr(Vec::from_hex(&hex).unwrap().as_slice())
+}
+
+///
+#[allow(dead_code)]
+pub fn to_20bytes(hex: &str) -> [u8; 20] {
+    to_arr(Vec::from_hex(&hex).unwrap().as_slice())
+}
+
+///
+#[allow(dead_code)]
+pub fn to_32bytes(hex: &str) -> [u8; 32] {
+    to_arr(Vec::from_hex(&hex).unwrap().as_slice())
 }
 
 #[cfg(test)]

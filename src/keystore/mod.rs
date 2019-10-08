@@ -164,6 +164,7 @@ impl KeyFile {
     }
 
     /// Encrypt a new private key for keystore file with a passphrase
+    #[allow(dead_code)]
     pub fn encrypt_key(&mut self, pk: PrivateKey, passphrase: &str) {
         self.encrypt_key_custom(pk, passphrase, &mut os_random());
     }
@@ -250,7 +251,8 @@ mod tests {
     use super::*;
     use crate::storage::{DbStorage, FsStorage, KeyfileStorage};
     use crate::tests::*;
-    use crate::{Address, KECCAK256_BYTES};
+    use crate::util::KECCAK256_BYTES;
+    use crate::Address;
     use hex::FromHex;
     use std::fs::File;
     use std::io::Read;

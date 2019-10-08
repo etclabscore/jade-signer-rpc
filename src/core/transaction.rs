@@ -56,6 +56,7 @@ impl Transaction {
     }
 
     /// RLP packed transaction
+    #[allow(dead_code)]
     pub fn to_rlp(&self, chain_id: Option<u8>) -> Vec<u8> {
         let mut buf = Vec::new();
         self.to_rlp_raw(chain_id).write_rlp(&mut buf);
@@ -100,6 +101,7 @@ impl Transaction {
 mod tests {
     use super::*;
     use crate::tests::*;
+    use crate::util::to_32bytes;
 
     #[test]
     fn should_sign_transaction_for_mainnet() {

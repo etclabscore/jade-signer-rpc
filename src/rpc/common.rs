@@ -84,6 +84,7 @@ pub enum SignTxParams<T, U> {
 }
 
 impl<T, U: Default> SignTxParams<T, U> {
+    #[allow(dead_code)]
     pub fn into_right(self) -> U {
         match self {
             SignTxParams::Left(_, _) => U::default(),
@@ -109,6 +110,7 @@ pub enum SignParams<U> {
 }
 
 impl<U: Default> SignParams<U> {
+    #[allow(dead_code)]
     pub fn into_right(self) -> U {
         match self {
             SignParams::Left(_, _, _) => U::default(),
@@ -134,6 +136,7 @@ pub enum SignTypedDataParams<U> {
 }
 
 impl<U: Default> SignTypedDataParams<U> {
+    #[allow(dead_code)]
     pub fn into_right(self) -> U {
         match self {
             SignTypedDataParams::Left(_, _, _) => U::default(),
