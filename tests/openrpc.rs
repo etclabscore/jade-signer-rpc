@@ -71,8 +71,6 @@ fn openrpc_test_cov() {
         .arg("run")
         .arg("--features")
         .arg("fixed-seed")
-        .arg("--")
-        .arg("server")
         .spawn()
         .expect("failed to start server");
 

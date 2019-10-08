@@ -16,6 +16,7 @@ pub enum Language {
 
 impl Language {
     /// Get list of word sor specific `Language`
+    #[allow(dead_code)]
     pub fn wordlist(self) -> &'static Vec<String> {
         match self {
             Language::English => &BIP39_ENGLISH_WORDLIST,

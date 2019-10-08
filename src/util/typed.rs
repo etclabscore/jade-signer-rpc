@@ -318,9 +318,7 @@ fn sanitize(typed_data: Value) -> Result<SanitizedData, failure::Error> {
 
 #[cfg(test)]
 mod tests {
-    use crate::util::typed::{encode_type, find_type_dependencies, SanitizedData};
-    use bitcoin::util::misc::hex_bytes;
-    use std::collections::HashMap;
+    use crate::util::typed::{encode_type, find_type_dependencies};
 
     mod hash {
         use crate::util::typed::hash;

@@ -23,9 +23,6 @@ pub enum Error {
 
     /// Invalid Kdf depth value
     InvalidKdfDepth(String),
-
-    /// Invalid crypto type
-    InvalidCrypto(String),
 }
 
 impl From<core::Error> for Error {
@@ -47,7 +44,6 @@ impl fmt::Display for Error {
             Error::FailedMacValidation => write!(f, "Message authentication code failed"),
             Error::CoreFault(ref err) => f.write_str(&err.to_string()),
             Error::InvalidKdfDepth(ref str) => write!(f, "Invalid security level: {}", str),
-            Error::InvalidCrypto(ref str) => write!(f, "Invalid crypto section: {}", str),
         }
     }
 }

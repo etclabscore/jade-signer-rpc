@@ -14,7 +14,6 @@ mod storage;
 mod util;
 
 use self::core::*;
-use self::util::*;
 
 #[cfg(test)]
 mod tests {

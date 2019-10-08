@@ -13,17 +13,8 @@ pub enum Error {
     /// IO errors
     IO(io::Error),
 
-    /// Invalid `Keyfile` decoding
-    InvalidDecoding(serde_json::Error),
-
     /// Invalid `Keyfile` encoding
     InvalidEncoding(serde_json::Error),
-
-    /// `KeyFile` wasn't found
-    NotFound,
-
-    /// `Keyfile` crypto section parsing
-    InvalidCrypto(String),
 }
 
 impl From<Error> for rpc::Error {
@@ -49,12 +40,7 @@ impl fmt::Display for Error {
         match *self {
             Error::UnsupportedVersion(v) => write!(f, "Unsupported keystore file version: {}", v),
             Error::IO(ref err) => write!(f, "Keystore file IO error: {}", err),
-            Error::InvalidDecoding(ref err) => write!(f, "Invalid keystore file decoding: {}", err),
             Error::InvalidEncoding(ref err) => write!(f, "Invalid keystore file encoding: {}", err),
-            Error::NotFound => f.write_str("Required keystore file wasn't found"),
-            Error::InvalidCrypto(ref str) => {
-                f.write_str(&format!("Can't parse `crypto` section for. {}", str))
-            }
         }
     }
 }

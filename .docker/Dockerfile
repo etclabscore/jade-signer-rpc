@@ -27,4 +27,4 @@ WORKDIR /root
 COPY --from=builder /build/jade-signer /usr/bin/
 
 # Run cmd
-CMD /usr/bin/jade-signer server
+CMD /usr/bin/jade-signer

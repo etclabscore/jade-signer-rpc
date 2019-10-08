@@ -23,17 +23,20 @@ impl Contract {
     ///
     /// * `DATA` - A byte slice
     ///
+    #[allow(dead_code)]
     pub fn try_from(data: &[u8]) -> Result<Self, Error> {
         let inner = ethabi::Contract::load(data)?;
         Ok(Contract { inner })
     }
 
     /// Returns specification of contract function given the function name.
+    #[allow(dead_code)]
     pub fn get_function(&self, name: String) -> Option<Function> {
         self.inner.function(&name).ok().cloned()
     }
 
     /// Encode ABI function call with input params
+    #[allow(dead_code)]
     pub fn serialize_function_call(
         &self,
         name: String,

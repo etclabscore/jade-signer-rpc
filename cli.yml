@@ -1,5 +1,5 @@
-name: emerald-vault
-about: Command-line interface for Emerald platform
+name: jade-signer
+about: Jade Signer OpenRPC Server
 
 settings:
     - [ArgRequiredElseHelp, GlobalVersion]
@@ -16,7 +16,7 @@ args:
     - base-path:
         short: p
         long: base-path
-        help: Set path for chain storage
+        help: Set path for storage
         takes_value: true
     - chain:
         short: c
@@ -24,16 +24,13 @@ args:
         help: Sets a chain name
         default_value: mainnet
         takes_value: true
-subcommands:
-    - server:
-        about: Start local RPC server
-        args:
-        - host:
-            help: Host for RPC server
-            takes_value: true
-            default_value: "127.0.0.1"
-        - port:
-            help: Port for RPC server
-            takes_value: true
-            default_value: "1920"
+    - host:
+          help: Host for RPC server
+          takes_value: true
+          default_value: "127.0.0.1"
+    - port:
+        help: Port for RPC server
+        takes_value: true
+        default_value: "1920"
+
     

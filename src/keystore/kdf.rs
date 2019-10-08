@@ -216,7 +216,7 @@ impl fmt::Display for Kdf {
 #[cfg(test)]
 pub mod tests {
     use super::*;
-    use crate::tests::*;
+    use crate::util::to_32bytes;
 
     #[test]
     fn should_derive_key_via_pbkdf2() {
