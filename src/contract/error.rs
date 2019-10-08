@@ -27,24 +27,6 @@ impl From<ethabi::Error> for Error {
     }
 }
 
-impl From<ethabi::spec::Error> for Error {
-    fn from(_: ethabi::spec::Error) -> Self {
-        Error::InvalidContract("ethabi spec error".to_string())
-    }
-}
-
-impl From<ethabi::spec::param_type::Error> for Error {
-    fn from(_: ethabi::spec::param_type::Error) -> Self {
-        Error::InvalidContract("ethabi param error".to_string())
-    }
-}
-
-impl From<ethabi::token::Error> for Error {
-    fn from(_: ethabi::token::Error) -> Self {
-        Error::InvalidContract("ethabi token error".to_string())
-    }
-}
-
 impl From<io::Error> for Error {
     fn from(err: io::Error) -> Self {
         Error::IO(err.to_string())

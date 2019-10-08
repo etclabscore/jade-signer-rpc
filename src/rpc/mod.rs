@@ -134,6 +134,13 @@ pub fn start(addr: &SocketAddr, storage_ctrl: StorageController, sec_level: Opti
     }
 
     {
+        let storage_ctrl = Arc::clone(&storage_ctrl);
+        io.add_method("signer_signTypedData", move |p: Params| {
+            wrapper(serves::sign_typed_data(parse(p)?, &storage_ctrl))
+        });
+    }
+
+    {
         io.add_method("signer_encodeFunctionCall", move |p: Params| {
             wrapper(serves::encode_function_call(parse(p)?))
         });
