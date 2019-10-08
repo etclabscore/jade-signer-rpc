@@ -1,3 +1,17 @@
+<a name="v0.3.0"></a>
+## v0.3.0 (2019-10-08)
+
+
+#### Breaking Changes
+
+*   massive codebase cleanup ([cfd8d9aa](cfd8d9aa))
+
+#### Features
+
+*   massive codebase cleanup ([cfd8d9aa](cfd8d9aa))
+
+
+
 <a name="v0.2.2"></a>
 ## v0.2.2 (2019-10-08)
 
