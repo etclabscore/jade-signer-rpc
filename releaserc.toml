@@ -32,19 +32,10 @@ assets = [
     "Changelog.md"
 ]
 
-[cfg.docker]
-repo_url = "https://github.com/etclabscore/jade-signer-rpc.git"
-repo_branch = "master"
-
 [[cfg.docker.images]]
 registry = "dockerhub"
 namespace = "etclabscore"
 dockerfile = ".docker/Dockerfile"
 name = "jade-signer-rpc"
 tag = "latest"
-binary_path = "target/release/jade-signer"
-cleanup = true
-build_cmd = "cargo build --release"
-exec_cmd = "/bin/jade-signer server"
-
 
