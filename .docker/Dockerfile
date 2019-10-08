@@ -15,6 +15,7 @@ RUN cargo build-deps --release
 # Copy the rest of sources & build
 COPY src/ ./src
 COPY cli.yml ./cli.yml
+COPY openrpc.json ./openrpc.json
 RUN cargo build --release
 RUN mkdir /build -p && cp ./target/release/jade-signer /build/
 
