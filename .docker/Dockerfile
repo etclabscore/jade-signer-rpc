@@ -1,51 +1,29 @@
-FROM rust:latest
-
-# REQUIRED ENV VARS
-
-# git repository url
-ARG REPO_URL
-
-# git repository branch
-ARG REPO_BRANCH
-
-# build command to run
-ARG BUILD_CMD
-
-# command to execute
-ARG EXEC_CMD
-ENV EXEC=$EXEC_CMD
-
-# OPTIONAL ENV VARS
-
-# relative path to the binary file (would be copied to /bin/)
-ARG BINARY_PATH=""
-
-# whether to cleanup the build
-ARG CLEANUP=false
-
-# docker runtime version
-ENV DOCKERVERSION="18.09.6"
+FROM rust:latest as builder
 
 # Install dependencies
-RUN apt-get update && apt-get install -y git cmake llvm clang libclang-dev
+RUN apt-get update && apt-get install -y cmake llvm clang libclang-dev
 
-# Clone the repo
+# Install dependency builder for cargo
+RUN cargo install cargo-build-deps
+
+# That would be cached if Cargo.lock haven't been changed
+RUN cd /tmp && USER=root cargo new --bin project
+WORKDIR /tmp/project
+COPY Cargo.toml Cargo.lock rust-toolchain ./
+RUN cargo build-deps --release
+
+# Copy the rest of sources & build
+COPY src/ ./src
+COPY cli.yml ./cli.yml
+RUN cargo build --release
+RUN mkdir /build -p && cp ./target/release/jade-signer /build/
+
+# Runtume image is Ubuntu 18.04, 'cause it's the base image of rust:latest
+FROM ubuntu:18.04
+
+USER root
 WORKDIR /root
-RUN git clone --recursive $REPO_URL project
-WORKDIR /root/project
-
-# Checkout branch
-RUN git checkout $REPO_BRANCH
-
-# Run build command
-RUN bash -c "$BUILD_CMD"
-
-# Optionally copy binary to /bin/
-RUN if [ -f $BINARY_PATH ]; then cp $BINARY_PATH /bin/; fi
-
-# Optional cleanup
-WORKDIR /root
-RUN if $CLEANUP; then rm -rf /root/project; fi
+COPY --from=builder /build/jade-signer /usr/bin/
 
 # Run cmd
-CMD $EXEC
+CMD /usr/bin/jade-signer server
