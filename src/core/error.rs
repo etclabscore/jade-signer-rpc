@@ -1,26 +1,31 @@
 //! # Core domain logic module errors
 
 use ethabi;
+use failure::Fail;
 use hex;
 use secp256k1;
-use std::{error, fmt};
 
 /// Core domain logic errors
-#[derive(Debug)]
+#[derive(Debug, Fail)]
 pub enum Error {
     /// Invalid ABI
+    #[fail(display = "Invalid ABI {}", _0)]
     InvalidABI(String),
 
     /// An invalid length
+    #[fail(display = "Invalid length: {}", _0)]
     InvalidLength(usize),
 
     /// An unexpected hexadecimal prefix (should be '0x')
+    #[fail(display = "Invalid hex data length: {}", _0)]
     InvalidHexLength(String),
 
     /// An unexpected hexadecimal encoding
+    #[fail(display = "Unexpected hexadecimal encoding: {:?}", _0)]
     UnexpectedHexEncoding(hex::FromHexError),
 
     /// ECDSA crypto error
+    #[fail(display = "ECDSA crypto error: {}", _0)]
     EcdsaCrypto(secp256k1::Error),
 }
 
@@ -39,33 +44,5 @@ impl From<hex::FromHexError> for Error {
 impl From<secp256k1::Error> for Error {
     fn from(err: secp256k1::Error) -> Self {
         Error::EcdsaCrypto(err)
-    }
-}
-
-impl fmt::Display for Error {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match *self {
-            Error::InvalidABI(ref str) => write!(f, "Invalid ABI: {}", str),
-            Error::InvalidLength(len) => write!(f, "Invalid length: {}", len),
-            Error::InvalidHexLength(ref str) => write!(f, "Invalid hex data length: {}", str),
-            Error::UnexpectedHexEncoding(ref err) => {
-                write!(f, "Unexpected hexadecimal encoding: {}", err)
-            }
-            Error::EcdsaCrypto(ref err) => write!(f, "ECDSA crypto error: {}", err),
-        }
-    }
-}
-
-impl error::Error for Error {
-    fn description(&self) -> &str {
-        "Core error"
-    }
-
-    fn cause(&self) -> Option<&dyn error::Error> {
-        match *self {
-            Error::UnexpectedHexEncoding(ref err) => Some(err),
-            Error::EcdsaCrypto(ref err) => Some(err),
-            _ => None,
-        }
     }
 }
