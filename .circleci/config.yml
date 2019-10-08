@@ -40,9 +40,6 @@ aliases:
   - &filter-only-master
     branches:
       only: master
-  - &filter-only-semantic-pr
-    branches:
-      only:  /^(pull|fix|feat|chore)\/.*$/
 
 defaults: &defaults
   working_directory: ~/project
@@ -252,43 +249,15 @@ jobs:
 
 workflows:
   version: 2
-  analysis:
+  ci:
     jobs:
-      - test-linux:
-          filters: *filter-only-semantic-pr
-      - test-macos:
-          filters: *filter-only-semantic-pr
-      - test-windows:
-          filters: *filter-only-semantic-pr
-      - build-linux:
-          filters: *filter-only-semantic-pr
-      - build-macos:
-          filters: *filter-only-semantic-pr
-      - build-windows:
-          filters: *filter-only-semantic-pr
+      - test-linux
+      - test-macos
+      - test-windows
+      - build-linux
+      - build-macos
+      - build-windows
       - release-dry:
-          filters: *filter-only-semantic-pr
-          requires:
-            - build-linux
-            - build-macos
-            - build-windows
-
-  release:
-    jobs:
-      - test-linux:
-          filters: *filter-only-master
-      - test-macos:
-          filters: *filter-only-master
-      - test-windows:
-          filters: *filter-only-master
-      - build-linux:
-          filters: *filter-only-master
-      - build-macos:
-          filters: *filter-only-master
-      - build-windows:
-          filters: *filter-only-master
-      - release-dry:
-          filters: *filter-only-master
           requires:
             - build-linux
             - build-macos
