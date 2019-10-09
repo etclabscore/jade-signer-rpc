@@ -26,7 +26,6 @@ Command-line interface for Jade Signer RPC
     -V, --version    Display version	
  OPTIONS:	
     -p, --base-path <base-path>    Set path for chain storage	
-    -c, --chain <chain>            Sets a chain name [default: etc-main]	
  SUBCOMMANDS:	
     server         Start local RPC server	
 ```
