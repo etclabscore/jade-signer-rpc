@@ -1,62 +1,38 @@
 //! # Keystore files (UTC / JSON) module errors
 
 use super::core;
-use std::{error, fmt};
+use failure::Fail;
 
 /// Keystore file errors
-#[derive(Debug)]
+#[derive(Debug, Fail)]
 pub enum Error {
     /// An unsupported cipher
+    #[fail(display = "Unsupported cipher: {}", _0)]
     UnsupportedCipher(String),
 
     /// An unsupported key derivation function
+    #[fail(display = "Unsupported key derivation function: {}", _0)]
     UnsupportedKdf(String),
 
     /// An unsupported pseudo-random function
+    #[fail(display = "Unsupported pseudo-random function: {}", _0)]
     UnsupportedPrf(String),
 
     /// `keccak256_mac` field validation failed
+    #[fail(display = "Message authentication code failed")]
     FailedMacValidation,
 
     /// Core module error wrapper
+    #[fail(display = "{:?}", _0)]
     CoreFault(core::Error),
 
     /// Invalid Kdf depth value
+    #[fail(display = "Invalid security level: {}", _0)]
     InvalidKdfDepth(String),
 }
 
 impl From<core::Error> for Error {
     fn from(err: core::Error) -> Self {
         Error::CoreFault(err)
-    }
-}
-
-impl fmt::Display for Error {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match *self {
-            Error::UnsupportedCipher(ref str) => write!(f, "Unsupported cipher: {}", str),
-            Error::UnsupportedKdf(ref str) => {
-                write!(f, "Unsupported key derivation function: {}", str)
-            }
-            Error::UnsupportedPrf(ref str) => {
-                write!(f, "Unsupported pseudo-random function: {}", str)
-            }
-            Error::FailedMacValidation => write!(f, "Message authentication code failed"),
-            Error::CoreFault(ref err) => f.write_str(&err.to_string()),
-            Error::InvalidKdfDepth(ref str) => write!(f, "Invalid security level: {}", str),
-        }
-    }
-}
-
-impl error::Error for Error {
-    fn description(&self) -> &str {
-        "Keystore file error"
-    }
-
-    fn cause(&self) -> Option<&dyn error::Error> {
-        match *self {
-            Error::CoreFault(ref err) => Some(err),
-            _ => None,
-        }
     }
 }

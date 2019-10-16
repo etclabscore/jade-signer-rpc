@@ -2,6 +2,7 @@
 
 use crate::keystore;
 use crate::storage::KeystoreError;
+use failure::Fail;
 use hex;
 use http;
 use hyper;
@@ -9,7 +10,7 @@ use reqwest;
 use serde_json;
 use std::net::AddrParseError;
 use std::num;
-use std::{error, fmt, io, str, string};
+use std::{io, str, string};
 use url;
 
 macro_rules! from_err {
@@ -23,9 +24,11 @@ macro_rules! from_err {
 }
 
 ///
-#[derive(Debug)]
+#[derive(Debug, Fail)]
 pub enum Error {
     /// Command execution error
+    ///
+    #[fail(display = "Command execution error: {}", _0)]
     ExecError(String),
 }
 
@@ -50,23 +53,3 @@ from_err!(serde_json::Error);
 from_err!(hyper::error::Error);
 from_err!(http::uri::InvalidUri);
 from_err!(failure::Error);
-
-impl fmt::Display for Error {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match *self {
-            Error::ExecError(ref str) => write!(f, "Command execution error: {}", str),
-        }
-    }
-}
-
-impl error::Error for Error {
-    fn description(&self) -> &str {
-        "Command execution error"
-    }
-
-    fn cause(&self) -> Option<&dyn error::Error> {
-        match *self {
-            _ => None,
-        }
-    }
-}

@@ -5,26 +5,33 @@ use super::storage;
 use crate::contract;
 use crate::keystore;
 use crate::mnemonic;
+use failure::Fail;
 use hex;
 use jsonrpc_core;
 use reqwest;
 use serde_json;
-use std::{error, fmt, io};
+use std::io;
 
 /// JSON RPC errors
-#[derive(Debug)]
+#[derive(Debug, Fail)]
 pub enum Error {
     /// Http client error
+    #[fail(display = "HTTP client error: {:?}", _0)]
     HttpClient(reqwest::Error),
     /// RPC error
+    #[fail(display = "RPC error: {:?}", _0)]
     RPC(jsonrpc_core::Error),
     /// Invalid data format
+    #[fail(display = "Invalid data format: {}", _0)]
     InvalidDataFormat(String),
     /// Storage error
+    #[fail(display = "Keyfile storage error: {}", _0)]
     StorageError(String),
     /// Storage error
+    #[fail(display = "Contract ABI error: {}", _0)]
     ContractAbiError(String),
     /// Mnemonic phrase operations error
+    #[fail(display = "Mnemonic error: {}", _0)]
     MnemonicError(String),
     /// Typed Data Error
     TypedDataError(String),
@@ -93,32 +100,5 @@ impl From<mnemonic::Error> for Error {
 impl Into<jsonrpc_core::Error> for Error {
     fn into(self) -> jsonrpc_core::Error {
         jsonrpc_core::Error::internal_error()
-    }
-}
-
-impl fmt::Display for Error {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match *self {
-            Error::HttpClient(ref err) => write!(f, "HTTP client error: {}", err),
-            Error::RPC(ref err) => write!(f, "RPC error: {:?}", err),
-            Error::InvalidDataFormat(ref str) => write!(f, "Invalid data format: {}", str),
-            Error::StorageError(ref str) => write!(f, "Keyfile storage error: {}", str),
-            Error::ContractAbiError(ref str) => write!(f, "Contract ABI error: {}", str),
-            Error::MnemonicError(ref str) => write!(f, "Mnemonic error: {}", str),
-            Error::TypedDataError(ref str) => write!(f, "Typed data error: {}", str),
-        }
-    }
-}
-
-impl error::Error for Error {
-    fn description(&self) -> &str {
-        "JSON RPC errors"
-    }
-
-    fn cause(&self) -> Option<&dyn error::Error> {
-        match *self {
-            Error::HttpClient(ref err) => Some(err),
-            _ => None,
-        }
     }
 }
